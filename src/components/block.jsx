@@ -4,6 +4,7 @@ class Block extends Component {
 	state = {
 		hash: "312312321231",
 		previousHash: "fsdfd223423asdfa",
+    miner: "adsifiuoeoijadfoajig",
 		nonce: "",
 		timestamp: new Date(),
 	};
@@ -22,6 +23,10 @@ class Block extends Component {
 					<h3 className="subtitle is-6 mb-1">Previous block hash</h3>
           <p className="subtitle is-7">
 						<a href="">{this.state.previousHash}</a>
+					</p>
+          <h3 className="subtitle is-6 mb-1">Miner</h3>
+          <p className="subtitle is-7">
+						<a href="">{this.state.miner}</a>
 					</p>
 					<button className="button">View</button>
 				</div>
