@@ -5,6 +5,7 @@ class Transaction extends Component {
     hash: "fdiasudfioafoiweuiweug2340823",
     from: "3094f9e8u3q98uf9348f342fae34fq34f",
     to: "fiu34f394873n498vfn739487f3f",
+    amount: 123.34,
   };
 	render() {
 		return (
@@ -22,6 +23,10 @@ class Transaction extends Component {
           <span>{this.state.to}</span>
 
 				</div>
+        <div className="column is-narrow">
+          <span className="subtitle is-6">Amount (BBC): &nbsp;</span>
+          <span className="title is-6">{this.state.amount} BBC</span>
+        </div>
         </div>
 			
 			</div>

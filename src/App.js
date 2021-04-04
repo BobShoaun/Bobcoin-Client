@@ -1,6 +1,7 @@
 import "./App.css";
 import Dashboard from "./components/dashboard";
 import Navbar from "./components/navbar";
+import Footer from "./components/footer";
 
 function App() {
 	return (
@@ -9,6 +10,7 @@ function App() {
 			<div className="container">
 				<Dashboard />
 			</div>
+      <Footer></Footer>
 		</div>
 	);
 }
