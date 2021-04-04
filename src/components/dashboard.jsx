@@ -9,13 +9,16 @@ class Dashboard extends Component {
 			<section className="section">
 				<h1 className="title is-2">Overview</h1>
 				<div className="columns">
-					<div className="column mr-2">
+					<div className="column">
 						<Block className=""></Block>
 					</div>
-					<div className="column mr-2">
+					<div className="column">
 						<Block className=""></Block>
 					</div>
-					<div className="column mr-2">
+					<div className="column">
+						<Block className=""></Block>
+					</div>
+          <div className="column">
 						<Block className=""></Block>
 					</div>
 				</div>

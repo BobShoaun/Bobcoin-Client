@@ -1,20 +1,30 @@
 import React, { Component } from "react";
 
 class Block extends Component {
-  state = {
-    hash: '312312321231',
-    previousHash: "",
-    nonce: "",
-    timestamp: new Date()
-  };
+	state = {
+		hash: "312312321231",
+		previousHash: "fsdfd223423asdfa",
+		nonce: "",
+		timestamp: new Date(),
+	};
 	render() {
 		return (
-			<div className="card card-content">
-				<h1 className="title is-4">Block</h1>
-        <p>hash: <a href="">{this.state.hash}</a></p>
-        <h1>Hash of previous block</h1>
-        <p>{this.state.previousHash}</p>
-				<button className="button">Button</button>
+			<div className="card">
+				<div className="card-header">
+					<h1 className="card-header-title">Block #1</h1>
+          <div className="column">{this.state.timestamp.toISOString()}</div>
+				</div>
+				<div className="card-content">
+					<h3 className="subtitle is-6 mb-1">Hash</h3>
+					<p className="subtitle is-7">
+						<a href="">{this.state.hash}</a>
+					</p>
+					<h3 className="subtitle is-6 mb-1">Previous block hash</h3>
+          <p className="subtitle is-7">
+						<a href="">{this.state.previousHash}</a>
+					</p>
+					<button className="button">View</button>
+				</div>
 			</div>
 		);
 	}
