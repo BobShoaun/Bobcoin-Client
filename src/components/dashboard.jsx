@@ -23,11 +23,11 @@ class Dashboard extends Component {
 				</div>
         </div>
 			
-				<span class="material-icons mr-2">monetization_on</span>
+				<span className="material-icons mr-2">monetization_on</span>
 				<h2 className="subtitle is-3 is-inline-block">Bobcoin BBC</h2>
 				<div>
-					<button class="button is-info is-pulled-right has-text-weight-semibold">
-						<span class="icon material-icons">grid_view</span>
+					<button className="button is-info is-pulled-right has-text-weight-semibold">
+						<span className="icon material-icons">grid_view</span>
 						<span>View All Blocks</span>
 					</button>
 					<h2 className="title is-4">Blockchain</h2>
@@ -54,8 +54,8 @@ class Dashboard extends Component {
 						<Block className=""></Block>
 					</div>
 				</div>
-				<button class="button is-info is-pulled-right has-text-weight-semibold">
-					<span class="icon material-icons">attach_money</span>
+				<button className="button is-info is-pulled-right has-text-weight-semibold">
+					<span className="icon material-icons">attach_money</span>
 					<span>Create Transaction</span>
 				</button>
 				<h2 className="title is-4">Mempool - Pending transactions</h2>

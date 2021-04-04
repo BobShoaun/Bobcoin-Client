@@ -11,7 +11,7 @@ class Transaction extends Component {
 		return (
 			<div className="card card-content m-0">
         <h3 className="title is-6 mb-2 is-inline-block">Hash: &nbsp;</h3>
-        <a href="" className="subtitle is-6 mb-2 is-inline-block">{this.state.hash}</a>
+        <a href="/" className="subtitle is-6 mb-2 is-inline-block">{this.state.hash}</a>
         <div className="columns">
         <div className="column">
           <span>{this.state.from}</span>
