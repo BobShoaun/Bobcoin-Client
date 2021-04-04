@@ -1,6 +1,7 @@
 import "./App.css";
 import Dashboard from "./pages/dashboard";
 import GenerateKey from "./pages/generateKey";
+import Mine from "./pages/mine";
 import Navbar from "./components/navbar";
 import Footer from "./components/footer";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
@@ -11,11 +12,14 @@ function App() {
 			<Navbar></Navbar>
 			<div className="container">
 				<Switch>
-					<Route exact path="/">
-						<Dashboard />
-					</Route>
 					<Route path="/generate-key">
 						<GenerateKey />
+					</Route>
+					<Route path="/mine">
+						<Mine />
+					</Route>
+					<Route path="/">
+						<Dashboard />
 					</Route>
 				</Switch>
 			</div>

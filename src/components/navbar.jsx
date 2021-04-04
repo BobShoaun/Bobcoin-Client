@@ -30,7 +30,7 @@ class Navbar extends Component {
 
 						<a href="/" className="navbar-item">Blockchain</a>
 						<a href="/" className="navbar-item">Transactions</a>
-						<a href="/" className="navbar-item">Mine</a>
+						<a href="/mine" className="navbar-item">Mine</a>
 
 						{/* <div className="navbar-item has-dropdown is-hoverable">
 							<a className="navbar-link">More</a>

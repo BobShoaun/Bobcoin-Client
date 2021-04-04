@@ -20,10 +20,10 @@ class Block extends Component {
 					<p className="subtitle is-7">
 						<a href="/">{this.state.hash}</a>
 					</p>
-					<h3 className="subtitle is-6 mb-1">Previous block hash</h3>
+					{/* <h3 className="subtitle is-6 mb-1">Previous block hash</h3>
           <p className="subtitle is-7">
 						<a href="/">{this.state.previousHash}</a>
-					</p>
+					</p> */}
           <h3 className="subtitle is-6 mb-1">Miner</h3>
           <p className="subtitle is-7">
 						<a href="/">{this.state.miner}</a>
