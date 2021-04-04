@@ -6,7 +6,7 @@ class Navbar extends Component {
 		return (
 			<nav className="navbar is-primary" role="navigation" aria-label="main navigation">
 				<div className="navbar-brand">
-					<a className="navbar-item" href="https://bulma.io">
+					<a className="navbar-item" href="">
 						<img src="https://bulma.io/images/bulma-logo.png" width="112" height="28" />
 					</a>
 
@@ -47,15 +47,15 @@ class Navbar extends Component {
 					<div className="navbar-end">
 						<div className="navbar-item">
 							<div className="buttons">
-								<a className="button is-primary">
-									<strong>Sign up</strong>
+								<a className="button is-warning">
+									<span class="icon material-icons">vpn_key</span>
+									<strong>Generate Key</strong>
 								</a>
-                
-					
+
 								<a className="button is-light has-text-weight-bold">
-                <span class="icon material-icons">account_balance_wallet</span>
-                <span>My Wallet</span>
-                  </a>
+									<span class="icon material-icons">account_balance_wallet</span>
+									<span>My Wallet</span>
+								</a>
 							</div>
 						</div>
 					</div>
