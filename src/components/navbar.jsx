@@ -25,11 +25,13 @@ class Navbar extends Component {
 
 				<div id="navbarBasicExample" className="navbar-menu">
 					<div className="navbar-start">
-						<a className="navbar-item">Home</a>
+						<a className="navbar-item">Overview</a>
 
-						<a className="navbar-item">Documentation</a>
+						<a className="navbar-item">Blockchain</a>
+						<a className="navbar-item">Transactions</a>
+						<a className="navbar-item">Mine</a>
 
-						<div className="navbar-item has-dropdown is-hoverable">
+						{/* <div className="navbar-item has-dropdown is-hoverable">
 							<a className="navbar-link">More</a>
 
 							<div className="navbar-dropdown">
@@ -39,7 +41,7 @@ class Navbar extends Component {
 								<hr className="navbar-divider" />
 								<a className="navbar-item">Report an issue</a>
 							</div>
-						</div>
+						</div> */}
 					</div>
 
 					<div className="navbar-end">
@@ -48,7 +50,12 @@ class Navbar extends Component {
 								<a className="button is-primary">
 									<strong>Sign up</strong>
 								</a>
-								<a className="button is-light">Log in</a>
+                
+					
+								<a className="button is-light has-text-weight-bold">
+                <span class="icon material-icons">account_balance_wallet</span>
+                <span>My Wallet</span>
+                  </a>
 							</div>
 						</div>
 					</div>
