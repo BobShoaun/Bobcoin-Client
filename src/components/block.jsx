@@ -11,11 +11,11 @@ class Block extends Component {
 		return (
 			<div>
         
-				<h1>Hash</h1>
+				<h1 className="title is-4">Hash</h1>
         <p>{this.state.hash}</p>
         <h1>Hash of previous block</h1>
         <p>{this.state.previousHash}</p>
-				<button>nice</button>
+				<button className="button">Button</button>
 			</div>
 		);
 	}
