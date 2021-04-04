@@ -9,10 +9,9 @@ class Block extends Component {
   };
 	render() {
 		return (
-			<div>
-        
-				<h1 className="title is-4">Hash</h1>
-        <p>{this.state.hash}</p>
+			<div className="card card-content">
+				<h1 className="title is-4">Block</h1>
+        <p>hash: <a href="">{this.state.hash}</a></p>
         <h1>Hash of previous block</h1>
         <p>{this.state.previousHash}</p>
 				<button className="button">Button</button>

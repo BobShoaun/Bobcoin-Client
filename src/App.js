@@ -1,13 +1,16 @@
-import './App.css';
-import Block from './components/block'
+import "./App.css";
+import Dashboard from "./components/dashboard";
+import Navbar from "./components/navbar";
 
 function App() {
-  return (
-    <div className="App">
-      <Block />
-      
-    </div>
-  );
+	return (
+		<div>
+      <Navbar></Navbar>
+			<div className="container">
+				<Dashboard />
+			</div>
+		</div>
+	);
 }
 
 export default App;
