@@ -48,13 +48,13 @@ class Navbar extends Component {
 					<div className="navbar-end">
 						<div className="navbar-item">
 							<div className="buttons">
-								<a href="/" className="button is-warning">
-									<span class="icon material-icons">vpn_key</span>
+								<a href="/generate-key" className="button is-warning">
+									<span className="icon material-icons">vpn_key</span>
 									<strong>Generate Key</strong>
 								</a>
 
 								<a href="/" className="button is-light has-text-weight-bold">
-									<span class="icon material-icons">account_balance_wallet</span>
+									<span className="icon material-icons">account_balance_wallet</span>
 									<span>My Wallet</span>
 								</a>
 							</div>

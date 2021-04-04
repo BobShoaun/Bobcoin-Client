@@ -1,17 +1,26 @@
 import "./App.css";
-import Dashboard from "./components/dashboard";
+import Dashboard from "./pages/dashboard";
+import GenerateKey from "./pages/generateKey";
 import Navbar from "./components/navbar";
 import Footer from "./components/footer";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 function App() {
 	return (
-		<div>
-      <Navbar></Navbar>
+		<Router>
+			<Navbar></Navbar>
 			<div className="container">
-				<Dashboard />
+				<Switch>
+					<Route exact path="/">
+						<Dashboard />
+					</Route>
+					<Route path="/generate-key">
+						<GenerateKey />
+					</Route>
+				</Switch>
 			</div>
-      <Footer></Footer>
-		</div>
+			<Footer></Footer>
+		</Router>
 	);
 }
 

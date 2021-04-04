@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import Block from "./block";
-import Transaction from "./transaction";
+import Block from "../components/block";
+import Transaction from "../components/transaction";
 
 class Dashboard extends Component {
 	state = {};
