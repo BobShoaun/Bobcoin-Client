@@ -45,7 +45,7 @@ class GenerateKey extends Component {
 						</p>
 					</div>
 					<p className="help is-primary">
-						This is used to identify you, and used as an address for others to send BBC to you.
+						This is used as an address to send and receive BBC.
 					</p>
 				</div>
 

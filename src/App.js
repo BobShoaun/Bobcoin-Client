@@ -2,6 +2,7 @@ import "./App.css";
 import Dashboard from "./pages/dashboard";
 import GenerateKey from "./pages/generateKey";
 import Mine from "./pages/mine";
+import NewTransaction from "./pages/newTransaction";
 import Navbar from "./components/navbar";
 import Footer from "./components/footer";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
@@ -14,6 +15,9 @@ function App() {
 				<Switch>
 					<Route path="/generate-key">
 						<GenerateKey />
+					</Route>
+          <Route path="/new-transaction">
+						<NewTransaction />
 					</Route>
 					<Route path="/mine">
 						<Mine />
