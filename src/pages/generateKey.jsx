@@ -1,7 +1,11 @@
 import React, { Component } from "react";
+import { generateKeyPair, getKeyPair } from "blockchain-crypto";
 
 class GenerateKey extends Component {
-	state = {};
+	state = {
+		privateKey: "",
+		publicKey: "",
+	};
 	render() {
 		return (
 			<section className="section">
@@ -14,6 +18,8 @@ class GenerateKey extends Component {
 								className="input"
 								type="text"
 								placeholder="Enter or auto-generate private key"
+								value={this.state.privateKey}
+								onChange={({ target }) => this.handleChangePrivateKey(target.value)}
 							></input>
 						</div>
 						<p className="control">
@@ -31,12 +37,7 @@ class GenerateKey extends Component {
 					<label className="label">Public key / Address</label>
 					<div className="field has-addons mb-0">
 						<div className="control is-expanded">
-							<input
-								className="input"
-								type="text"
-								value="23423534f35445g4545tg4tg4e5y4g"
-								readOnly
-							/>
+							<input className="input" type="text" value={this.state.publicKey} readOnly />
 						</div>
 						<p className="control">
 							<a className="button is-light">
@@ -44,19 +45,32 @@ class GenerateKey extends Component {
 							</a>
 						</p>
 					</div>
-					<p className="help is-primary">
-						This is used as an address to send and receive BBC.
-					</p>
+					<p className="help is-primary">This is used as an address to send and receive BBC.</p>
 				</div>
 
 				<div className="buttons is-pulled-right">
-					<button className="button is-warning">Generate new key</button>
+					<button onClick={this.generate} className="button is-warning">
+						Generate random key
+					</button>
 					<button className="button is-info">Save & Use key</button>
 				</div>
 				<div className="is-clearfix"></div>
 			</section>
 		);
 	}
+
+	generate = () => {
+		const keypair = generateKeyPair();
+		this.setState({ privateKey: keypair.getPrivate("hex"), publicKey: keypair.getPublic("hex") });
+	};
+
+	handleChangePrivateKey = privateKey => {
+		try {
+			this.setState({ privateKey, publicKey: getKeyPair(privateKey).getPublic("hex") });
+		} catch (ex) {
+			this.setState({ privateKey: "", publicKey: "" });
+		}
+	};
 }
 
 export default GenerateKey;
