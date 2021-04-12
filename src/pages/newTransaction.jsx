@@ -1,12 +1,36 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { addTransaction } from "../actions";
+import { getKeyPair, Transaction } from "blockchain-crypto";
 
 class NewTransaction extends Component {
 	state = {
 		showPrivateKey: false,
 		amount: "",
+		senderPrivateKey: "",
+		senderPublicKey: "",
+		recipientPublicKey: "",
 	};
 	handleAmountChange = amount => {
 		this.setState({ amount });
+	};
+	handleSenderKeyChange = privateKey => {
+		try {
+			const keypair = getKeyPair(privateKey);
+			this.setState({ senderPrivateKey: privateKey, senderPublicKey: keypair.getPublic("hex") });
+		} catch {
+			this.setState({ senderPrivateKey: "", senderPublicKey: "" });
+		}
+	};
+	createTransaction = () => {
+		const transaction = new Transaction(
+			this.state.senderPublicKey,
+			this.state.recipientPublicKey,
+			this.state.amount,
+			0
+		);
+		transaction.sign(this.state.senderPrivateKey);
+		this.props.addTransaction(transaction);
 	};
 	render() {
 		return (
@@ -22,6 +46,7 @@ class NewTransaction extends Component {
 								className="input"
 								type={this.state.showPrivateKey ? "text" : "password"}
 								placeholder="Enter private key"
+								onChange={({ target: { value } }) => this.handleSenderKeyChange(value)}
 							></input>
 						</div>
 						<p className="control">
@@ -41,7 +66,7 @@ class NewTransaction extends Component {
 				<div className="field">
 					<label className="label">Sender's Public key</label>
 					<input
-						value={''}
+						value={this.state.senderPublicKey}
 						className="input"
 						type="text"
 						placeholder="Input private key above to get public key"
@@ -52,7 +77,12 @@ class NewTransaction extends Component {
 
 				<div className="field">
 					<label className="label">Recipient's Public key</label>
-					<input className="input" type="text" placeholder="Enter public key"></input>
+					<input
+						className="input"
+						type="text"
+						placeholder="Enter public key"
+						onChange={({ target: { value } }) => this.setState({ recipientPublicKey: value })}
+					></input>
 					{/* <p className="help">The public key of the recipient of this transaction.</p> */}
 				</div>
 
@@ -72,7 +102,9 @@ class NewTransaction extends Component {
 
 				<div className="buttons is-pulled-right">
 					<button className="button">Cancel</button>
-					<button className="button is-info">Create & Sign</button>
+					<button className="button is-info" onClick={this.createTransaction}>
+						Create & Sign
+					</button>
 				</div>
 				<div className="is-clearfix"></div>
 			</section>
@@ -80,4 +112,12 @@ class NewTransaction extends Component {
 	}
 }
 
-export default NewTransaction;
+// const mapDispatchToProps = () => ({
+//   addTransaction
+// })
+
+const mapStateToProps = state => ({
+	transactions: state.transactions,
+});
+
+export default connect(mapStateToProps, { addTransaction })(NewTransaction);

@@ -1,4 +1,3 @@
-import "./App.css";
 import Dashboard from "./pages/dashboard";
 import GenerateKey from "./pages/generateKey";
 import Mine from "./pages/mine";
