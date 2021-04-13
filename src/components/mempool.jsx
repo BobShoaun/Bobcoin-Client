@@ -42,7 +42,7 @@ class Mempool extends Component {
 }
 
 const mapStateToProps = state => ({
-	transactions: state.transactions,
+	transactions: state.blockchain.pendingTransactions,
 });
 
 export default connect(mapStateToProps)(Mempool);

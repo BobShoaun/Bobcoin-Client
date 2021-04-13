@@ -7,6 +7,7 @@ import "bulma/css/bulma.css";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
 import rootReducer from "./reducers";
+import {Cryptocurrency} from 'blockchain-crypto';
 
 const store = createStore(
 	rootReducer,
@@ -30,7 +31,7 @@ function loadFromLocalStorage() {
     const serializedState = localStorage.getItem('state');
     if (serializedState === null)
       return undefined;
-    return JSON.parse(serializedState);
+    return { blockchain: Cryptocurrency.parse(JSON.parse(serializedState).blockchain) };
   }
   catch(e) {
     console.log(e);

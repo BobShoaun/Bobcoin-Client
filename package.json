@@ -9,6 +9,7 @@
     "blockchain": "github:bobshoaun/Blockchain-Crypto",
     "blockchain-crypto": "github:bobshoaun/Blockchain-Crypto",
     "bulma": "^0.9.2",
+    "lodash": "^4.17.21",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.3",

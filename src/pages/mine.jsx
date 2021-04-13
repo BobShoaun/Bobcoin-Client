@@ -1,9 +1,14 @@
 import React, { Component } from "react";
 import Blockchain from "../components/blockchain";
 import Mempool from "../components/mempool";
+import { mineTransactions } from "../actions";
+import { connect } from "react-redux";
 
 class Mine extends Component {
 	state = {};
+	startMining = () => {
+		this.props.mineTransactions("gooba");
+	};
 	render() {
 		return (
 			<section className="section">
@@ -13,10 +18,12 @@ class Mine extends Component {
 				</p>
 				<div className="columns is-vcentered">
 					<div className="column is-narrow mb-0">
-						<button className="button mb-0">Start mining</button>
+						<button onClick={this.startMining} className="button mb-0">
+							Start mining
+						</button>
 					</div>
-					<div className="column">
-						<Blockchain className=""></Blockchain>
+					<div className="column is-10">
+						<Blockchain style={{ width: "100%" }} className=""></Blockchain>
 					</div>
 				</div>
 				<Mempool></Mempool>
@@ -25,4 +32,4 @@ class Mine extends Component {
 	}
 }
 
-export default Mine;
+export default connect(undefined, { mineTransactions })(Mine);

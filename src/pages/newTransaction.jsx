@@ -116,8 +116,5 @@ class NewTransaction extends Component {
 //   addTransaction
 // })
 
-const mapStateToProps = state => ({
-	transactions: state.transactions,
-});
 
-export default connect(mapStateToProps, { addTransaction })(NewTransaction);
+export default connect(undefined, { addTransaction })(NewTransaction);

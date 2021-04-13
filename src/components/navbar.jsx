@@ -53,7 +53,7 @@ class Navbar extends Component {
 									<strong>Generate Key</strong>
 								</a>
 
-								<a href="/" className="button is-light has-text-weight-bold">
+								<a href="/wallet" className="button is-light has-text-weight-bold">
 									<span className="icon material-icons">account_balance_wallet</span>
 									<span>My Wallet</span>
 								</a>

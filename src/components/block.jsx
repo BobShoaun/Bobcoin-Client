@@ -16,17 +16,19 @@ class Block extends Component {
 						<h1 className="title is-6 mb-0">Block #{this.props.index}</h1>
 						{this.props.index === 0 && <span className="subtitle is-6">(Genesis)</span>}
 					</div>
-					<div className="column">{this.props.block.timestamp.toISOString()}</div>
+					<div className="column">{(new Date(this.props.block.timestamp)).toISOString?.() || 'no date'}</div>
 				</div>
 				<div className="card-content">
 					<h3 className="subtitle is-6 mb-1">Hash</h3>
 					<p className="subtitle is-7">
 						<a href="/">{this.props.block.hash}</a>
 					</p>
-					{/* <h3 className="subtitle is-6 mb-1">Previous block hash</h3>
+
+					<h3 className="subtitle is-6 mb-1">Previous hash</h3>
           <p className="subtitle is-7">
-						<a href="/">{this.state.previousHash}</a>
-					</p> */}
+						<a href="/">{this.props.block.previousHash}</a>
+					</p>
+
 					<h3 className="subtitle is-6 mb-1">Miner</h3>
 					<p className="subtitle is-7">
 						<a href="/">{this.props.block.miner}</a>
