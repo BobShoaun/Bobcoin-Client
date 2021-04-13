@@ -7,11 +7,11 @@ class Navbar extends Component {
 			<nav className="navbar is-primary" role="navigation" aria-label="main navigation">
 				<div className="navbar-brand">
 					<a className="navbar-item" href="/">
-						<img src="https://bulma.io/images/bulma-logo.png" width="112" height="28" alt="logo"/>
+						<img src="https://bulma.io/images/bulma-logo.png" width="112" height="28" alt="logo" />
 					</a>
 
 					<a
-          href="/"
+						href="/"
 						role="button"
 						className="navbar-burger"
 						aria-label="menu"
@@ -26,11 +26,19 @@ class Navbar extends Component {
 
 				<div id="navbarBasicExample" className="navbar-menu">
 					<div className="navbar-start">
-						<a href="/" className="navbar-item">Overview</a>
+						<a href="/" className="navbar-item">
+							Overview
+						</a>
 
-						<a href="/" className="navbar-item">Blockchain</a>
-						<a href="/" className="navbar-item">Transactions</a>
-						<a href="/mine" className="navbar-item">Mine</a>
+						<a href="/" className="navbar-item">
+							Blockchain
+						</a>
+						<a href="/" className="navbar-item">
+							Transactions
+						</a>
+						<a href="/mine" className="navbar-item">
+							Mine
+						</a>
 
 						{/* <div className="navbar-item has-dropdown is-hoverable">
 							<a className="navbar-link">More</a>
@@ -48,6 +56,7 @@ class Navbar extends Component {
 					<div className="navbar-end">
 						<div className="navbar-item">
 							<div className="buttons">
+
 								<a href="/generate-key" className="button is-warning">
 									<span className="icon material-icons">vpn_key</span>
 									<strong>Generate Key</strong>

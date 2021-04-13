@@ -27,7 +27,7 @@ class Dashboard extends Component {
 				<div>
 					<button className="button is-info is-pulled-right has-text-weight-semibold">
 						<span className="icon material-icons">grid_view</span>
-						<span>View All Blocks</span>
+						<span>View all Blocks</span>
 					</button>
 					<h2 className="title is-4">Blockchain</h2>
 					<p className="subtitle is-5">All blocks in the blockchain.</p>
@@ -42,7 +42,7 @@ class Dashboard extends Component {
 					className="button is-info is-pulled-right has-text-weight-semibold"
 				>
 					<span className="icon material-icons">attach_money</span>
-					<span>New Transaction</span>
+					<span>View all Transactions</span>
 				</a>
 				<h2 className="title is-4">Mempool - Pending transactions</h2>
 				<p className="subtitle is-5">All pending transactions that are unconfirmed.</p>

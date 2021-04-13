@@ -31,7 +31,7 @@ class Block extends Component {
 
 					<h3 className="subtitle is-6 mb-1">Miner</h3>
 					<p className="subtitle is-7">
-						<a href="/">{this.props.block.miner}</a>
+						<a href={`/wallet/${this.props.block.miner}`}>{this.props.block.miner}</a>
 					</p>
 					<button className="button">View</button>
 				</div>

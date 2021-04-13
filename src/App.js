@@ -6,8 +6,17 @@ import NewTransaction from "./pages/newTransaction";
 import Navbar from "./components/navbar";
 import Footer from "./components/footer";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { useState } from 'react';
 
 function App() {
+  const [buttonWidth, setButtonWidth] = useState('4rem');
+  const floatingButton = {
+    position: 'fixed',
+    right: '2rem',
+    bottom: '2rem',
+    borderRadius: '2rem',
+    height: '4rem',
+  }
 	return (
 		<Router>
 			<Navbar></Navbar>
@@ -28,6 +37,10 @@ function App() {
 					</Route>
 				</Switch>
 			</div>
+			<a style={{...floatingButton, width: buttonWidth}} onMouseEnter={() => setButtonWidth('auto')} onMouseLeave={() => setButtonWidth('4rem')} href="/new-transaction" className="button is-link">
+				<span className="icon material-icons md-36">attach_money</span>
+				{buttonWidth == 'auto' && <strong>New Transaction</strong>}
+			</a>
 			<Footer></Footer>
 		</Router>
 	);
