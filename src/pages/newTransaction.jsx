@@ -86,7 +86,7 @@ class NewTransaction extends Component {
 					{/* <p className="help">The public key of the recipient of this transaction.</p> */}
 				</div>
 
-				<div className="field">
+				<div className="field mb-6">
 					<label className="label">Amount (BBC)</label>
 					<input
 						value={this.state.amount}

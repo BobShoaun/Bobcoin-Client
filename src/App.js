@@ -31,6 +31,7 @@ function App() {
 					<Route path="/mine">
 						<Mine />
 					</Route>
+					<Route path="/wallet" component={Wallet}></Route>
 					<Route path="/wallet/:publicKey" component={Wallet}></Route>
 					<Route path="/">
 						<Dashboard />
@@ -39,7 +40,7 @@ function App() {
 			</div>
 			<a style={{...floatingButton, width: buttonWidth}} onMouseEnter={() => setButtonWidth('auto')} onMouseLeave={() => setButtonWidth('4rem')} href="/new-transaction" className="button is-link">
 				<span className="icon material-icons md-36">attach_money</span>
-				{buttonWidth == 'auto' && <strong>New Transaction</strong>}
+				{buttonWidth === 'auto' && <strong>New Transaction</strong>}
 			</a>
 			<Footer></Footer>
 		</Router>

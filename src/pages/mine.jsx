@@ -5,9 +5,11 @@ import { mineTransactions } from "../actions";
 import { connect } from "react-redux";
 
 class Mine extends Component {
-	state = {};
+	state = {
+		miner: "",
+	};
 	startMining = () => {
-		this.props.mineTransactions("gooba");
+		this.props.mineTransactions(this.state.miner);
 	};
 	render() {
 		return (
@@ -16,6 +18,19 @@ class Mine extends Component {
 				<p className="subtitle is-4">
 					From the comfort of your browser! No need for unnessasary mining clients.
 				</p>
+
+				<div className="field">
+					<label className="label">Miner's Public key</label>
+					<input
+						value={this.state.miner}
+						onChange={({ target }) => this.setState({ miner: target.value })}
+						className="input"
+						type="text"
+						placeholder="Input miner's key"
+					></input>
+					<p className="help">The public key of the miner, where to send block reward.</p>
+				</div>
+
 				<div className="columns is-vcentered">
 					<div className="column is-narrow mb-0">
 						<button onClick={this.startMining} className="button mb-0">
