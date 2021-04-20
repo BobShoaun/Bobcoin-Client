@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import Blockchain from "../components/blockchain";
 import Mempool from "../components/mempool";
+import { connect } from "react-redux";
+
 
 class Dashboard extends Component {
 	state = {};
@@ -48,10 +50,16 @@ class Dashboard extends Component {
 				<p className="subtitle is-5">All pending transactions that are unconfirmed.</p>
 				{/* <div className="is-clearfix"></div> */}
 				<hr />
-				<Mempool></Mempool>
+        <Mempool mempool={this.props.blockchain.getMempool(this.props.blockchain.highestBlock)}></Mempool>
+
 			</section>
 		);
 	}
 }
 
-export default Dashboard;
+const mapStateToProps = state => ({
+	blockchain: state.blockchain,
+});
+
+export default connect(mapStateToProps)(Dashboard);
+

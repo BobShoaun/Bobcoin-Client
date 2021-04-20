@@ -31,7 +31,7 @@ class Mempool extends Component {
 	render() {
 		return (
 			<div>
-				{this.props.transactions.map((transaction, index) => (
+				{this.props.mempool.map((transaction, index) => (
 					<div key={index} className="mb-2">
 						<Transaction transaction={transaction}></Transaction>
 					</div>
@@ -42,7 +42,7 @@ class Mempool extends Component {
 }
 
 const mapStateToProps = state => ({
-	transactions: state.blockchain.pendingTransactions,
+	transactions: state.blockchain.transactions,
 });
 
 export default connect(mapStateToProps)(Mempool);

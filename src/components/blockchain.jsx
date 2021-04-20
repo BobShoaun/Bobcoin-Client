@@ -37,7 +37,8 @@ class Blockchain extends Component {
 	};
 
 	render() {
-		const blockchain = this.props.blockchain.slice(0).reverse();
+    let blockchain = [...this.props.blockchain];
+    blockchain.sort((a, b) => a.height < b.height ? 1 : -1);
 		return (
 			<div className="columns" style={{ overflowX: "auto" }}>
 				{blockchain.map((block, index) => (
@@ -52,7 +53,6 @@ class Blockchain extends Component {
 
 const mapStateToProps = state => ({
 	blockchain: state.blockchain.chain,
-  number: state.number,
 });
 
 export default connect(mapStateToProps)(Blockchain);

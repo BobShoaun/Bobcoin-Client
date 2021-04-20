@@ -13,10 +13,10 @@ class Block extends Component {
 			<div className="card">
 				<div className="card-header">
 					<div className="card-header-title">
-						<h1 className="title is-6 mb-0">Block #{this.props.index}</h1>
-						{this.props.index === 0 && <span className="subtitle is-6">(Genesis)</span>}
+						<h1 className="title is-6 mb-0">Block #{this.props.block.height}</h1>
+						{this.props.block.height === 0 && <span className="subtitle is-6">(Genesis)</span>}
 					</div>
-					<div className="column">{(new Date(this.props.block.timestamp)).toISOString?.() || 'no date'}</div>
+					{/* <div className="column">{(new Date(this.props.block.timestamp)).toISOString?.() || 'no date'}</div> */}
 				</div>
 				<div className="card-content">
 					<h3 className="subtitle is-6 mb-1">Hash</h3>

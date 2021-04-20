@@ -7,30 +7,35 @@ class NewTransaction extends Component {
 	state = {
 		showPrivateKey: false,
 		amount: "",
-		senderPrivateKey: "",
-		senderPublicKey: "",
-		recipientPublicKey: "",
+		senderSK: "",
+		senderPK: "",
+		recipientPK: "",
 	};
 	handleAmountChange = amount => {
 		this.setState({ amount });
 	};
-	handleSenderKeyChange = privateKey => {
+	handleSenderKeyChange = senderSK => {
 		try {
-			const keypair = getKeyPair(privateKey);
-			this.setState({ senderPrivateKey: privateKey, senderPublicKey: keypair.getPublic("hex") });
+			const keypair = getKeyPair(senderSK);
+			this.setState({ senderSK, senderPK: keypair.getPublic("hex") });
 		} catch {
-			this.setState({ senderPrivateKey: "", senderPublicKey: "" });
+			this.setState({ senderSK: "", senderPK: "" });
 		}
 	};
 	createTransaction = () => {
-		const transaction = new Transaction(
-			this.state.senderPublicKey,
-			this.state.recipientPublicKey,
+		// const transaction = new Transaction(
+		// 	this.state.senderPK,
+		// 	thiPK,
+		// 	this.state.amount,
+		// 	0
+		// );
+		// transaction.sign(this.state.senderSK);
+		this.props.addTransaction(
+			this.state.senderPK,
+			this.state.recipientPK,
 			this.state.amount,
-			0
+			this.state.senderSK
 		);
-		transaction.sign(this.state.senderPrivateKey);
-		this.props.addTransaction(transaction);
 	};
 	render() {
 		return (
@@ -66,7 +71,7 @@ class NewTransaction extends Component {
 				<div className="field">
 					<label className="label">Sender's Public key</label>
 					<input
-						value={this.state.senderPublicKey}
+						value={this.state.senderPK}
 						className="input"
 						type="text"
 						placeholder="Input private key above to get public key"
@@ -81,7 +86,7 @@ class NewTransaction extends Component {
 						className="input"
 						type="text"
 						placeholder="Enter public key"
-						onChange={({ target: { value } }) => this.setState({ recipientPublicKey: value })}
+						onChange={({ target: { value } }) => this.setState({ recipientPK: value })  }
 					></input>
 					{/* <p className="help">The public key of the recipient of this transaction.</p> */}
 				</div>
@@ -115,6 +120,5 @@ class NewTransaction extends Component {
 // const mapDispatchToProps = () => ({
 //   addTransaction
 // })
-
 
 export default connect(undefined, { addTransaction })(NewTransaction);

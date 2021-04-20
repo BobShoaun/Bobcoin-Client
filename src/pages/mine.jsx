@@ -7,10 +7,25 @@ import { connect } from "react-redux";
 class Mine extends Component {
 	state = {
 		miner: "",
+		prevBlock: this.props.blockchain.highestBlock,
+		mempool: this.props.blockchain.getMempool(this.props.blockchain.highestBlock),
 	};
 	startMining = () => {
-		this.props.mineTransactions(this.state.miner);
+
+		this.props.mineTransactions(
+			this.state.miner,
+			this.state.mempool,
+			this.state.prevBlock
+		);
 	};
+	handlePrevBlockChange = height => {
+		const prevBlock = this.props.blockchain.chain.find(block => block.height == height);
+		if (prevBlock == undefined) return;
+		this.setState({ prevBlock, mempool: this.props.blockchain.getMempool(prevBlock) });
+	};
+	componentDidMount() {
+		// this.setState({ blockHeight: this.props.blockchain.highestBlock.height });
+	}
 	render() {
 		return (
 			<section className="section">
@@ -22,13 +37,24 @@ class Mine extends Component {
 				<div className="field">
 					<label className="label">Miner's Public key</label>
 					<input
-						value={this.state.miner}
 						onChange={({ target }) => this.setState({ miner: target.value })}
 						className="input"
 						type="text"
 						placeholder="Input miner's key"
 					></input>
 					<p className="help">The public key of the miner, where to send block reward.</p>
+				</div>
+
+				<div className="field">
+					<label className="label">Mine from block #</label>
+					<input
+						value={this.state.prevBlock.height}
+						onChange={({ target }) => this.handlePrevBlockChange(target.value)}
+						className="input"
+						type="number"
+						placeholder="Input block height"
+					></input>
+					<p className="help">Which block to mine from.</p>
 				</div>
 
 				<div className="columns is-vcentered">
@@ -41,10 +67,14 @@ class Mine extends Component {
 						<Blockchain style={{ width: "100%" }} className=""></Blockchain>
 					</div>
 				</div>
-				<Mempool></Mempool>
+				<Mempool mempool={this.state.mempool}></Mempool>
 			</section>
 		);
 	}
 }
 
-export default connect(undefined, { mineTransactions })(Mine);
+const mapStateToProps = state => ({
+	blockchain: state.blockchain,
+});
+
+export default connect(mapStateToProps, { mineTransactions })(Mine);

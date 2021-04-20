@@ -1,13 +1,22 @@
 import * as types from './types.js';
 
-export const addTransaction = transaction => ({
+export const addTransaction = (senderPK, recipientPK, amount, senderSK) => ({
   type: types.ADD_TRANSACTION,
-  payload: transaction,
+  payload: {
+    senderPK,
+    recipientPK,
+    amount,
+    senderSK
+  },
 })
 
-export const mineTransactions = miner => ({
+export const mineTransactions = (minerPK, transactions, prevBlock) => ({
   type: types.MINE_TRANSACTIONS,
-  payload: miner,
+  payload: {
+    minerPK,
+    transactions,
+    prevBlock
+  },
 })
 
 export const addNumber = () => ({

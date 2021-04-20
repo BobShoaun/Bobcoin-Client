@@ -31,7 +31,11 @@ function loadFromLocalStorage() {
     const serializedState = localStorage.getItem('state');
     if (serializedState === null)
       return undefined;
-    return { blockchain: Cryptocurrency.parse(JSON.parse(serializedState).blockchain) };
+    const blockchain = new Cryptocurrency();
+    const blockchainJson = JSON.parse(serializedState).blockchain;
+    blockchain.chain = blockchainJson.chain;
+    blockchain.transactions = blockchainJson.transactions;
+    return { blockchain };
   }
   catch(e) {
     console.log(e);
