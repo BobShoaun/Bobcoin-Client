@@ -32,7 +32,7 @@ class Dashboard extends Component {
 						<span>View all Blocks</span>
 					</button>
 					<h2 className="title is-4">Blockchain</h2>
-					<p className="subtitle is-5">All blocks in the blockchain.</p>
+					<p className="subtitle is-5">Most recently mined blocks in the blockchain.</p>
 				</div>
 				<hr />
 				<div className="mb-6">

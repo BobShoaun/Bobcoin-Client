@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 
-
 class Transaction extends Component {
 	render() {
 		const keyText = {
@@ -9,12 +8,12 @@ class Transaction extends Component {
 			whiteSpace: "pre-wrap",
 			wordWrap: "break-word",
 		};
-    const signatureText = {
-      display: "block",
-      maxWidth: "50rem",
-      whiteSpace: "nowrap",
-      overflow: "hidden",
-      textOverflow: "ellipsis",
+		const signatureText = {
+			display: "block",
+			maxWidth: "50rem",
+			whiteSpace: "nowrap",
+			overflow: "hidden",
+			textOverflow: "ellipsis",
 		};
 		return (
 			<div className="card card-content m-0">
@@ -33,13 +32,23 @@ class Transaction extends Component {
 
 				<div className="columns">
 					<div className="column is-4">
-						<span style={keyText}>{this.props.transaction.sender || 'coinbase'}</span>
+						<span style={keyText}>
+							{this.props.transaction.sender ? (
+								<a href={`/wallet/${this.props.transaction.sender}`}>
+									{this.props.transaction.sender}
+								</a>
+							) : (
+								"COINBASE"
+							)}
+						</span>
 					</div>
 					<div className="column is-narrow">
 						<i className="material-icons">arrow_right_alt</i>
 					</div>
 					<div className="column is-4">
-						<span style={keyText}>{this.props.transaction.recipient}</span>
+						<a style={keyText} href={`/wallet/${this.props.transaction.recipient}`}>
+							{this.props.transaction.recipient}
+						</a>
 					</div>
 					<div className="column is-offset-1">
 						<span className="subtitle is-6">Amount: &nbsp;</span>

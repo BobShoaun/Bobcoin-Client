@@ -21,9 +21,9 @@ class Wallet extends Component {
 								onChange={({ target }) => this.setState({ inputPublicKey: target.value })}
 								className="input"
 								type="text"
-								placeholder="Input miner's key"
+								placeholder="Input public key"
 							></input>
-							<p className="help">The public key of the miner, where to send block reward.</p>
+							{/* <p className="help">The public key of the miner, where to send block reward.</p> */}
 						</div>
 						<div className="control">
 							<a href={`/wallet/${this.state.inputPublicKey}`} className="button is-info">Search</a>
