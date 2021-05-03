@@ -9,7 +9,7 @@ import Footer from "./components/footer";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { useState } from "react";
 
-function App() {
+const App = () => {
 	const [buttonWidth, setButtonWidth] = useState("4rem");
 	const floatingButton = {
 		position: "fixed",
@@ -55,6 +55,6 @@ function App() {
 			<Footer></Footer>
 		</Router>
 	);
-}
+};
 
 export default App;
