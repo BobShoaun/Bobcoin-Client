@@ -1,58 +1,19 @@
-import React, { Component } from "react";
+import React from "react";
+import { useSelector } from "react-redux";
+
 import Block from "../components/block";
-import { connect } from "react-redux";
 
-class Blockchain extends Component {
-	state = {
-		// chain: [
-		// 	{
-		// 		hash: "312312321231",
-		// 		previousHash: "fsdfd223423asdfa",
-		// 		miner: "adsifiuoeoijadfoajig",
-		// 		nonce: "",
-		// 		timestamp: new Date(),
-		// 	},
-		// 	{
-		// 		hash: "312312321231",
-		// 		previousHash: "fsdfd223423asdfa",
-		// 		miner: "adsifiuoeoijadfoajig",
-		// 		nonce: "",
-		// 		timestamp: new Date(),
-		// 	},
-		// 	{
-		// 		hash: "312312321231",
-		// 		previousHash: "fsdfd223423asdfa",
-		// 		miner: "adsifiuoeoijadfoajig",
-		// 		nonce: "",
-		// 		timestamp: new Date(),
-		// 	},
-		// 	{
-		// 		hash: "312312321231",
-		// 		previousHash: "fsdfd223423asdfa",
-		// 		miner: "adsifiuoeoijadfoajig",
-		// 		nonce: "",
-		// 		timestamp: new Date(),
-		// 	},
-		// ],
-	};
+const Blockchain = () => {
+	const blockchain = useSelector(state => state.blockchain);
+	return (
+		<div className="columns" style={{ overflowX: "auto" }}>
+			{blockchain.map((block, index) => (
+				<div key={index} className="column is-3">
+					<Block block={block} index={index} className=""></Block>
+				</div>
+			))}
+		</div>
+	);
+};
 
-	render() {
-    let blockchain = [...this.props.blockchain];
-    blockchain.sort((a, b) => a.height < b.height ? 1 : -1);
-		return (
-			<div className="columns" style={{ overflowX: "auto" }}>
-				{blockchain.map((block, index) => (
-					<div key={index} className="column is-3">
-						<Block block={block} index={blockchain.length - index - 1} className=""></Block>
-					</div>
-				))}
-			</div>
-		);
-	}
-}
-
-const mapStateToProps = state => ({
-	blockchain: state.blockchain.chain,
-});
-
-export default connect(mapStateToProps)(Blockchain);
+export default Blockchain;

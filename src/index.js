@@ -3,16 +3,17 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App.jsx";
 import "bulma/css/bulma.css";
-import { createStore } from "redux";
-import { Provider } from "react-redux";
-import rootReducer from "./reducers";
-import { Cryptocurrency } from "blockchain-crypto";
+// import { createStore } from "redux";
+// import rootReducer from "./reducers";
 
-const store = createStore(
-	rootReducer,
-	loadFromLocalStorage(),
-	window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-);
+import store from "./store";
+import { Provider } from "react-redux";
+
+// const store = createStore(
+// 	rootReducer,
+// 	loadFromLocalStorage(),
+// 	window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+// );
 
 store.subscribe(() => saveToLocalStorage(store.getState()));
 
@@ -25,20 +26,20 @@ function saveToLocalStorage(state) {
 	}
 }
 
-function loadFromLocalStorage() {
-	try {
-		const serializedState = localStorage.getItem("state");
-		if (serializedState === null) return undefined;
-		const blockchain = new Cryptocurrency();
-		const blockchainJson = JSON.parse(serializedState).blockchain;
-		blockchain.chain = blockchainJson.chain;
-		blockchain.transactions = blockchainJson.transactions;
-		return { blockchain };
-	} catch (e) {
-		console.log(e);
-		return undefined;
-	}
-}
+// function loadFromLocalStorage() {
+// 	try {
+// 		const serializedState = localStorage.getItem("state");
+// 		if (serializedState === null) return undefined;
+// 		const blockchain = new Cryptocurrency();
+// 		const blockchainJson = JSON.parse(serializedState).blockchain;
+// 		blockchain.chain = blockchainJson.chain;
+// 		blockchain.transactions = blockchainJson.transactions;
+// 		return { blockchain };
+// 	} catch (e) {
+// 		console.log(e);
+// 		return undefined;
+// 	}
+// }
 
 console.log(store.getState());
 
