@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { generateKeyPair, getKeyPair } from "blockchain-crypto";
 
-const GenerateKey = () => {
+const GenerateKeyPage = () => {
 	const [secretKey, setSecretKey] = useState("");
 	const [publicKey, setPublicKey] = useState("");
 
@@ -74,4 +74,4 @@ const GenerateKey = () => {
 	);
 };
 
-export default GenerateKey;
+export default GenerateKeyPage;

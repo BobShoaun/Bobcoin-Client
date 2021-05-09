@@ -1,21 +1,16 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import Blockchain from "../components/blockchain";
-import Mempool from "../components/mempool";
+import Blockchain from "../components/Blockchain";
+import Mempool from "../components/Mempool";
 
-// import { mineTransactions } from "../actions";
 import { getHighestValidBlock } from "blockchain-crypto";
 
-const Mine = () => {
+const MinePage = () => {
 	const blockchain = useSelector(state => state.blockchain);
 	const transactions = useSelector(state => state.transactions);
 	const [miner, setMiner] = useState("");
 	const [headBlock, setHeadBlock] = useState(getHighestValidBlock(blockchain));
-	// state = {
-	// 	miner: "",
-	// 	prevBlock: this.props.blockchain.highestBlock,
-	// 	mempool: this.props.blockchain.getMempool(this.props.blockchain.highestBlock),
-	// };
+
 	const startMining = () => {
 		// this.props.mineTransactions(this.state.miner, this.state.mempool, this.state.prevBlock);
 	};
@@ -64,4 +59,4 @@ const Mine = () => {
 	);
 };
 
-export default Mine;
+export default MinePage;

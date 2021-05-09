@@ -1,8 +1,11 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+
+import { addTransactions } from "../store/transactionsSlice";
 import { getKeyPair, createAndSignTransaction, getHighestValidBlock } from "blockchain-crypto";
 
-const NewTransaction = () => {
+const NewTransactionPage = () => {
+	const dispatch = useDispatch();
 	const blockchain = useSelector(state => state.blockchain);
 
 	const [showSK, setShowSK] = useState(false);
@@ -36,6 +39,7 @@ const NewTransaction = () => {
 			amount,
 			0
 		);
+		dispatch(addTransactions([tx]));
 	};
 
 	return (
@@ -111,4 +115,4 @@ const NewTransaction = () => {
 	);
 };
 
-export default NewTransaction;
+export default NewTransactionPage;

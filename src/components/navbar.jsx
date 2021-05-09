@@ -1,78 +1,61 @@
-import React, { Component } from "react";
+import React from "react";
+import { Link } from "react-router-dom";
 
-class Navbar extends Component {
-	state = {};
-	render() {
-		return (
-			<nav className="navbar is-primary" role="navigation" aria-label="main navigation">
-				<div className="navbar-brand">
-					<a className="navbar-item" href="/">
-						<img src="https://bulma.io/images/bulma-logo.png" width="112" height="28" alt="logo" />
-					</a>
+const Navbar = () => (
+	<nav className="navbar is-primary" role="navigation" aria-label="main navigation">
+		<div className="navbar-brand">
+			<Link className="navbar-item" to="/">
+				<img src="https://bulma.io/images/bulma-logo.png" width="112" height="28" alt="logo" />
+			</Link>
 
-					<a
-						href="/"
-						role="button"
-						className="navbar-burger"
-						aria-label="menu"
-						aria-expanded="false"
-						data-target="navbarBasicExample"
-					>
-						<span aria-hidden="true"></span>
-						<span aria-hidden="true"></span>
-						<span aria-hidden="true"></span>
-					</a>
-				</div>
+			<Link
+				to="/"
+				role="button"
+				className="navbar-burger"
+				aria-label="menu"
+				aria-expanded="false"
+				data-target="navbarBasicExample"
+			>
+				<span aria-hidden="true"></span>
+				<span aria-hidden="true"></span>
+				<span aria-hidden="true"></span>
+			</Link>
+		</div>
 
-				<div id="navbarBasicExample" className="navbar-menu">
-					<div className="navbar-start">
-						<a href="/" className="navbar-item">
-							Overview
-						</a>
+		<div id="navbarBasicExample" className="navbar-menu">
+			<div className="navbar-start">
+				<Link to="/" className="navbar-item">
+					Overview
+				</Link>
 
-						<a href="/" className="navbar-item">
-							Blockchain
-						</a>
-						<a href="/" className="navbar-item">
-							Transactions
-						</a>
-						<a href="/mine" className="navbar-item">
-							Mine
-						</a>
+				<Link to="/" className="navbar-item">
+					Blockchain
+				</Link>
+				<Link to="/" className="navbar-item">
+					Transactions
+				</Link>
+				<Link to="/mine" className="navbar-item">
+					Mine
+				</Link>
+			</div>
 
-						{/* <div className="navbar-item has-dropdown is-hoverable">
-							<a className="navbar-link">More</a>
+			<div className="navbar-end">
+				<div className="navbar-item">
+					<div className="buttons">
+						<Link to="/generate-key" className="button is-warning">
+							<span className="icon material-icons">vpn_key</span>
+							<strong>Generate Key</strong>
+						</Link>
 
-							<div className="navbar-dropdown">
-								<a className="navbar-item">About</a>
-								<a className="navbar-item">Jobs</a>
-								<a className="navbar-item">Contact</a>
-								<hr className="navbar-divider" />
-								<a className="navbar-item">Report an issue</a>
-							</div>
-						</div> */}
-					</div>
-
-					<div className="navbar-end">
-						<div className="navbar-item">
-							<div className="buttons">
-
-								<a href="/generate-key" className="button is-warning">
-									<span className="icon material-icons">vpn_key</span>
-									<strong>Generate Key</strong>
-								</a>
-
-								<a href="/wallet" className="button is-light has-text-weight-bold">
-									<span className="icon material-icons">account_balance_wallet</span>
-									<span>My Wallet</span>
-								</a>
-							</div>
-						</div>
+						<Link to="/wallet" className="button is-light has-text-weight-bold">
+							<span className="icon material-icons">account_balance_wallet</span>
+							<span>My Wallet</span>
+						</Link>
 					</div>
 				</div>
-			</nav>
-		);
-	}
-}
+			</div>
+		</div>
+	</nav>
+);
 
 export default Navbar;

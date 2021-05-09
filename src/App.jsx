@@ -1,13 +1,14 @@
-import Dashboard from "./pages/dashboard";
-import GenerateKey from "./pages/generateKey";
-import Mine from "./pages/mine";
-import Wallet from "./pages/wallet";
-import NewTransaction from "./pages/newTransaction";
-import Block from "./pages/block";
-import Navbar from "./components/navbar";
-import Footer from "./components/footer";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { useState } from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+
+import DashboardPage from "./pages/DashboardPage";
+import GenerateKeyPage from "./pages/GenerateKeyPage";
+import MinePage from "./pages/MinePage";
+import WalletPage from "./pages/WalletPage";
+import NewTransactionPage from "./pages/NewTransactionPage";
+import Block from "./pages/BlockPage";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
 const App = () => {
 	const [buttonWidth, setButtonWidth] = useState("4rem");
@@ -24,21 +25,21 @@ const App = () => {
 			<div className="container">
 				<Switch>
 					<Route path="/generate-key">
-						<GenerateKey />
+						<GenerateKeyPage />
 					</Route>
 					<Route path="/new-transaction">
-						<NewTransaction />
+						<NewTransactionPage />
 					</Route>
 					<Route path="/mine">
-						<Mine />
+						<MinePage />
 					</Route>
 
 					<Route path="/block/:hash" component={Block}></Route>
 
-					<Route path="/wallet/:publicKey" component={Wallet}></Route>
-					<Route path="/wallet" component={Wallet}></Route>
+					<Route path="/wallet/:publicKey" component={WalletPage}></Route>
+					<Route path="/wallet" component={WalletPage}></Route>
 					<Route path="/">
-						<Dashboard />
+						<DashboardPage />
 					</Route>
 				</Switch>
 			</div>

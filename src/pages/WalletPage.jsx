@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { calculateBalance, getHighestValidBlock } from "blockchain-crypto";
 
-const Wallet = () => {
+const WalletPage = () => {
 	const blockchain = useSelector(state => state.blockchain);
 	const { publicKey } = useParams();
 
@@ -38,4 +38,4 @@ const Wallet = () => {
 	);
 };
 
-export default Wallet;
+export default WalletPage;

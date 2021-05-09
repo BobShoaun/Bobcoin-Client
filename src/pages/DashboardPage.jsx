@@ -1,10 +1,11 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
-import Blockchain from "../components/blockchain";
-import Mempool from "../components/mempool";
+import Blockchain from "../components/Blockchain";
+import Mempool from "../components/Mempool";
 
-const Dashboard = () => {
+const DashboardPage = () => {
 	const transactions = useSelector(state => state.transactions);
 	return (
 		<section className="section">
@@ -38,13 +39,13 @@ const Dashboard = () => {
 				<Blockchain />
 			</div>
 
-			<a
-				href="/new-transaction"
+			<Link
+				to="/new-transaction"
 				className="button is-info is-pulled-right has-text-weight-semibold"
 			>
 				<span className="icon material-icons">attach_money</span>
 				<span>View all Transactions</span>
-			</a>
+			</Link>
 			<h2 className="title is-4">Mempool - Pending transactions</h2>
 			<p className="subtitle is-5">All pending transactions that are unconfirmed.</p>
 			{/* <div className="is-clearfix"></div> */}
@@ -54,4 +55,4 @@ const Dashboard = () => {
 	);
 };
 
-export default Dashboard;
+export default DashboardPage;

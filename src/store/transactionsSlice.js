@@ -10,8 +10,9 @@ export const transactionsSlice = createSlice({
 	name: "transactions",
 	initialState: [],
 	reducers: {
-		addTransactions: (state, { payload }) => {
-			state.push(...payload.transactions);
+		addTransactions: (state, transactions) => {
+			console.log(transactions);
+			state.push(...transactions);
 		},
 	},
 });
