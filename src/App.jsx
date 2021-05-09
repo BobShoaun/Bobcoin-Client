@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 
 import DashboardPage from "./pages/DashboardPage";
 import GenerateKeyPage from "./pages/GenerateKeyPage";
-import MinePage from "./pages/MinePage";
+import MinePage from "./pages/MinePage/MinePage";
 import WalletPage from "./pages/WalletPage";
 import NewTransactionPage from "./pages/NewTransactionPage";
 import Block from "./pages/BlockPage";
@@ -43,16 +43,16 @@ const App = () => {
 					</Route>
 				</Switch>
 			</div>
-			<a
+			<Link
 				style={{ ...floatingButton, width: buttonWidth }}
 				onMouseEnter={() => setButtonWidth("auto")}
 				onMouseLeave={() => setButtonWidth("4rem")}
-				href="/new-transaction"
+				to="/new-transaction"
 				className="button is-link"
 			>
 				<span className="icon material-icons md-36">attach_money</span>
 				{buttonWidth === "auto" && <strong>New Transaction</strong>}
-			</a>
+			</Link>
 			<Footer></Footer>
 		</Router>
 	);

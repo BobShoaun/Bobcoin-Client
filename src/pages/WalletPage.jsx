@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { calculateBalance, getHighestValidBlock } from "blockchain-crypto";
 
@@ -20,9 +20,9 @@ const WalletPage = () => {
 						{/* <p className="help">The public key of the miner, where to send block reward.</p> */}
 					</div>
 					<div className="control">
-						<a href={`/wallet/${publicKey}`} className="button is-info">
+						<Link to={`/wallet/${publicKey}`} className="button is-info">
 							Search
-						</a>
+						</Link>
 					</div>
 				</div>
 			</div>

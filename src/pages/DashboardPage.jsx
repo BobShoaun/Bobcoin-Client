@@ -35,7 +35,7 @@ const DashboardPage = () => {
 				<p className="subtitle is-5">Most recently mined blocks in the blockchain.</p>
 			</div>
 			<hr />
-			<div className="mb-6">
+			<div className="mb-6" style={{ overflow: "auto" }}>
 				<Blockchain />
 			</div>
 

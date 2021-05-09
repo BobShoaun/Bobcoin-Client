@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const Block = ({ block }) => (
-	<div className="card">
+	<div className="card" style={{ height: "100%", overflow: "visible" }}>
 		<div className="card-header">
 			<div className="card-header-title">
 				<h1 className="title is-6 mb-0">
@@ -25,7 +25,9 @@ const Block = ({ block }) => (
 
 			<h3 className="subtitle is-6 mb-1">Miner</h3>
 			<p className="subtitle is-7">
-				<Link to={`/wallet/${block.miner}`}>{block.miner ?? "-"}</Link>
+				<Link to={`/wallet/${block.transactions[0].outputs[0].address}`}>
+					{block.transactions[0].outputs[0].address ?? "-"}
+				</Link>
 			</p>
 			<Link to={`/block/${block.hash}`} className="button">
 				View

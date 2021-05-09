@@ -7,7 +7,7 @@ const Mempool = () => {
 	return (
 		<div>
 			{transactions.map(transaction => (
-				<div key={transaction.hash} className="mb-2">
+				<div key={transaction.hash} className="card card-content mb-2">
 					<Transaction transaction={transaction}></Transaction>
 				</div>
 			))}

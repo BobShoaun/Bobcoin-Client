@@ -6,12 +6,11 @@ import {
 	addBlockToBlockchain,
 } from "blockchain-crypto";
 
-export const transactionsSlice = createSlice({
+const transactionsSlice = createSlice({
 	name: "transactions",
 	initialState: [],
 	reducers: {
-		addTransactions: (state, transactions) => {
-			console.log(transactions);
+		addTransactions: (state, { payload: transactions }) => {
 			state.push(...transactions);
 		},
 	},

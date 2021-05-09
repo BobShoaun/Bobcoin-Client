@@ -7,7 +7,7 @@ const BlockPage = () => {
 	const { hash } = useParams();
 	const blockchain = useSelector(state => state.blockchain);
 	console.log("chain: ", blockchain);
-	const block = blockchain.find(block => block.hash == hash);
+	const block = blockchain.find(block => block.hash === hash);
 	console.log("block: ", block);
 
 	return (
@@ -27,7 +27,7 @@ const BlockPage = () => {
 					</tr>
 					<tr>
 						<td>Timestamp</td>
-						<td>{block.timestamp.toString()}</td>
+						<td>{new Date(block.timestamp).toString()}</td>
 					</tr>
 					<tr>
 						<td>Confirmations</td>

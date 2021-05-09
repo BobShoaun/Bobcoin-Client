@@ -6,10 +6,10 @@ import Block from "./Block";
 const Blockchain = () => {
 	const blockchain = useSelector(state => state.blockchain);
 	return (
-		<div className="columns" style={{ overflowX: "auto" }}>
-			{blockchain.map((block, index) => (
-				<div key={index} className="column is-3">
-					<Block block={block} index={index} className="" />
+		<div className="is-flex is-align-items-stretch">
+			{blockchain.map(block => (
+				<div key={block.hash} className="my-3 mx-2" style={{ flex: "0 1 15em", minWidth: "15em" }}>
+					<Block block={block} className="" />
 				</div>
 			))}
 		</div>

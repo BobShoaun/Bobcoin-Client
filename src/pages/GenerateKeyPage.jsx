@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { generateKeyPair, getKeyPair } from "blockchain-crypto";
 
 const GenerateKeyPage = () => {
@@ -38,9 +39,9 @@ const GenerateKeyPage = () => {
 						></input>
 					</div>
 					<p className="control">
-						<a className="button is-light">
+						<Link className="button is-light">
 							<i className="material-icons md-18">content_copy</i>
-						</a>
+						</Link>
 					</p>
 				</div>
 				<p className="help is-danger">
@@ -55,9 +56,9 @@ const GenerateKeyPage = () => {
 						<input className="input" type="text" value={publicKey} readOnly />
 					</div>
 					<p className="control">
-						<a className="button is-light">
+						<Link className="button is-light">
 							<i className="material-icons md-18">content_copy</i>
-						</a>
+						</Link>
 					</p>
 				</div>
 				<p className="help is-primary">This is used as an address to send and receive BBC.</p>
