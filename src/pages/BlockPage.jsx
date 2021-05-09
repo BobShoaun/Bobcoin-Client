@@ -1,7 +1,10 @@
 import React from "react";
 import { useParams, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+
 import Transactions from "../components/Transactions";
+
+import { isBlockValid } from "blockchain-crypto";
 
 const BlockPage = () => {
 	const { hash } = useParams();
@@ -68,6 +71,20 @@ const BlockPage = () => {
 					<tr>
 						<td>Block reward</td>
 						<td>50 BBC</td>
+					</tr>
+					<tr>
+						<td>Valid</td>
+						<td>
+							{isBlockValid(block) ? (
+								<div className="icon has-text-success ml-auto">
+									<i className="material-icons">check_circle_outline</i>
+								</div>
+							) : (
+								<div className="icon has-text-danger ml-auto">
+									<i className="material-icons">dangerous</i>
+								</div>
+							)}
+						</td>
 					</tr>
 				</tbody>
 			</table>

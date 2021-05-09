@@ -61,7 +61,7 @@ const GenerateKeyPage = () => {
 						</Link>
 					</p>
 				</div>
-				<p className="help is-primary">This is used as an address to send and receive BBC.</p>
+				<p className="help">This is used as an address to send and receive BBC.</p>
 			</div>
 
 			<div className="buttons is-pulled-right">
