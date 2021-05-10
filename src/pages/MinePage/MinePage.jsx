@@ -51,6 +51,7 @@ const MinePage = () => {
 					className="input"
 					type="text"
 					placeholder="Enter block hash"
+					readOnly
 				></input>
 				<p className="help">Which block to mine from.</p>
 			</div>

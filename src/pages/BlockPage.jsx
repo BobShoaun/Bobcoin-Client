@@ -28,7 +28,7 @@ const BlockPage = () => {
 					</tr>
 					<tr>
 						<td>Timestamp</td>
-						<td>{new Date(block.timestamp).toString()}</td>
+						<td>{new Date(block.timestamp).toUTCString()}</td>
 					</tr>
 					<tr>
 						<td>Confirmations</td>
@@ -36,7 +36,15 @@ const BlockPage = () => {
 					</tr>
 					<tr>
 						<td>Miner</td>
-						<td>{block.miner ? <Link to={`/wallet/${block.miner}`}>{block.miner}</Link> : "-"}</td>
+						<td>
+							{block.transactions[0].outputs[0].address ? (
+								<Link to={`/wallet/${block.transactions[0].outputs[0].address}`}>
+									{block.transactions[0].outputs[0].address}
+								</Link>
+							) : (
+								"-"
+							)}
+						</td>
 					</tr>
 					<tr>
 						<td>Nonce</td>
