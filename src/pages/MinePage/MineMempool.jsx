@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
+import { calculateMempool } from "blockchain-crypto";
 import Transaction from "../../components/Transaction";
 
-const MineMempool = ({ updateSelectedTransactions }) => {
+const MineMempool = ({ headBlock, updateSelectedTransactions }) => {
 	const transactions = useSelector(state => state.transactions);
+	const blockchain = useSelector(state => state.blockchain);
 	const [selectedTxMap, setSelectedTxMap] = useState({});
+
+	const mempool = calculateMempool(blockchain, headBlock, transactions);
 
 	const handleChecked = tx => {
 		if (tx.hash in selectedTxMap)
@@ -24,7 +28,7 @@ const MineMempool = ({ updateSelectedTransactions }) => {
 
 	return (
 		<div>
-			{transactions.map(transaction => (
+			{mempool.map(transaction => (
 				<div
 					// onClick={() => handleChecked(transaction)}
 					key={transaction.hash}

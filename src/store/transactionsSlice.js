@@ -6,16 +6,23 @@ import {
 	addBlockToBlockchain,
 } from "blockchain-crypto";
 
+import socket from "./socket";
+
 const transactionsSlice = createSlice({
 	name: "transactions",
 	initialState: [],
 	reducers: {
-		addTransactions: (state, { payload: transactions }) => {
-			state.push(...transactions);
+		newTransaction: (state, { payload: transaction }) => {
+			state.push(transaction);
+			socket.emit("new transaction", transaction);
+		},
+		addTransaction: (state, { payload: transaction }) => {
+			console.log("received transaction:", transaction);
+			state.push(transaction);
 		},
 	},
 });
 
-export const { addTransactions } = transactionsSlice.actions;
+export const { newTransaction, addTransaction } = transactionsSlice.actions;
 
 export default transactionsSlice.reducer;

@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import Blockchain from "../../components/Blockchain";
+import MineBlockchain from "./MineBlockchain";
 import MineMempool from "./MineMempool";
 
-import { addBlock } from "../../store/blockchainSlice";
+import { newBlock } from "../../store/blockchainSlice";
 import { getHighestValidBlock, mineNewBlock } from "blockchain-crypto";
 
 const MinePage = () => {
@@ -12,22 +12,17 @@ const MinePage = () => {
 	const blockchain = useSelector(state => state.blockchain);
 	const transactions = useSelector(state => state.transactions);
 	const [miner, setMiner] = useState("");
-	// const [headBlock, setHeadBlock] = useState(getHighestValidBlock(blockchain));
+	const [headBlock, setHeadBlock] = useState(getHighestValidBlock(blockchain));
 	const [selectedTxMap, setSelectedTxMap] = useState({});
 
-	const headBlock = getHighestValidBlock(blockchain);
+	useEffect(() => {
+		setHeadBlock(getHighestValidBlock(blockchain));
+	}, [blockchain]);
 
 	const startMining = () => {
-		console.log("mining");
 		const txToMine = transactions.filter(tx => selectedTxMap[tx.hash]);
 		const block = mineNewBlock(headBlock, txToMine, miner);
-		dispatch(addBlock(block));
-	};
-
-	const headBlockChanged = height => {
-		// const prevBlock = this.props.blockchain.chain.find(block => block.height == height);
-		// if (prevBlock == undefined) return;
-		// this.setState({ prevBlock, mempool: this.props.blockchain.getMempool(prevBlock) });
+		dispatch(newBlock(block));
 	};
 
 	return (
@@ -50,8 +45,13 @@ const MinePage = () => {
 			</div>
 
 			<div className="field">
-				<label className="label">Mine from block</label>
-				<input className="input" type="text" placeholder="Enter block hash"></input>
+				<label className="label">Head block</label>
+				<input
+					value={headBlock.hash}
+					className="input"
+					type="text"
+					placeholder="Enter block hash"
+				></input>
 				<p className="help">Which block to mine from.</p>
 			</div>
 
@@ -62,14 +62,17 @@ const MinePage = () => {
 					</button>
 				</div>
 				<div className="" style={{ overflow: "auto" }}>
-					<Blockchain className=""></Blockchain>
+					<MineBlockchain selectBlock={setHeadBlock}></MineBlockchain>
 				</div>
 			</div>
 
 			<h3 className="title is-4">Mempool</h3>
 			<p className="subtitle">Select transactions to include from the mempool.</p>
 			<hr />
-			<MineMempool updateSelectedTransactions={txs => setSelectedTxMap(txs)}></MineMempool>
+			<MineMempool
+				headBlock={headBlock}
+				updateSelectedTransactions={txs => setSelectedTxMap(txs)}
+			></MineMempool>
 		</section>
 	);
 };

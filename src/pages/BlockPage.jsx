@@ -9,13 +9,11 @@ import { isBlockValid } from "blockchain-crypto";
 const BlockPage = () => {
 	const { hash } = useParams();
 	const blockchain = useSelector(state => state.blockchain);
-	console.log("chain: ", blockchain);
 	const block = blockchain.find(block => block.hash === hash);
-	console.log("block: ", block);
 
 	return (
 		<section className="section">
-			<h1 className="title is-2">Block {block.height}</h1>
+			<h1 className="title is-2">Block #{block.height}</h1>
 			<table className="table is-fullwidth mb-6">
 				<tbody>
 					<tr>
@@ -89,6 +87,7 @@ const BlockPage = () => {
 				</tbody>
 			</table>
 			<h2 className="title is-4 is-spaced">Transactions in this block</h2>
+			<hr />
 			<div className="mb-5">
 				{block.transactions.length ? (
 					<Transactions transactions={block.transactions}></Transactions>

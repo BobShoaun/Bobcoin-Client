@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { addTransactions } from "../store/transactionsSlice";
+import { newTransaction } from "../store/transactionsSlice";
 import { getKeyPair, createAndSignTransaction, getHighestValidBlock } from "blockchain-crypto";
 
 const NewTransactionPage = () => {
@@ -39,7 +39,7 @@ const NewTransactionPage = () => {
 			amount,
 			0
 		);
-		dispatch(addTransactions([tx]));
+		dispatch(newTransaction(tx));
 	};
 
 	return (
