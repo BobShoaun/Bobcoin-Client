@@ -21,4 +21,12 @@ socket.on("add transaction", transaction => {
 	store.dispatch(addTransaction(transaction));
 });
 
+socket.on("all blocks", blocks => {
+	console.log("all bloc: ", blocks);
+});
+
+socket.on("all transactions", transactions => {
+	console.log("all tx", transactions);
+});
+
 export default store;
