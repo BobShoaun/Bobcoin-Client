@@ -9,8 +9,7 @@ import {
 
 import socket from "./socket";
 
-const pk =
-	"04d5db8b8c280e9914f0a034ac3e0f9fcf169f20464a618789994f8a796663c3e241163c3a085a0039f5e5635a819941f798f27078aa65ecbbeb60d577c263412b";
+const pk = "21mm3w2KGGbya45eJ9DzezFBJYgaZoyQ8mw5pe3dDpwzZ";
 // sk: bob
 
 const blockchainSlice = createSlice({
