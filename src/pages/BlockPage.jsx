@@ -13,7 +13,14 @@ const BlockPage = () => {
 
 	return (
 		<section className="section">
-			<h1 className="title is-2">Block #{block.height}</h1>
+			<div className="is-flex is-align-items-center mb-5">
+				<h1 className="title is-2 mb-0">Block #{block.height}</h1>
+				<div className="has-text-right ml-auto">
+					<button className="button is-link mr-3">Previous Block</button>
+					<button className="button is-link">Next Block</button>
+				</div>
+			</div>
+
 			<table className="table is-fullwidth mb-6">
 				<tbody>
 					<tr>

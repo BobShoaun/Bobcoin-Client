@@ -23,6 +23,11 @@ const GenerateKeyPage = () => {
 		}
 	};
 
+	const saveKey = () => {
+		localStorage.setItem("sk", secretKey);
+		localStorage.setItem("pk", publicKey);
+	};
+
 	return (
 		<section className="section">
 			<h1 className="title is-2">Generate Key</h1>
@@ -68,7 +73,9 @@ const GenerateKeyPage = () => {
 				<button onClick={generate} className="button is-warning">
 					Generate random key
 				</button>
-				<button className="button is-info">Save & Use key</button>
+				<button onClick={saveKey} className="button is-info">
+					Save & Use key
+				</button>
 			</div>
 			<div className="is-clearfix"></div>
 		</section>

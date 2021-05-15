@@ -23,6 +23,7 @@ const blockchainSlice = createSlice({
 		},
 		newBlock: (state, { payload: block }) => {
 			addBlockToBlockchain(state, block);
+
 			socket.emit("new block", block);
 		},
 		addBlock: (state, { payload: block }) => {

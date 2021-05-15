@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { newTransaction } from "../store/transactionsSlice";
@@ -10,9 +10,19 @@ const NewTransactionPage = () => {
 
 	const [showSK, setShowSK] = useState(false);
 	const [amount, setAmount] = useState("");
-	const [senderSK, setSenderSK] = useState("");
+	const [senderSK, setSenderSK] = useState(localStorage.getItem("sk"));
 	const [senderPK, setSenderPK] = useState("");
 	const [recipientPK, setRecipientPK] = useState("");
+
+	useEffect(() => {
+		try {
+			const { sk, pk } = getKeyPair(senderSK);
+			setSenderPK(pk);
+		} catch {
+			setSenderSK("");
+			setSenderPK("");
+		}
+	}, [senderSK]);
 
 	const handleAmountChange = amount => {
 		setAmount(amount);
@@ -22,7 +32,7 @@ const NewTransactionPage = () => {
 		try {
 			const { sk, pk } = getKeyPair(senderSK);
 			setSenderSK(sk);
-			setSenderPK(pk);
+			// setSenderPK(pk);
 		} catch {
 			setSenderSK("");
 			setSenderPK("");
@@ -55,6 +65,7 @@ const NewTransactionPage = () => {
 							className="input"
 							type={showSK ? "text" : "password"}
 							placeholder="Enter private key"
+							value={senderSK}
 							onChange={({ target: { value } }) => handleSenderKeyChange(value)}
 						></input>
 					</div>

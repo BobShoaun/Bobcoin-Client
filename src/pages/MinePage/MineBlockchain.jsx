@@ -6,9 +6,11 @@ import Block from "../../components/Block";
 const MineBlockchain = ({ selectBlock }) => {
 	const blockchain = useSelector(state => state.blockchain);
 
+	const reversedBlockchain = [...blockchain].reverse();
+
 	return (
 		<div className="is-flex">
-			{blockchain.map(block => (
+			{reversedBlockchain.map(block => (
 				<div
 					onClick={() => selectBlock(block)}
 					key={block.hash}

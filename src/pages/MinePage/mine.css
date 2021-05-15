@@ -1,0 +1,26 @@
+.terminal {
+	background: rgb(49, 49, 49);
+	border-radius: 0.5rem;
+	height: 20em;
+	color: yellow;
+	padding: 1em 2em 1em 2em;
+	font-family: monospace;
+	overflow: auto;
+	display: flex;
+	flex-direction: column-reverse;
+}
+
+.terminal-input {
+	background: transparent;
+	border: none;
+	color: white;
+	font-family: monospace;
+	font-size: 16px;
+	outline: none;
+	padding: 0;
+}
+
+.terminal-input::selection {
+	background: white;
+	color: black;
+}
