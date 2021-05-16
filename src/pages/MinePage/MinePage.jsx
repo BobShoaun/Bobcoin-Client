@@ -5,7 +5,9 @@ import MineBlockchain from "./MineBlockchain";
 import MineMempool from "./MineMempool";
 
 import { newBlock } from "../../store/blockchainSlice";
-import { getHighestValidBlock, mineNewBlock } from "blockchain-crypto";
+import { getHighestValidBlock } from "blockchain-crypto";
+
+import Miner from "./miner.worker";
 
 import "./mine.css";
 
@@ -23,32 +25,41 @@ const MinePage = () => {
 	}, [blockchain]);
 
 	const startMining = () => {
-		setTerminalLog(log => [...log, `Mining started from block: ${headBlock.hash}`]);
-
 		const txToMine = transactions.filter(tx => selectedTxMap[tx.hash]);
 
-		new Promise((resolve, reject) => {
-			let block = {};
-			for (block of mineNewBlock(blockchain, headBlock, txToMine, miner, target =>
-				console.log("target: ", target)
-			)) {
-				if (block.nonce % 10000 === 0) {
-					// setTerminalLog(log => [...log, `nonce reached: ${block.nonce}`]);
-					console.log("nonce: ", block.nonce);
-				}
-			}
-			resolve(block);
+		const worker = new Miner();
+		worker.postMessage({
+			blockchain,
+			headBlock,
+			txToMine,
+			miner,
 		});
 
-		// console.log("worker");
-		// const worker = new Worker("worker.js");
-		// worker.postMessage("hellow");
-		// worker.onmessage = function (e) {
-		// 	console.log("on mesg: ", e);
-		// 	setTerminalLog(log => [...log, "Mining successful!"]);
-		// };
+		worker.addEventListener("message", ({ data }) => {
+			switch (data.message) {
+				case "target":
+					setTerminalLog(log => [
+						...log,
+						"Mining started...",
+						`previous block: ${headBlock.hash}`,
+						`target hash: ${data.target}`,
+					]);
+					break;
+				case "nonce":
+					setTerminalLog(log => [...log, `nonce reached: ${data.block.nonce}`]);
+					break;
 
-		// dispatch(newBlock(block));
+				case "success":
+					setTerminalLog(log => [
+						...log,
+						`Mining successful! New block mined with...`,
+						`hash: ${data.block.hash}`,
+						`nonce: ${data.block.nonce}`,
+					]);
+					dispatch(newBlock(data.block));
+					break;
+			}
+		});
 	};
 
 	const submitCommand = event => {
