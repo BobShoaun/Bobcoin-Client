@@ -26,10 +26,29 @@ const MinePage = () => {
 		setTerminalLog(log => [...log, `Mining started from block: ${headBlock.hash}`]);
 
 		const txToMine = transactions.filter(tx => selectedTxMap[tx.hash]);
-		const block = mineNewBlock(headBlock, txToMine, miner);
-		dispatch(newBlock(block));
 
-		setTerminalLog(log => [...log, "Mining successful!"]);
+		new Promise((resolve, reject) => {
+			let block = {};
+			for (block of mineNewBlock(blockchain, headBlock, txToMine, miner, target =>
+				console.log("target: ", target)
+			)) {
+				if (block.nonce % 10000 === 0) {
+					// setTerminalLog(log => [...log, `nonce reached: ${block.nonce}`]);
+					console.log("nonce: ", block.nonce);
+				}
+			}
+			resolve(block);
+		});
+
+		// console.log("worker");
+		// const worker = new Worker("worker.js");
+		// worker.postMessage("hellow");
+		// worker.onmessage = function (e) {
+		// 	console.log("on mesg: ", e);
+		// 	setTerminalLog(log => [...log, "Mining successful!"]);
+		// };
+
+		// dispatch(newBlock(block));
 	};
 
 	const submitCommand = event => {
@@ -72,7 +91,7 @@ const MinePage = () => {
 									className="terminal-input"
 									name="command"
 									type="text"
-									autocomplete="off"
+									autoComplete="off"
 									style={{ width: "100%" }}
 								/>
 							</form>

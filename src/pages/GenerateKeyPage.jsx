@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { generateKeyPair, getKeyPair } from "blockchain-crypto";
 import QRCode from "qrcode";
@@ -8,7 +8,6 @@ const GenerateKeyPage = () => {
 	const [publicKey, setPublicKey] = useState("");
 	const [skQR, setSKQR] = useState("");
 	const [pkQR, setPKQR] = useState("");
-	const canvas = useRef(null);
 
 	const generate = () => {
 		const { sk, pk } = generateKeyPair();
