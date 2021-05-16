@@ -71,7 +71,7 @@ const MinePage = () => {
 				startMining();
 				break;
 			default:
-				setTerminalLog(log => [...log, "invalid command: " + command]);
+				setTerminalLog(log => [...log, "unknown command: " + command]);
 		}
 	};
 

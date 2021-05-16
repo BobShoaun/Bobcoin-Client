@@ -50,8 +50,8 @@ const GenerateKeyPage = () => {
 				<section className=" mr-6" style={{ width: "50%" }}>
 					<p
 						dangerouslySetInnerHTML={{ __html: skQR }}
-						className="ml-auto mx-auto"
-						style={{ width: "300px", height: "300px" }}
+						className="ml-auto mx-auto mb-5"
+						style={{ width: "300px", height: "300px", background: "lightgray" }}
 					></p>
 					<div className="field">
 						<label className="label">Private / Secret key</label>
@@ -80,8 +80,8 @@ const GenerateKeyPage = () => {
 				<section className="" style={{ width: "50%" }}>
 					<p
 						dangerouslySetInnerHTML={{ __html: pkQR }}
-						className="ml-auto mx-auto"
-						style={{ width: "300px", height: "300px" }}
+						className="ml-auto mx-auto mb-5"
+						style={{ width: "300px", height: "300px", background: "lightgray" }}
 					></p>
 					<div className="field">
 						<label className="label">Public key / Address</label>
