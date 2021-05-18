@@ -1,0 +1,32 @@
+.main::-webkit-outer-spin-button,
+.main::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+/* Firefox */
+.main[type="number"] {
+	-moz-appearance: textfield;
+}
+
+.main,
+.right,
+.main:hover,
+.main:focus,
+.right:hover,
+.right:focus {
+	border: none !important;
+	outline: none !important;
+	padding: 0 !important;
+	background: transparent !important;
+	box-shadow: none !important;
+}
+
+.main {
+	margin-right: 0.1em;
+}
+
+.right {
+	margin-left: 0.1em;
+	color: lightslategray !important;
+}

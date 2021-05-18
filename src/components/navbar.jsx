@@ -28,10 +28,10 @@ const Navbar = () => (
 					Overview
 				</Link>
 
-				<Link to="/" className="navbar-item">
+				<Link to="/blockchain" className="navbar-item">
 					Blockchain
 				</Link>
-				<Link to="/" className="navbar-item">
+				<Link to="/transactions" className="navbar-item">
 					Transactions
 				</Link>
 				<Link to="/mine" className="navbar-item">
@@ -47,7 +47,10 @@ const Navbar = () => (
 							<strong>Generate Key</strong>
 						</Link>
 
-						<Link to="/wallet" className="button is-light has-text-weight-bold">
+						<Link
+							to={`/wallet/${localStorage.getItem("pk")}`}
+							className="button is-light has-text-weight-bold"
+						>
 							<span className="icon material-icons">account_balance_wallet</span>
 							<span>My Wallet</span>
 						</Link>

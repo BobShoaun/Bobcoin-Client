@@ -5,7 +5,12 @@ import { calculateBalance, getHighestValidBlock } from "blockchain-crypto";
 
 const WalletPage = () => {
 	const blockchain = useSelector(state => state.blockchain.chain);
+	const params = useSelector(state => state.blockchain.params);
 	const { publicKey } = useParams();
+
+	const balance = (
+		calculateBalance(blockchain, getHighestValidBlock(blockchain), publicKey) / params.coin
+	).toFixed(8);
 
 	return (
 		<section className="section">
@@ -29,10 +34,7 @@ const WalletPage = () => {
 
 			<h2 className="subtitle is-4">Public key: {publicKey || "-"}</h2>
 			<p className="subtitle is-5">
-				Balance:{" "}
-				{parseFloat(calculateBalance(blockchain, getHighestValidBlock(blockchain), publicKey)) ||
-					"-"}{" "}
-				BBC
+				Balance: {balance} {params.symbol}
 			</p>
 		</section>
 	);

@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 
 import Transactions from "../components/Transactions";
 
-import { isBlockValid } from "blockchain-crypto";
+import { isBlockValid, calculateBlockReward } from "blockchain-crypto";
 
 const BlockPage = () => {
 	const { hash } = useParams();
@@ -80,12 +80,16 @@ const BlockPage = () => {
 					<tr>
 						<td>Total transaction volume</td>
 						<td>
-							{block.transactions.reduce((prev, curr) => prev + parseFloat(curr.amount), 0)} BBC
+							{block.transactions.reduce((prev, curr) => prev + parseFloat(curr.amount), 0)}{" "}
+							{params.symbol}
 						</td>
 					</tr>
 					<tr>
 						<td>Block reward</td>
-						<td>50 BBC</td>
+						<td>
+							{(calculateBlockReward(params, block.height) / params.coin).toFixed(8)}{" "}
+							{params.symbol}
+						</td>
 					</tr>
 					<tr>
 						<td>Valid</td>

@@ -4,12 +4,16 @@ import { useSelector, useDispatch } from "react-redux";
 import { newTransaction } from "../store/transactionsSlice";
 import { getKeyPair, createAndSignTransaction, getHighestValidBlock } from "blockchain-crypto";
 
+import CurrencyInput from "../components/CurrencyInput";
+
 const NewTransactionPage = () => {
 	const dispatch = useDispatch();
 	const blockchain = useSelector(state => state.blockchain.chain);
+	const params = useSelector(state => state.blockchain.params);
 
 	const [showSK, setShowSK] = useState(false);
 	const [amount, setAmount] = useState("");
+	const [fee, setFee] = useState("");
 	const [senderSK, setSenderSK] = useState(localStorage.getItem("sk"));
 	const [senderPK, setSenderPK] = useState("");
 	const [recipientPK, setRecipientPK] = useState("");
@@ -23,10 +27,6 @@ const NewTransactionPage = () => {
 			setSenderPK("");
 		}
 	}, [senderSK]);
-
-	const handleAmountChange = amount => {
-		setAmount(amount);
-	};
 
 	const handleSenderKeyChange = senderSK => {
 		try {
@@ -46,8 +46,8 @@ const NewTransactionPage = () => {
 			senderSK,
 			senderPK,
 			recipientPK,
-			parseInt(amount),
-			0
+			amount,
+			fee
 		);
 		dispatch(newTransaction(tx));
 	};
@@ -57,7 +57,7 @@ const NewTransactionPage = () => {
 			<h1 className="title is-2">New Transaction</h1>
 			<p className="subtitle is-4">Create and sign a new transaction.</p>
 
-			<div className="field">
+			<div className="field mb-4">
 				<label className="label">Sender's Private key</label>
 				<div className="field has-addons mb-0">
 					<div className="control is-expanded">
@@ -78,7 +78,7 @@ const NewTransactionPage = () => {
 				<p className="help">You can only spend from wallets which you have the private key.</p>
 			</div>
 
-			<div className="field">
+			<div className="field mb-4">
 				<label className="label">Sender's Public key</label>
 				<input
 					value={senderPK}
@@ -90,7 +90,7 @@ const NewTransactionPage = () => {
 				<p className="help">The public key of the sender generated from the private key above.</p>
 			</div>
 
-			<div className="field">
+			<div className="field mb-4">
 				<label className="label">Recipient's Public key</label>
 				<input
 					className="input"
@@ -101,18 +101,16 @@ const NewTransactionPage = () => {
 				{/* <p className="help">The public key of the recipient of this transaction.</p> */}
 			</div>
 
-			<div className="field mb-6">
-				<label className="label">Amount (BBC)</label>
-				<input
-					value={amount}
-					onChange={({ target }) => handleAmountChange(target.value)}
-					onBlur={({ target }) => handleAmountChange(Number(target.value).toFixed(6))}
-					step="0.01"
-					className="input"
-					type="number"
-					placeholder="Enter amount in BBC"
-				></input>
-				{/* <p className="help">The public key of the recipient of this transaction.</p> */}
+			<div className="is-flex mb-6">
+				<div className="field mr-5" style={{ flexGrow: 1 }}>
+					<label className="label">Amount ({params.symbol})</label>
+					<CurrencyInput onChange={setAmount} />
+				</div>
+
+				<div className="field" style={{ flexGrow: 1 }}>
+					<label className="label">Fee ({params.symbol})</label>
+					<CurrencyInput onChange={setFee} />
+				</div>
 			</div>
 
 			<div className="buttons is-pulled-right">

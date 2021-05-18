@@ -10,7 +10,6 @@ const TransactionPage = () => {
 
 	const transactions = useSelector(state => state.transactions);
 	const transaction = transactions.find(tx => tx.hash === hash);
-	console.log(transactions);
 
 	const totalInputAmount = transaction.inputs?.reduce((total, input) => total + input.amount, 0);
 	const totalOutputAmount = transaction.outputs?.reduce(

@@ -20,7 +20,7 @@ const blockchainSlice = createSlice({
 			name: "Bobcoin",
 			symbol: "BBC", // or BCX ?
 			coin: 100000000, // amounts are stored as the smallest unit, this is how many of the smallest unit that amounts to 1 coin.
-			initBlockReward: 50, // in coins
+			initBlockReward: 5000000005, // in bobberinos
 			blockRewardHalflife: 10, // in block height
 			initBlockDiff: 1,
 			initHashTarget: "0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",

@@ -8,6 +8,7 @@ import WalletPage from "./pages/WalletPage";
 import NewTransactionPage from "./pages/NewTransactionPage";
 import BlockPage from "./pages/BlockPage";
 import TransactionPage from "./pages/TransactionPage/TransactionPage";
+import BlockchainPage from "./pages/BlockchainPage/BlockchainPage";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
@@ -25,24 +26,17 @@ const App = () => {
 			<Navbar></Navbar>
 			<div className="container">
 				<Switch>
-					<Route path="/generate-key">
-						<GenerateKeyPage />
-					</Route>
-					<Route path="/new-transaction">
-						<NewTransactionPage />
-					</Route>
-					<Route path="/mine">
-						<MinePage />
-					</Route>
+					<Route path="/generate-key" component={GenerateKeyPage} />
+					<Route path="/new-transaction" component={NewTransactionPage} />
+					<Route path="/mine" component={MinePage} />
+					<Route path="/blockchain" component={BlockchainPage} />
 
 					<Route path="/block/:hash" component={BlockPage}></Route>
 					<Route path="/transaction/:hash" component={TransactionPage}></Route>
 
 					<Route path="/wallet/:publicKey" component={WalletPage}></Route>
 					<Route path="/wallet" component={WalletPage}></Route>
-					<Route path="/">
-						<DashboardPage />
-					</Route>
+					<Route path="/" component={DashboardPage} />
 				</Switch>
 			</div>
 			<Link
