@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import Block from "./Block";
 
 const Blockchain = () => {
-	const blockchain = useSelector(state => state.blockchain);
+	const blockchain = useSelector(state => state.blockchain.chain);
 	return (
 		<div className="is-flex">
 			{blockchain.map(block => (

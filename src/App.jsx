@@ -6,7 +6,8 @@ import GenerateKeyPage from "./pages/GenerateKeyPage";
 import MinePage from "./pages/MinePage/MinePage";
 import WalletPage from "./pages/WalletPage";
 import NewTransactionPage from "./pages/NewTransactionPage";
-import Block from "./pages/BlockPage";
+import BlockPage from "./pages/BlockPage";
+import TransactionPage from "./pages/TransactionPage/TransactionPage";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
@@ -34,7 +35,8 @@ const App = () => {
 						<MinePage />
 					</Route>
 
-					<Route path="/block/:hash" component={Block}></Route>
+					<Route path="/block/:hash" component={BlockPage}></Route>
+					<Route path="/transaction/:hash" component={TransactionPage}></Route>
 
 					<Route path="/wallet/:publicKey" component={WalletPage}></Route>
 					<Route path="/wallet" component={WalletPage}></Route>

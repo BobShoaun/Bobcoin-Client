@@ -22,7 +22,7 @@ const Transaction = ({ transaction }) => {
 		<div className="">
 			<div className="is-flex mb-1">
 				<h3 className="title is-6 mb-0">Hash: &nbsp;</h3>
-				<Link to="/" className="">
+				<Link to={`/transaction/${transaction.hash}`} className="">
 					<p className="subtitle is-6 mb-0"> {transaction.hash ?? "no hash"}</p>
 				</Link>
 				{isTransactionValid(transaction) ? (

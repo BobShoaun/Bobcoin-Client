@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { calculateBalance, getHighestValidBlock } from "blockchain-crypto";
 
 const WalletPage = () => {
-	const blockchain = useSelector(state => state.blockchain);
+	const blockchain = useSelector(state => state.blockchain.chain);
 	const { publicKey } = useParams();
 
 	return (

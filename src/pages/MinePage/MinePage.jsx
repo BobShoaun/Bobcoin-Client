@@ -13,7 +13,8 @@ import "./mine.css";
 
 const MinePage = () => {
 	const dispatch = useDispatch();
-	const blockchain = useSelector(state => state.blockchain);
+	const blockchain = useSelector(state => state.blockchain.chain);
+	const params = useSelector(state => state.blockchain.params);
 	const transactions = useSelector(state => state.transactions);
 	const [miner, setMiner] = useState(localStorage.getItem("pk"));
 	const [headBlock, setHeadBlock] = useState(getHighestValidBlock(blockchain));
@@ -29,6 +30,7 @@ const MinePage = () => {
 
 		const worker = new Miner();
 		worker.postMessage({
+			params,
 			blockchain,
 			headBlock,
 			txToMine,
@@ -83,7 +85,7 @@ const MinePage = () => {
 			</p>
 			<hr />
 
-			<div className="mb-5" style={{ overflow: "auto" }}>
+			<div className="mb-6">
 				<MineBlockchain selectBlock={setHeadBlock}></MineBlockchain>
 			</div>
 

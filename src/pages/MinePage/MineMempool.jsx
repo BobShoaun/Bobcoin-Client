@@ -6,7 +6,7 @@ import Transaction from "../../components/Transaction";
 
 const MineMempool = ({ headBlock, updateSelectedTransactions }) => {
 	const transactions = useSelector(state => state.transactions);
-	const blockchain = useSelector(state => state.blockchain);
+	const blockchain = useSelector(state => state.blockchain.chain);
 	const [selectedTxMap, setSelectedTxMap] = useState({});
 
 	const mempool = calculateMempool(blockchain, headBlock, transactions);

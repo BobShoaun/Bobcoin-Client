@@ -6,7 +6,7 @@ import { getKeyPair, createAndSignTransaction, getHighestValidBlock } from "bloc
 
 const NewTransactionPage = () => {
 	const dispatch = useDispatch();
-	const blockchain = useSelector(state => state.blockchain);
+	const blockchain = useSelector(state => state.blockchain.chain);
 
 	const [showSK, setShowSK] = useState(false);
 	const [amount, setAmount] = useState("");
@@ -46,7 +46,7 @@ const NewTransactionPage = () => {
 			senderSK,
 			senderPK,
 			recipientPK,
-			amount,
+			parseInt(amount),
 			0
 		);
 		dispatch(newTransaction(tx));

@@ -9,22 +9,25 @@ import "bulma/css/bulma.css";
 import store from "./store";
 import { Provider } from "react-redux";
 
+import { initialize } from "./store/blockchainSlice";
+
 // const store = createStore(
 // 	rootReducer,
 // 	loadFromLocalStorage(),
 // 	window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 // );
 
-store.subscribe(() => saveToLocalStorage(store.getState()));
+// store.subscribe(() => saveToLocalStorage(store.getState()));
+store.dispatch(initialize());
 
-function saveToLocalStorage(state) {
-	try {
-		const serializedState = JSON.stringify(state);
-		localStorage.setItem("state", serializedState);
-	} catch (e) {
-		console.log(e);
-	}
-}
+// function saveToLocalStorage(state) {
+// 	try {
+// 		const serializedState = JSON.stringify(state);
+// 		localStorage.setItem("state", serializedState);
+// 	} catch (e) {
+// 		console.log(e);
+// 	}
+// }
 
 // function loadFromLocalStorage() {
 // 	try {

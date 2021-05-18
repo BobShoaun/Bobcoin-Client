@@ -8,7 +8,9 @@ import { isBlockValid } from "blockchain-crypto";
 
 const BlockPage = () => {
 	const { hash } = useParams();
-	const blockchain = useSelector(state => state.blockchain);
+	const blockchain = useSelector(state => state.blockchain.chain);
+	const params = useSelector(state => state.blockchain.params);
+
 	const block = blockchain.find(block => block.hash === hash);
 
 	return (
@@ -88,7 +90,7 @@ const BlockPage = () => {
 					<tr>
 						<td>Valid</td>
 						<td>
-							{isBlockValid(block) ? (
+							{isBlockValid(params, block) ? (
 								<div className="icon has-text-success ml-auto">
 									<i className="material-icons">check_circle_outline</i>
 								</div>
