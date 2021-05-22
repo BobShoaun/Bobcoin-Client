@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { newTransaction } from "../store/transactionsSlice";
-import { getKeyPair, createAndSignTransaction, getHighestValidBlock } from "blockchain-crypto";
+import { getKeys, createAndSignTransaction, getHighestValidBlock } from "blockchain-crypto";
 
 import CurrencyInput from "../components/CurrencyInput";
 
@@ -16,36 +16,43 @@ const NewTransactionPage = () => {
 	const [fee, setFee] = useState("");
 	const [senderSK, setSenderSK] = useState(localStorage.getItem("sk"));
 	const [senderPK, setSenderPK] = useState("");
-	const [recipientPK, setRecipientPK] = useState("");
+	const [senderAdd, setSenderAdd] = useState("");
+	const [recipientAdd, setRecipientAdd] = useState("");
 
 	useEffect(() => {
 		try {
-			const { sk, pk } = getKeyPair(senderSK);
+			const { _, pk, address } = getKeys(params, senderSK);
 			setSenderPK(pk);
+			setSenderAdd(address);
 		} catch {
 			setSenderSK("");
 			setSenderPK("");
+			setSenderAdd("");
 		}
 	}, [senderSK]);
 
 	const handleSenderKeyChange = senderSK => {
 		try {
-			const { sk, pk } = getKeyPair(senderSK);
+			const { sk, pk, address } = getKeys(params, senderSK);
 			setSenderSK(sk);
-			// setSenderPK(pk);
+			setSenderPK(pk);
+			setSenderAdd(address);
 		} catch {
 			setSenderSK("");
 			setSenderPK("");
+			setSenderAdd("");
 		}
 	};
 
 	const createTransaction = () => {
 		const tx = createAndSignTransaction(
+			params,
 			blockchain,
 			getHighestValidBlock(blockchain),
 			senderSK,
 			senderPK,
-			recipientPK,
+			senderAdd,
+			recipientAdd,
 			amount,
 			fee
 		);
@@ -91,12 +98,24 @@ const NewTransactionPage = () => {
 			</div>
 
 			<div className="field mb-4">
-				<label className="label">Recipient's Public key</label>
+				<label className="label">Sender's Address</label>
+				<input
+					value={senderAdd}
+					className="input"
+					type="text"
+					placeholder="Input private key above to get address"
+					readOnly
+				></input>
+				<p className="help">The address of the sender generated from the public key above.</p>
+			</div>
+
+			<div className="field mb-4">
+				<label className="label">Recipient's Address</label>
 				<input
 					className="input"
 					type="text"
-					placeholder="Enter public key"
-					onChange={({ target: { value } }) => setRecipientPK(value)}
+					placeholder="Enter Address"
+					onChange={({ target: { value } }) => setRecipientAdd(value)}
 				></input>
 				{/* <p className="help">The public key of the recipient of this transaction.</p> */}
 			</div>

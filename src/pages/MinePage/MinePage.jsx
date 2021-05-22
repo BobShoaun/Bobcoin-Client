@@ -16,7 +16,7 @@ const MinePage = () => {
 	const blockchain = useSelector(state => state.blockchain.chain);
 	const params = useSelector(state => state.blockchain.params);
 	const transactions = useSelector(state => state.transactions);
-	const [miner, setMiner] = useState(localStorage.getItem("pk"));
+	const [miner, setMiner] = useState(localStorage.getItem("add"));
 	const [headBlock, setHeadBlock] = useState(getHighestValidBlock(blockchain));
 	const [selectedTxMap, setSelectedTxMap] = useState({});
 	const [terminalLog, setTerminalLog] = useState([]);

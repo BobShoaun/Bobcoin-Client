@@ -10,7 +10,7 @@ import {
 
 import socket from "./socket";
 
-const pk = "21mm3w2KGGbya45eJ9DzezFBJYgaZoyQ8mw5pe3dDpwzZ";
+const address = "8obdgEpD9kqU8RqAH6j53j9bX2U62VV";
 // sk: bob
 
 const blockchainSlice = createSlice({
@@ -20,14 +20,17 @@ const blockchainSlice = createSlice({
 			name: "Bobcoin",
 			symbol: "BBC", // or BCX ?
 			coin: 100000000, // amounts are stored as the smallest unit, this is how many of the smallest unit that amounts to 1 coin.
-			initBlockReward: 5000000005, // in bobberinos
-			blockRewardHalflife: 10, // in block height
+			version: 1,
+			addressPre: "06",
+			checksumLen: 4,
+			initBlkReward: 5000000005, // in coins
+			blkRewardHalflife: 10, // in block height
 			initBlockDiff: 1,
-			initHashTarget: "0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-			targetBlockTime: 5 * 60, // 5 minutes in seconds
+			initHashTarg: "0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+			targBlkTime: 5 * 60, // 5 minutes in seconds
 			diffRecalcHeight: 20, // in block height
-			minDiffCorrectionFactor: 1 / 4,
-			maxDiffCorrectionFactor: 4,
+			minDiffCorrFact: 1 / 4,
+			maxDiffCorrFact: 4,
 		},
 		chain: [],
 	},
@@ -36,7 +39,7 @@ const blockchainSlice = createSlice({
 			resetCache();
 			console.log(state);
 
-			const genesis = mineGenesisBlock(state.params, pk);
+			const genesis = mineGenesisBlock(state.params, address);
 			state.chain = createBlockchain([genesis]);
 		},
 		newBlock: (state, { payload: block }) => {

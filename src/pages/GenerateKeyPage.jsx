@@ -1,42 +1,44 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { generateKeyPair, getKeyPair } from "blockchain-crypto";
+import { generateKeys, getKeys } from "blockchain-crypto";
 import QRCode from "qrcode";
 
 const GenerateKeyPage = () => {
+	const params = useSelector(state => state.blockchain.params);
 	const [secretKey, setSecretKey] = useState("");
-	const [publicKey, setPublicKey] = useState("");
+	const [address, setAddress] = useState("");
 	const [skQR, setSKQR] = useState("");
-	const [pkQR, setPKQR] = useState("");
+	const [addQR, setAddQR] = useState("");
 
-	const generate = () => {
-		const { sk, pk } = generateKeyPair();
+	const generateRandom = () => {
+		const { sk, _, address } = generateKeys(params);
 		setSecretKey(sk);
-		setPublicKey(pk);
-		generateQRCode(sk, pk);
+		setAddress(address);
+		generateQRCode(sk, address);
 	};
 
 	const handleChangePrivateKey = privateKey => {
 		try {
-			const { sk, pk } = getKeyPair(privateKey);
+			const { sk, _, address } = getKeys(params, privateKey);
 			setSecretKey(sk);
-			setPublicKey(pk);
-			generateQRCode(sk, pk);
+			setAddress(address);
+			generateQRCode(sk, address);
 		} catch {
 			setSecretKey("");
-			setPublicKey("");
+			setAddress("");
 		}
 	};
 
-	const saveKey = () => {
+	const saveKeys = () => {
 		localStorage.setItem("sk", secretKey);
-		localStorage.setItem("pk", publicKey);
+		localStorage.setItem("add", address);
 	};
 
-	const generateQRCode = async (sk, pk) => {
+	const generateQRCode = async (sk, add) => {
 		try {
 			setSKQR(await QRCode.toString(sk));
-			setPKQR(await QRCode.toString(pk));
+			setAddQR(await QRCode.toString(add));
 		} catch (e) {
 			console.error(e);
 		}
@@ -79,15 +81,15 @@ const GenerateKeyPage = () => {
 
 				<section className="" style={{ width: "50%" }}>
 					<p
-						dangerouslySetInnerHTML={{ __html: pkQR }}
+						dangerouslySetInnerHTML={{ __html: addQR }}
 						className="ml-auto mx-auto mb-5"
 						style={{ width: "300px", height: "300px", background: "lightgray" }}
 					></p>
 					<div className="field">
-						<label className="label">Public key / Address</label>
+						<label className="label">{params.name} Address</label>
 						<div className="field has-addons mb-0">
 							<div className="control is-expanded">
-								<input className="input" type="text" value={publicKey} readOnly />
+								<input className="input" type="text" value={address} readOnly />
 							</div>
 							<p className="control">
 								<Link className="button is-light">
@@ -95,16 +97,16 @@ const GenerateKeyPage = () => {
 								</Link>
 							</p>
 						</div>
-						<p className="help">This is used as an address to send and receive BBC.</p>
+						<p className="help">This is used as an address to send and receive {params.symbol}.</p>
 					</div>
 				</section>
 			</div>
 
 			<div className="buttons is-pulled-right">
-				<button onClick={generate} className="button is-warning">
+				<button onClick={generateRandom} className="button is-warning">
 					Generate random key
 				</button>
-				<button onClick={saveKey} className="button is-info">
+				<button onClick={saveKeys} className="button is-info">
 					Save & Use key
 				</button>
 			</div>

@@ -34,9 +34,8 @@ const Transaction = ({ transaction }) => {
 				return <p>Miner's Fee Reward</p>;
 			default:
 				return (
-					<Link to={`/wallet/${transaction.inputs[0].address}`}>
-						{transaction.inputs[0].address}
-					</Link>
+					// change to sender address
+					<Link to={`/wallet/${transaction.inputs[0].txHash}`}>{transaction.inputs[0].txHash}</Link>
 				);
 		}
 	};

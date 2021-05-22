@@ -46,13 +46,13 @@ const BlockPage = () => {
 					<tr>
 						<td>Miner</td>
 						<td>
-							{block.transactions[0].outputs[0].address ? (
+							{/* {block.transactions[0].outputs[0].address ? (
 								<Link to={`/wallet/${block.transactions[0].outputs[0].address}`}>
 									{block.transactions[0].outputs[0].address}
 								</Link>
 							) : (
 								"-"
-							)}
+							)} */}
 						</td>
 					</tr>
 					<tr>
