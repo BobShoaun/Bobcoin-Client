@@ -118,8 +118,12 @@ const TransactionPage = () => {
 			<div className="mb-6">
 				<table className="mb-5" style={{ width: "100%", borderSpacing: "10px" }}>
 					<tbody>
-						{transaction.outputs.map(output => (
+						{transaction.outputs.map((output, index) => (
 							<>
+								<tr>
+									<td>Index</td>
+									<td>{index}</td>
+								</tr>
 								<tr>
 									<td>Address</td>
 									<td>
