@@ -48,7 +48,7 @@ const Block = ({ block }) => {
 
 					<h3 className="subtitle is-6 mb-1">Miner</h3>
 					<p className="subtitle is-7">
-						<Link to={`/wallet/${block.transactions[0].outputs[0].address}`}>
+						<Link to={`/address/${block.transactions[0].outputs[0].address}`}>
 							{block.transactions[0].outputs[0].address ?? "-"}
 						</Link>
 					</p>

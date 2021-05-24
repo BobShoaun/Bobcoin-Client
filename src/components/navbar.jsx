@@ -48,11 +48,11 @@ const Navbar = () => (
 						</Link>
 
 						<Link
-							to={`/wallet/${localStorage.getItem("pk")}`}
+							to={`/address/${localStorage.getItem("add")}`}
 							className="button is-light has-text-weight-bold"
 						>
 							<span className="icon material-icons">account_balance_wallet</span>
-							<span>My Wallet</span>
+							<span>My Address</span>
 						</Link>
 					</div>
 				</div>

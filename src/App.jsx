@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import DashboardPage from "./pages/DashboardPage";
 import GenerateKeyPage from "./pages/GenerateKeyPage";
 import MinePage from "./pages/MinePage/MinePage";
-import WalletPage from "./pages/WalletPage";
+import AddressPage from "./pages/AddressPage";
 import NewTransactionPage from "./pages/NewTransactionPage";
 import BlockPage from "./pages/BlockPage";
 import TransactionPage from "./pages/TransactionPage/TransactionPage";
@@ -34,8 +34,8 @@ const App = () => {
 					<Route path="/block/:hash" component={BlockPage}></Route>
 					<Route path="/transaction/:hash" component={TransactionPage}></Route>
 
-					<Route path="/wallet/:publicKey" component={WalletPage}></Route>
-					<Route path="/wallet" component={WalletPage}></Route>
+					<Route path="/address/:address" component={AddressPage}></Route>
+					<Route path="/address" component={AddressPage}></Route>
 					<Route path="/" component={DashboardPage} />
 				</Switch>
 			</div>

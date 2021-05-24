@@ -3,13 +3,19 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App.jsx";
 import "bulma/css/bulma.css";
-// import { createStore } from "redux";
-// import rootReducer from "./reducers";
 
-import store from "./store";
 import { Provider } from "react-redux";
+import store from "./store";
 
-import { initialize } from "./store/blockchainSlice";
+import { newBlock } from "./store/blockchainSlice";
+import { newTransaction } from "./store/transactionsSlice";
+
+import {
+	mineGenesisBlock,
+	resetTransactionSets,
+	resetUtxoSets,
+	createCoinbaseTransaction,
+} from "blockchain-crypto";
 
 // const store = createStore(
 // 	rootReducer,
@@ -18,7 +24,6 @@ import { initialize } from "./store/blockchainSlice";
 // );
 
 // store.subscribe(() => saveToLocalStorage(store.getState()));
-store.dispatch(initialize());
 
 // function saveToLocalStorage(state) {
 // 	try {
@@ -43,6 +48,21 @@ store.dispatch(initialize());
 // 		return undefined;
 // 	}
 // }
+
+resetTransactionSets();
+resetUtxoSets();
+
+const address = "8obdgEpD9kqU8RqAH6j53j9bX2U62VV";
+// sk: bob
+
+const blockchain = store.getState().blockchain.chain;
+const params = store.getState().blockchain.params;
+
+const coinbase = createCoinbaseTransaction(params, blockchain, null, [], address);
+store.dispatch(newTransaction(coinbase));
+
+const genesis = mineGenesisBlock(params, [coinbase]);
+store.dispatch(newBlock(genesis));
 
 console.log(store.getState());
 

@@ -6,11 +6,23 @@ import { isTransactionValid } from "blockchain-crypto";
 
 const Transaction = ({ transaction }) => {
 	const params = useSelector(state => state.blockchain.params);
+	const transactions = useSelector(state => state.transactions);
 
-	const totalInputAmount = transaction.inputs.reduce((total, input) => total + input.amount, 0);
+	console.log(transactions);
+
+	const findTxo = input => {
+		const tx = transactions.find(tx => tx.hash === input.txHash);
+		const output = tx.outputs[input.outIndex];
+		return output;
+	};
+
+	const isCoinbase = transaction.inputs.length === 0 && transaction.outputs.length === 1;
+	const totalInputAmount = transaction.inputs.reduce(
+		(total, input) => total + findTxo(input).amount,
+		0
+	);
 	const totalOutputAmount = transaction.outputs.reduce((total, output) => total + output.amount, 0);
 	const fee = totalInputAmount - totalOutputAmount;
-	const normalTransaction = transaction.type !== "coinbase" && transaction.type !== "fee";
 
 	const keyText = {
 		// maxWidth: "20em",
@@ -27,17 +39,11 @@ const Transaction = ({ transaction }) => {
 	};
 
 	const TransactionInputRender = () => {
-		switch (transaction.type) {
-			case "coinbase":
-				return <p>COINBASE (Newly Minted Coins)</p>;
-			case "fee":
-				return <p>Miner's Fee Reward</p>;
-			default:
-				return (
-					// change to sender address
-					<Link to={`/wallet/${transaction.inputs[0].txHash}`}>{transaction.inputs[0].txHash}</Link>
-				);
-		}
+		if (isCoinbase) return <p>COINBASE (Newly Minted Coins)</p>;
+		return transaction.inputs.map(input => {
+			const txo = findTxo(input);
+			return <Link to={`/address/${txo.address}`}>{txo.address}</Link>;
+		});
 	};
 
 	return (
@@ -48,7 +54,7 @@ const Transaction = ({ transaction }) => {
 					<p className="subtitle is-6 mb-0"> {transaction.hash ?? "no hash"}</p>
 				</Link>
 				<p className="ml-auto subtitle is-6 mb-0">
-					{new Date(transaction.outputs[0].timestamp).toUTCString()}
+					{new Date(transaction.timestamp).toUTCString()}
 				</p>
 				{isTransactionValid(transaction) ? (
 					<div className="icon has-text-success ml-3">
@@ -61,14 +67,14 @@ const Transaction = ({ transaction }) => {
 				)}
 			</div>
 
-			{normalTransaction && (
+			{/* {normalTransaction && (
 				<div className="is-flex is-justify-content-start is-align-items-baseline mb-2">
 					<h3 className="title is-6 mb-0">Signature: &nbsp;</h3>
 					<p style={signatureText} className="subtitle is-6 mb-0">
 						{transaction.signature}
 					</p>
 				</div>
-			)}
+			)} */}
 
 			<div className="is-flex mb-2">
 				<div style={keyText}>
@@ -79,7 +85,7 @@ const Transaction = ({ transaction }) => {
 				</div>
 				<div>
 					{transaction.outputs.map(output => (
-						<Link style={keyText} to={`/wallet/${output.address}`}>
+						<Link style={keyText} to={`/address/${output.address}`}>
 							{output.address}
 						</Link>
 					))}
@@ -99,7 +105,7 @@ const Transaction = ({ transaction }) => {
 				>
 					Amount = {(totalOutputAmount / params.coin).toFixed(8)} {params.symbol}
 				</span>
-				{normalTransaction && (
+				{!isCoinbase && (
 					<div>
 						<span
 							className="title is-6 is-inline-block mb-1 py-1 px-3"

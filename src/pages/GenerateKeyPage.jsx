@@ -50,11 +50,13 @@ const GenerateKeyPage = () => {
 
 			<div className="is-flex mb-5">
 				<section className=" mr-6" style={{ width: "50%" }}>
-					<p
-						dangerouslySetInnerHTML={{ __html: skQR }}
-						className="ml-auto mx-auto mb-5"
-						style={{ width: "300px", height: "300px", background: "lightgray" }}
-					></p>
+					<div className="box mx-auto mb-6" style={{ width: "300px", height: "300px" }}>
+						<div
+							dangerouslySetInnerHTML={{ __html: skQR }}
+							style={{ width: "100%", height: "100%", background: "lightgray" }}
+						></div>
+					</div>
+
 					<div className="field">
 						<label className="label">Private / Secret key</label>
 						<div className="field has-addons mb-0">
@@ -80,11 +82,12 @@ const GenerateKeyPage = () => {
 				</section>
 
 				<section className="" style={{ width: "50%" }}>
-					<p
-						dangerouslySetInnerHTML={{ __html: addQR }}
-						className="ml-auto mx-auto mb-5"
-						style={{ width: "300px", height: "300px", background: "lightgray" }}
-					></p>
+					<div className="box mx-auto mb-6" style={{ width: "300px", height: "300px" }}>
+						<div
+							dangerouslySetInnerHTML={{ __html: addQR }}
+							style={{ width: "100%", height: "100%", background: "lightgray" }}
+						></div>
+					</div>
 					<div className="field">
 						<label className="label">{params.name} Address</label>
 						<div className="field has-addons mb-0">

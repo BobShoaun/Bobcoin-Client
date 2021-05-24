@@ -1,10 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {
-	mineGenesisBlock,
-	createBlockchain,
-	resetCache,
-	addBlockToBlockchain,
-} from "blockchain-crypto";
 
 import socket from "./socket";
 

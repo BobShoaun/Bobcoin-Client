@@ -5,7 +5,8 @@ import MineBlockchain from "./MineBlockchain";
 import MineMempool from "./MineMempool";
 
 import { newBlock } from "../../store/blockchainSlice";
-import { getHighestValidBlock } from "blockchain-crypto";
+import { newTransaction } from "../../store/transactionsSlice";
+import { getHighestValidBlock, createCoinbaseTransaction } from "blockchain-crypto";
 
 import Miner from "./miner.worker";
 
@@ -28,13 +29,15 @@ const MinePage = () => {
 	const startMining = () => {
 		const txToMine = transactions.filter(tx => selectedTxMap[tx.hash]);
 
+		const coinbase = createCoinbaseTransaction(params, blockchain, headBlock, txToMine, miner);
+		dispatch(newTransaction(coinbase));
+
 		const worker = new Miner();
 		worker.postMessage({
 			params,
 			blockchain,
 			headBlock,
-			txToMine,
-			miner,
+			txToMine: [coinbase, ...txToMine],
 		});
 
 		worker.addEventListener("message", ({ data }) => {
@@ -93,7 +96,7 @@ const MinePage = () => {
 				<section className="terminal mr-6" style={{ width: "60%" }}>
 					<div className="mt-auto" style={{ width: "100%" }}>
 						{terminalLog.map((log, index) => (
-							<p className="mb-2" key={index}>
+							<p className="mb-1" key={index}>
 								{log}
 							</p>
 						))}

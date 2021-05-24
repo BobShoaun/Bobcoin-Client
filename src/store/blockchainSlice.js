@@ -1,17 +1,8 @@
-/* global BigInt */
 import { createSlice } from "@reduxjs/toolkit";
 
-import {
-	mineGenesisBlock,
-	createBlockchain,
-	resetCache,
-	addBlockToBlockchain,
-} from "blockchain-crypto";
+import { addBlockToBlockchain, createBlockchain } from "blockchain-crypto";
 
 import socket from "./socket";
-
-const address = "8obdgEpD9kqU8RqAH6j53j9bX2U62VV";
-// sk: bob
 
 const blockchainSlice = createSlice({
 	name: "blockchain",
@@ -32,19 +23,11 @@ const blockchainSlice = createSlice({
 			minDiffCorrFact: 1 / 4,
 			maxDiffCorrFact: 4,
 		},
-		chain: [],
+		chain: createBlockchain([]),
 	},
 	reducers: {
-		initialize: state => {
-			resetCache();
-			console.log(state);
-
-			const genesis = mineGenesisBlock(state.params, address);
-			state.chain = createBlockchain([genesis]);
-		},
 		newBlock: (state, { payload: block }) => {
 			addBlockToBlockchain(state.chain, block);
-
 			socket.emit("new block", block);
 		},
 		addBlock: (state, { payload: block }) => {
@@ -54,6 +37,6 @@ const blockchainSlice = createSlice({
 	},
 });
 
-export const { initialize, addBlock, newBlock } = blockchainSlice.actions;
+export const { addBlock, newBlock } = blockchainSlice.actions;
 
 export default blockchainSlice.reducer;

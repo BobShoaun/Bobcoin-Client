@@ -2,13 +2,19 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { newTransaction } from "../store/transactionsSlice";
-import { getKeys, createAndSignTransaction, getHighestValidBlock } from "blockchain-crypto";
+import {
+	getKeys,
+	createAndSignTransaction,
+	getHighestValidBlock,
+	findUTXOs,
+} from "blockchain-crypto";
 
 import CurrencyInput from "../components/CurrencyInput";
 
 const NewTransactionPage = () => {
 	const dispatch = useDispatch();
 	const blockchain = useSelector(state => state.blockchain.chain);
+	const transactions = useSelector(state => state.transactions);
 	const params = useSelector(state => state.blockchain.params);
 
 	const [showSK, setShowSK] = useState(false);
@@ -45,10 +51,11 @@ const NewTransactionPage = () => {
 	};
 
 	const createTransaction = () => {
+		const headBlock = getHighestValidBlock(blockchain);
+		const utxos = findUTXOs(blockchain, headBlock, transactions, senderAdd, amount + fee);
 		const tx = createAndSignTransaction(
 			params,
-			blockchain,
-			getHighestValidBlock(blockchain),
+			utxos,
 			senderSK,
 			senderPK,
 			senderAdd,
@@ -82,7 +89,7 @@ const NewTransactionPage = () => {
 						</button>
 					</p>
 				</div>
-				<p className="help">You can only spend from wallets which you have the private key.</p>
+				<p className="help">You can only spend from an address which you have the private key.</p>
 			</div>
 
 			<div className="field mb-4">

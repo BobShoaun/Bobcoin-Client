@@ -7,6 +7,7 @@ import Mempool from "../components/Mempool";
 
 const DashboardPage = () => {
 	const transactions = useSelector(state => state.transactions);
+	const params = useSelector(state => state.blockchain.params);
 	return (
 		<section className="section">
 			<div className="columns mb-4">
@@ -25,7 +26,9 @@ const DashboardPage = () => {
 			</div>
 
 			<span className="material-icons mr-2">monetization_on</span>
-			<h2 className="subtitle is-3 is-inline-block">Bobcoin BBC</h2>
+			<h2 className="subtitle is-3 is-inline-block">
+				{params.name} {params.symbol}
+			</h2>
 			<div>
 				<button className="button is-info is-pulled-right has-text-weight-semibold">
 					<span className="icon material-icons">grid_view</span>

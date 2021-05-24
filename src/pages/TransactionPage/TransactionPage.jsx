@@ -45,7 +45,7 @@ const TransactionPage = () => {
 					</tr>
 					<tr>
 						<td>Timestamp</td>
-						<td>{transaction.outputs[0].timestamp}</td>
+						<td>{transaction.timestamp}</td>
 					</tr>
 					<tr>
 						<td>Confirmations</td>
@@ -65,7 +65,7 @@ const TransactionPage = () => {
 					</tr>
 					<tr>
 						<td>Signature</td>
-						<td>{transaction.signature}</td>
+						{/* <td>{transaction.signature}</td> */}
 					</tr>
 				</tbody>
 			</table>
