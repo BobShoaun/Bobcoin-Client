@@ -8,7 +8,7 @@ const Transaction = ({ transaction }) => {
 	const params = useSelector(state => state.blockchain.params);
 	const transactions = useSelector(state => state.transactions);
 
-	console.log(transactions);
+	console.log(transaction);
 
 	const findTxo = input => {
 		const tx = transactions.find(tx => tx.hash === input.txHash);
@@ -36,14 +36,6 @@ const Transaction = ({ transaction }) => {
 		whiteSpace: "nowrap",
 		overflow: "hidden",
 		textOverflow: "ellipsis",
-	};
-
-	const TransactionInputRender = () => {
-		if (isCoinbase) return <p>COINBASE (Newly Minted Coins)</p>;
-		return transaction.inputs.map(input => {
-			const txo = findTxo(input);
-			return <Link to={`/address/${txo.address}`}>{txo.address}</Link>;
-		});
 	};
 
 	return (
@@ -77,15 +69,35 @@ const Transaction = ({ transaction }) => {
 			)} */}
 
 			<div className="is-flex mb-2">
-				<div style={keyText}>
-					<TransactionInputRender />
-				</div>
+				{isCoinbase ? (
+					<p>COINBASE (Newly Minted Coins)</p>
+				) : (
+					<div>
+						{transaction.inputs.map(input => {
+							const txo = findTxo(input);
+							return (
+								<Link className="is-block" to={`/address/${txo.address}`}>
+									{txo.address}
+								</Link>
+							);
+						})}
+					</div>
+				)}
+				{!isCoinbase && (
+					<div className="ml-auto">
+						{transaction.inputs.map(input => (
+							<p className="has-text-weight-medium">
+								{(findTxo(input).amount / params.coin).toFixed(8)} {params.symbol}
+							</p>
+						))}
+					</div>
+				)}
 				<div className="has-text-centered" style={{ width: "5em" }}>
 					<i className="material-icons">arrow_right_alt</i>
 				</div>
 				<div>
 					{transaction.outputs.map(output => (
-						<Link style={keyText} to={`/address/${output.address}`}>
+						<Link className="is-block" to={`/address/${output.address}`}>
 							{output.address}
 						</Link>
 					))}

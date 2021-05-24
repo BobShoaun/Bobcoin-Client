@@ -38,7 +38,7 @@ const Block = ({ block }) => {
 						<Link to={`/block/${block.hash}`}>{block.hash}</Link>
 					</p>
 
-					<h3 className="subtitle is-6 mb-1">Previous hash</h3>
+					<h3 className="subtitle is-6 mb-1">Previous Block</h3>
 					<p className="subtitle is-7">
 						<Link to={`/block/${block.previousHash}`}>{block.previousHash ?? "-"}</Link>
 					</p>

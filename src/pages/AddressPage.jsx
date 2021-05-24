@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-import { calculateBalance, getHighestValidBlock } from "blockchain-crypto";
+import { calculateBalance, getHighestValidBlock, isAddressValid } from "blockchain-crypto";
 import QRCode from "qrcode";
 
 const AddressPage = () => {
@@ -47,6 +47,20 @@ const AddressPage = () => {
 						<tr>
 							<td>Address</td>
 							<td>{address}</td>
+						</tr>
+						<tr>
+							<td>Valid?</td>
+							<td>
+								{isAddressValid(params, address) ? (
+									<div className="icon has-text-success ml-auto">
+										<i className="material-icons">check_circle_outline</i>
+									</div>
+								) : (
+									<div className="icon has-text-danger ml-auto">
+										<i className="material-icons">dangerous</i>
+									</div>
+								)}
+							</td>
 						</tr>
 						<tr>
 							<td>Transaction count</td>

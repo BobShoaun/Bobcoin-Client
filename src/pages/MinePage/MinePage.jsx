@@ -116,7 +116,7 @@ const MinePage = () => {
 				</section>
 				<section style={{ width: "40%" }}>
 					<div className="field mb-4">
-						<label className="label">Miner's Public key</label>
+						<label className="label">Miner's Address</label>
 						<input
 							onChange={({ target }) => setMiner(target.value)}
 							value={miner}
@@ -124,7 +124,7 @@ const MinePage = () => {
 							type="text"
 							placeholder="Input miner's key"
 						></input>
-						<p className="help">The public key of the miner, where to send block reward.</p>
+						<p className="help">The address of the miner, where to send block reward and fees.</p>
 					</div>
 
 					<div className="field mb-5">

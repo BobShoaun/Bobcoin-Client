@@ -9,6 +9,7 @@ const TransactionPage = () => {
 	const { hash } = useParams();
 
 	const transactions = useSelector(state => state.transactions);
+	const params = useSelector(state => state.blockchain.params);
 	const transaction = transactions.find(tx => tx.hash === hash);
 
 	const totalInputAmount = transaction.inputs?.reduce((total, input) => total + input.amount, 0);
@@ -69,6 +70,73 @@ const TransactionPage = () => {
 					</tr>
 				</tbody>
 			</table>
+
+			<h1 className="title is-4">Inputs</h1>
+
+			<div className="mb-6">
+				<table className="-table mb-5" style={{ width: "100%", borderSpacing: "10px" }}>
+					<tbody>
+						{transaction.inputs.map(input => (
+							<>
+								<tr>
+									<td>Transaction Hash</td>
+									<td>
+										<Link to={`./${input.txHash}`}>{input.txHash}</Link>
+									</td>
+								</tr>
+								<tr>
+									<td>Output Index</td>
+									<td>{input.outIndex}</td>
+								</tr>
+								<tr>
+									<td>Public Key</td>
+									<td>{input.publicKey}</td>
+								</tr>
+								<tr>
+									<td>Signature</td>
+
+									<td
+										className="pb-5"
+										style={{
+											display: "block",
+											whiteSpace: "wrap",
+											maxWidth: "60em",
+											wordWrap: "break-word",
+										}}
+									>
+										{input.signature}
+									</td>
+								</tr>
+							</>
+						))}
+					</tbody>
+				</table>
+			</div>
+
+			<h1 className="title is-4">Outputs</h1>
+
+			<div className="mb-6">
+				<table className="mb-5" style={{ width: "100%", borderSpacing: "10px" }}>
+					<tbody>
+						{transaction.outputs.map(output => (
+							<>
+								<tr>
+									<td>Address</td>
+									<td>
+										<Link to={`/address/${output.address}`}>{output.address}</Link>
+									</td>
+								</tr>
+								<tr>
+									<td>Amount</td>
+									<td className="pb-5 has-text-weight-medium">
+										{(output.amount / params.coin).toFixed(8)} {params.symbol}
+									</td>
+								</tr>
+							</>
+						))}
+					</tbody>
+				</table>
+			</div>
 		</section>
 	);
 };
