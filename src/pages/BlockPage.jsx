@@ -4,7 +4,11 @@ import { useSelector } from "react-redux";
 
 import Transactions from "../components/Transactions";
 
-import { isBlockValid, calculateBlockReward } from "blockchain-crypto";
+import {
+	calculateBlockReward,
+	getBlockConfirmations,
+	isBlockValidInBlockchain,
+} from "blockchain-crypto";
 
 const BlockPage = () => {
 	const { hash } = useParams();
@@ -41,7 +45,7 @@ const BlockPage = () => {
 					</tr>
 					<tr>
 						<td>Confirmations</td>
-						<td>idk</td>
+						<td>{getBlockConfirmations(blockchain, block)}</td>
 					</tr>
 					<tr>
 						<td>Miner</td>
@@ -94,7 +98,7 @@ const BlockPage = () => {
 					<tr>
 						<td>Valid</td>
 						<td>
-							{isBlockValid(params, block) ? (
+							{isBlockValidInBlockchain(params, blockchain, block) ? (
 								<div className="icon has-text-success ml-auto">
 									<i className="material-icons">check_circle_outline</i>
 								</div>

@@ -16,7 +16,7 @@ const BlockchainPage = () => {
 			<hr />
 			<div className="blockchain">
 				{blockchain.map(block => (
-					<Block block={block} />
+					<Block key={block.hash} block={block} />
 				))}
 			</div>
 		</section>

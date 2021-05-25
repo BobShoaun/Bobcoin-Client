@@ -2,8 +2,15 @@ import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-import { calculateBalance, getHighestValidBlock, isAddressValid } from "blockchain-crypto";
+import {
+	calculateBalance,
+	getHighestValidBlock,
+	isAddressValid,
+	getAddressTxs,
+} from "blockchain-crypto";
 import QRCode from "qrcode";
+
+import Transaction from "../components/Transaction";
 
 const AddressPage = () => {
 	const blockchain = useSelector(state => state.blockchain.chain);
@@ -16,6 +23,8 @@ const AddressPage = () => {
 	const balance = (
 		calculateBalance(blockchain, getHighestValidBlock(blockchain), address) / params.coin
 	).toFixed(8);
+
+	const [receivedTxs, sentTxs] = getAddressTxs(blockchain, address);
 
 	return (
 		<section className="section">
@@ -84,8 +93,23 @@ const AddressPage = () => {
 				</table>
 			</div>
 
-			<h1 className="title is-3">Transactions</h1>
+			<h1 className="title is-3">Inbound Transactions</h1>
 			<hr />
+			<div className="mb-6">
+				{receivedTxs.map(tx => (
+					<div className="card card-content">
+						<Transaction transaction={tx} key={tx.hash} />
+					</div>
+				))}
+			</div>
+
+			<h1 className="title is-3">Outbound Transactions</h1>
+			<hr />
+			{sentTxs.map(tx => (
+				<div className="card card-content">
+					<Transaction transaction={tx} key={tx.hash} />
+				</div>
+			))}
 		</section>
 	);
 };

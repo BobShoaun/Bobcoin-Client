@@ -2,10 +2,12 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-import { isBlockValid } from "blockchain-crypto";
+import { isBlockValidInBlockchain } from "blockchain-crypto";
 
 const Block = ({ block }) => {
 	const params = useSelector(state => state.blockchain.params);
+	const blockchain = useSelector(state => state.blockchain.chain);
+
 	return (
 		<div
 			className="card is-flex is-flex-direction-column"
@@ -17,7 +19,7 @@ const Block = ({ block }) => {
 						Block #{block.height}
 						{block.height === 0 && <span className="subtitle is-6"> (Genesis)</span>}
 					</h1>
-					{isBlockValid(params, block) ? (
+					{isBlockValidInBlockchain(params, blockchain, block) ? (
 						<div className="icon has-text-success ml-auto">
 							<i className="material-icons">check_circle_outline</i>
 						</div>

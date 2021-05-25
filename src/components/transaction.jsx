@@ -2,13 +2,11 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-import { isTransactionValid } from "blockchain-crypto";
+import { isTransactionValid, isCoinbaseTxValid } from "blockchain-crypto";
 
 const Transaction = ({ transaction }) => {
 	const params = useSelector(state => state.blockchain.params);
 	const transactions = useSelector(state => state.transactions);
-
-	console.log(transaction);
 
 	const findTxo = input => {
 		const tx = transactions.find(tx => tx.hash === input.txHash);
@@ -23,6 +21,10 @@ const Transaction = ({ transaction }) => {
 	);
 	const totalOutputAmount = transaction.outputs.reduce((total, output) => total + output.amount, 0);
 	const fee = totalInputAmount - totalOutputAmount;
+
+	const isValid = isCoinbase
+		? isCoinbaseTxValid(params, transaction)
+		: isTransactionValid(params, transaction);
 
 	const keyText = {
 		// maxWidth: "20em",
@@ -48,7 +50,7 @@ const Transaction = ({ transaction }) => {
 				<p className="ml-auto subtitle is-6 mb-0">
 					{new Date(transaction.timestamp).toUTCString()}
 				</p>
-				{isTransactionValid(transaction) ? (
+				{isValid ? (
 					<div className="icon has-text-success ml-3">
 						<i className="material-icons">check_circle_outline</i>
 					</div>
