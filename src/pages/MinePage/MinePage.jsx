@@ -6,7 +6,7 @@ import MineMempool from "./MineMempool";
 
 import { newBlock } from "../../store/blockchainSlice";
 import { newTransaction } from "../../store/transactionsSlice";
-import { getHighestValidBlock, createCoinbaseTransaction } from "blockchain-crypto";
+import { getHighestValidBlock, createCoinbaseTransaction } from "blockcrypto";
 
 import Miner from "./miner.worker";
 

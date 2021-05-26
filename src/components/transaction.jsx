@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-import { isTransactionValid, isCoinbaseTxValid } from "blockchain-crypto";
+import { isTransactionValid, isCoinbaseTxValid } from "blockcrypto";
 
 const Transaction = ({ transaction }) => {
 	const params = useSelector(state => state.blockchain.params);
@@ -22,9 +22,14 @@ const Transaction = ({ transaction }) => {
 	const totalOutputAmount = transaction.outputs.reduce((total, output) => total + output.amount, 0);
 	const fee = totalInputAmount - totalOutputAmount;
 
-	const isValid = isCoinbase
-		? isCoinbaseTxValid(params, transaction)
-		: isTransactionValid(params, transaction);
+	let isValid = false;
+	try {
+		isValid = isCoinbase
+			? isCoinbaseTxValid(params, transaction)
+			: isTransactionValid(params, transaction);
+	} catch (e) {
+		console.log(e);
+	}
 
 	const keyText = {
 		// maxWidth: "20em",

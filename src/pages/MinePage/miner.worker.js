@@ -1,4 +1,4 @@
-import { mineNewBlock } from "blockchain-crypto";
+import { mineNewBlock } from "blockcrypto";
 
 onmessage = mineBlock;
 

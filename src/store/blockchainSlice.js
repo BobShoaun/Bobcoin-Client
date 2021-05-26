@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { addBlockToBlockchain, createBlockchain } from "blockchain-crypto";
+import { addBlockToBlockchain, createBlockchain } from "blockcrypto";
 
 import socket from "./socket";
 
@@ -14,7 +14,7 @@ const blockchainSlice = createSlice({
 			version: 1,
 			addressPre: "06",
 			checksumLen: 4,
-			initBlkReward: 5000000005, // in coins
+			initBlkReward: 4000000005, // in coins
 			blkRewardHalflife: 10, // in block height
 			initBlockDiff: 1,
 			initHashTarg: "0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
@@ -34,9 +34,14 @@ const blockchainSlice = createSlice({
 			console.log("received block:", block);
 			addBlockToBlockchain(state.chain, block);
 		},
+		syncWithNode: (state, { payload }) => {
+			state.chain = createBlockchain(payload.blocks);
+			state.params = payload.params;
+			console.log("all bloc: ", state.chain);
+		},
 	},
 });
 
-export const { addBlock, newBlock } = blockchainSlice.actions;
+export const { addBlock, newBlock, syncWithNode } = blockchainSlice.actions;
 
 export default blockchainSlice.reducer;

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
-import { calculateMempool } from "blockchain-crypto";
+import { calculateMempool } from "blockcrypto";
 import Transaction from "../../components/Transaction";
 
 const MineMempool = ({ headBlock, updateSelectedTransactions }) => {

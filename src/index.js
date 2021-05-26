@@ -15,7 +15,7 @@ import {
 	resetTransactionSets,
 	resetUtxoSets,
 	createCoinbaseTransaction,
-} from "blockchain-crypto";
+} from "blockcrypto";
 
 // const store = createStore(
 // 	rootReducer,
@@ -52,17 +52,17 @@ import {
 resetTransactionSets();
 resetUtxoSets();
 
-const address = "8obdgEpD9kqU8RqAH6j53j9bX2U62VV";
-// sk: bob
+// const address = "8obdgEpD9kqU8RqAH6j53j9bX2U62VV";
+// // sk: bob
 
-const blockchain = store.getState().blockchain.chain;
-const params = store.getState().blockchain.params;
+// const blockchain = store.getState().blockchain.chain;
+// const params = store.getState().blockchain.params;
 
-const coinbase = createCoinbaseTransaction(params, blockchain, null, [], address);
-store.dispatch(newTransaction(coinbase));
+// const coinbase = createCoinbaseTransaction(params, blockchain, null, [], address);
+// store.dispatch(newTransaction(coinbase));
 
-const genesis = mineGenesisBlock(params, [coinbase]);
-store.dispatch(newBlock(genesis));
+// const genesis = mineGenesisBlock(params, [coinbase]);
+// store.dispatch(newBlock(genesis));
 
 console.log(store.getState());
 

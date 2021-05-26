@@ -2,12 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { newTransaction } from "../store/transactionsSlice";
-import {
-	getKeys,
-	createAndSignTransaction,
-	getHighestValidBlock,
-	findUTXOs,
-} from "blockchain-crypto";
+import { getKeys, createAndSignTransaction, getHighestValidBlock, findUTXOs } from "blockcrypto";
 
 import CurrencyInput from "../components/CurrencyInput";
 

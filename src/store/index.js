@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import blockchainReducer from "./blockchainSlice";
 import transactionsReducer from "./transactionsSlice";
 
-import { addBlock } from "./blockchainSlice";
+import { addBlock, syncWithNode } from "./blockchainSlice";
 import { addTransaction } from "./transactionsSlice";
 import socket from "./socket";
 
@@ -21,8 +21,8 @@ socket.on("add transaction", transaction => {
 	store.dispatch(addTransaction(transaction));
 });
 
-socket.on("all blocks", blocks => {
-	console.log("all bloc: ", blocks);
+socket.on("sync", payload => {
+	store.dispatch(syncWithNode(payload));
 });
 
 socket.on("all transactions", transactions => {

@@ -2,11 +2,18 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-import { isBlockValidInBlockchain } from "blockchain-crypto";
+import { isBlockValidInBlockchain } from "blockcrypto";
 
 const Block = ({ block }) => {
 	const params = useSelector(state => state.blockchain.params);
 	const blockchain = useSelector(state => state.blockchain.chain);
+
+	let isValid = false;
+	try {
+		isValid = isBlockValidInBlockchain(params, blockchain, block);
+	} catch (e) {
+		console.log(e);
+	}
 
 	return (
 		<div
@@ -19,7 +26,7 @@ const Block = ({ block }) => {
 						Block #{block.height}
 						{block.height === 0 && <span className="subtitle is-6"> (Genesis)</span>}
 					</h1>
-					{isBlockValidInBlockchain(params, blockchain, block) ? (
+					{isValid ? (
 						<div className="icon has-text-success ml-auto">
 							<i className="material-icons">check_circle_outline</i>
 						</div>

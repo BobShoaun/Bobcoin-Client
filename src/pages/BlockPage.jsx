@@ -4,11 +4,7 @@ import { useSelector } from "react-redux";
 
 import Transactions from "../components/Transactions";
 
-import {
-	calculateBlockReward,
-	getBlockConfirmations,
-	isBlockValidInBlockchain,
-} from "blockchain-crypto";
+import { calculateBlockReward, getBlockConfirmations, isBlockValidInBlockchain } from "blockcrypto";
 
 const BlockPage = () => {
 	const { hash } = useParams();
@@ -16,6 +12,13 @@ const BlockPage = () => {
 	const params = useSelector(state => state.blockchain.params);
 
 	const block = blockchain.find(block => block.hash === hash);
+
+	let isValid = false;
+	try {
+		isValid = isBlockValidInBlockchain(params, blockchain, block);
+	} catch (e) {
+		console.log(e);
+	}
 
 	return (
 		<section className="section">
@@ -98,7 +101,7 @@ const BlockPage = () => {
 					<tr>
 						<td>Valid</td>
 						<td>
-							{isBlockValidInBlockchain(params, blockchain, block) ? (
+							{isValid ? (
 								<div className="icon has-text-success ml-auto">
 									<i className="material-icons">check_circle_outline</i>
 								</div>

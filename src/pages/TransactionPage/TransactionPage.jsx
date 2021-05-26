@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { useParams, Link } from "react-router-dom";
 
 import Transaction from "../../components/Transaction";
-import { getBlockConfirmations, getTxBlock } from "blockchain-crypto";
+import { getBlockConfirmations, getTxBlock } from "blockcrypto";
 
 const TransactionPage = () => {
 	const { hash } = useParams();

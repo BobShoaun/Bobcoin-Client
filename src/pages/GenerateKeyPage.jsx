@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { generateKeys, getKeys } from "blockchain-crypto";
+import { generateKeys, getKeys } from "blockcrypto";
 import QRCode from "qrcode";
 
 const GenerateKeyPage = () => {

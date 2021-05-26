@@ -2,12 +2,7 @@ import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-import {
-	calculateBalance,
-	getHighestValidBlock,
-	isAddressValid,
-	getAddressTxs,
-} from "blockchain-crypto";
+import { calculateBalance, getHighestValidBlock, isAddressValid, getAddressTxs } from "blockcrypto";
 import QRCode from "qrcode";
 
 import Transaction from "../components/Transaction";
