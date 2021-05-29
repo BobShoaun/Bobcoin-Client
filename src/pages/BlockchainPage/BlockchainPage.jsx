@@ -10,9 +10,7 @@ const BlockchainPage = () => {
 	return (
 		<section className="section">
 			<h1 className="title is-2">Blockchain</h1>
-			<p className="subtitle is-4">
-				Explore the entire blockchain, stored locally on your computer.
-			</p>
+			<p className="subtitle is-4">Explore the entire blockchain.</p>
 			<hr />
 			<div className="blockchain">
 				{blockchain.map(block => (

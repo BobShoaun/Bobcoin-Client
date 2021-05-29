@@ -31,8 +31,8 @@ const Navbar = () => (
 				<Link to="/blockchain" className="navbar-item">
 					Blockchain
 				</Link>
-				<Link to="/transactions" className="navbar-item">
-					Transactions
+				<Link to="/new-transaction" className="navbar-item">
+					New Transactions
 				</Link>
 				<Link to="/mine" className="navbar-item">
 					Mine

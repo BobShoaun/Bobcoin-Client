@@ -68,7 +68,7 @@ const AddressPage = () => {
 						</tr>
 						<tr>
 							<td>Transaction count</td>
-							<td>0</td>
+							<td>{receivedTxs.length + sentTxs.length}</td>
 						</tr>
 						<tr>
 							<td>Total Received</td>
@@ -80,7 +80,7 @@ const AddressPage = () => {
 						</tr>
 						<tr>
 							<td>Final Balance</td>
-							<td>
+							<td className="has-text-weight-semibold">
 								{balance} {params.symbol}
 							</td>
 						</tr>
