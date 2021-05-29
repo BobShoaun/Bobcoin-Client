@@ -9,7 +9,7 @@ function mineBlock({ data }) {
 	for (block of mineNewBlock(params, blockchain, headBlock, txToMine, target =>
 		postMessage({ message: "target", target })
 	)) {
-		if (block.nonce % 10000 === 0 && block.nonce > 0) postMessage({ message: "nonce", block });
+		if (block.nonce % 20000 === 0 && block.nonce > 0) postMessage({ message: "nonce", block });
 	}
 	postMessage({ message: "success", block });
 }

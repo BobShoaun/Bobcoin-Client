@@ -6,9 +6,7 @@ import "bulma/css/bulma.css";
 
 import { Provider } from "react-redux";
 import store from "./store";
-
-import { newBlock } from "./store/blockchainSlice";
-import { newTransaction } from "./store/transactionsSlice";
+import { initializeSocket } from "./socket/socket";
 
 import {
 	mineGenesisBlock,
@@ -65,6 +63,8 @@ resetUtxoSets();
 // store.dispatch(newBlock(genesis));
 
 console.log(store.getState());
+
+initializeSocket();
 
 ReactDOM.render(
 	<React.StrictMode>

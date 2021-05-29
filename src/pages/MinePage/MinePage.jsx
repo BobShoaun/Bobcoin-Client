@@ -18,15 +18,24 @@ const MinePage = () => {
 	const params = useSelector(state => state.blockchain.params);
 	const transactions = useSelector(state => state.transactions);
 	const [miner, setMiner] = useState(localStorage.getItem("add"));
-	const [headBlock, setHeadBlock] = useState(getHighestValidBlock(blockchain));
+	const [headBlock, setHeadBlock] = useState(null);
 	const [selectedTxMap, setSelectedTxMap] = useState({});
 	const [terminalLog, setTerminalLog] = useState([]);
+	const [activeWorker, setActiveWorker] = useState(null);
 
 	useEffect(() => {
-		setHeadBlock(getHighestValidBlock(blockchain));
+		if (blockchain.length) setHeadBlock(getHighestValidBlock(blockchain));
 	}, [blockchain]);
 
 	const startMining = () => {
+		if (activeWorker) {
+			setTerminalLog(log => [
+				...log,
+				`\nAnother mining process is currently running, to terminate it type 'mine stop'.`,
+			]);
+			return;
+		}
+
 		const txToMine = transactions.filter(tx => selectedTxMap[tx.hash]);
 
 		const coinbase = createCoinbaseTransaction(params, blockchain, headBlock, txToMine, miner);
@@ -40,14 +49,14 @@ const MinePage = () => {
 			txToMine: [coinbase, ...txToMine],
 		});
 
+		setActiveWorker(worker);
+
 		worker.addEventListener("message", ({ data }) => {
 			switch (data.message) {
 				case "target":
 					setTerminalLog(log => [
 						...log,
-						"Mining started...",
-						`previous block: ${headBlock.hash}`,
-						`target hash: ${data.target}`,
+						`\nMining started...\nprevious block: ${headBlock.hash}\ntarget hash: ${data.target}\n `,
 					]);
 					break;
 				case "nonce":
@@ -57,14 +66,23 @@ const MinePage = () => {
 				case "success":
 					setTerminalLog(log => [
 						...log,
-						`Mining successful! New block mined with...`,
-						`hash: ${data.block.hash}`,
-						`nonce: ${data.block.nonce}`,
+						`\nMining successful! New block mined with...\nhash: ${data.block.hash}\nnonce: ${data.block.nonce}`,
 					]);
 					dispatch(newBlock(data.block));
+					setActiveWorker(null);
 					break;
 			}
 		});
+	};
+
+	const stopMining = () => {
+		if (activeWorker) {
+			activeWorker.terminate();
+			setTerminalLog(log => [...log, `\nMining operation stopped.`]);
+			setActiveWorker(null);
+			return;
+		}
+		setTerminalLog(log => [...log, `\nNo mining processes running.`]);
 	};
 
 	const submitCommand = event => {
@@ -75,8 +93,17 @@ const MinePage = () => {
 			case "mine start":
 				startMining();
 				break;
+			case "mine stop":
+				stopMining();
+				break;
+			case "help":
+				setTerminalLog(log => [
+					...log,
+					`\nCrappy ${params.name} mining terminal v1.0.0-beta\n\nList of commands:\nmine start\nmine stop\nhelp`,
+				]);
+				break;
 			default:
-				setTerminalLog(log => [...log, "unknown command: " + command]);
+				setTerminalLog(log => [...log, `\nunknown command: ${command}, type 'help' for help.`]);
 		}
 	};
 
@@ -94,11 +121,11 @@ const MinePage = () => {
 
 			<section className="is-flex mb-6">
 				<section className="terminal mr-6" style={{ width: "60%" }}>
-					<div className="mt-auto" style={{ width: "100%" }}>
+					<div className="mt-auto content" style={{ width: "100%" }}>
 						{terminalLog.map((log, index) => (
-							<p className="mb-1" key={index}>
+							<pre className="terminal-output" key={index}>
 								{log}
-							</p>
+							</pre>
 						))}
 						<div className="is-flex is-align-items-center">
 							<span className="mr-2">&gt;</span>
@@ -130,7 +157,7 @@ const MinePage = () => {
 					<div className="field mb-5">
 						<label className="label">Head block</label>
 						<input
-							value={headBlock.hash}
+							value={headBlock?.hash ?? "-"}
 							className="input"
 							type="text"
 							placeholder="Enter block hash"
@@ -139,8 +166,9 @@ const MinePage = () => {
 						<p className="help">Which block to mine from.</p>
 					</div>
 
-					<button onClick={startMining} className="button mb-0">
-						Start mining
+					<button onClick={activeWorker ? stopMining : startMining} className="button mb-0">
+						<i className="material-icons mr-2">engineering</i>
+						{activeWorker ? "Stop mining" : "Start mining"}
 					</button>
 				</section>
 			</section>

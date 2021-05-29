@@ -2,7 +2,7 @@
 	background: rgb(49, 49, 49);
 	border-radius: 0.5rem;
 	height: 25em;
-	color: yellow;
+	color: rgb(180, 180, 0);
 	padding: 1em 2em 1em 2em;
 	font-family: monospace;
 	overflow: auto;
@@ -13,7 +13,7 @@
 .terminal-input {
 	background: transparent;
 	border: none;
-	color: white;
+	color: yellow;
 	font-family: monospace;
 	font-size: 16px;
 	outline: none;
@@ -21,6 +21,19 @@
 }
 
 .terminal-input::selection {
+	background: yellow;
+	color: black;
+}
+
+.terminal-output {
+	color: white;
+	background: none;
+	padding: 0 !important;
+	margin: 0 !important;
+	font-size: 14px;
+}
+
+.terminal-output::selection {
 	background: white;
 	color: black;
 }

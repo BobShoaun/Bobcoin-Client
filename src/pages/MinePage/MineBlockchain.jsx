@@ -11,7 +11,7 @@ const MineBlockchain = ({ selectBlock }) => {
 	const reversedBlockchain = [...blockchain].reverse();
 
 	return (
-		<div className="is-flex is-align-items-center">
+		<div className="is-flex is-align-items-center is-justify-content-space-between">
 			<button
 				className="button py-6 px-1 mr-4"
 				disabled={page === 0}

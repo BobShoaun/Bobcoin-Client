@@ -92,8 +92,8 @@ const AddressPage = () => {
 			<hr />
 			<div className="mb-6">
 				{receivedTxs.map(tx => (
-					<div className="card card-content">
-						<Transaction transaction={tx} key={tx.hash} />
+					<div key={tx.hash} className="card card-content">
+						<Transaction transaction={tx} />
 					</div>
 				))}
 			</div>
@@ -101,8 +101,8 @@ const AddressPage = () => {
 			<h1 className="title is-3">Outbound Transactions</h1>
 			<hr />
 			{sentTxs.map(tx => (
-				<div className="card card-content">
-					<Transaction transaction={tx} key={tx.hash} />
+				<div key={tx.hash} className="card card-content">
+					<Transaction transaction={tx} />
 				</div>
 			))}
 		</section>

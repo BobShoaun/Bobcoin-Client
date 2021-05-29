@@ -80,10 +80,10 @@ const Transaction = ({ transaction }) => {
 					<p>COINBASE (Newly Minted Coins)</p>
 				) : (
 					<div>
-						{transaction.inputs.map(input => {
+						{transaction.inputs.map((input, index) => {
 							const txo = findTxo(input);
 							return (
-								<Link className="is-block" to={`/address/${txo.address}`}>
+								<Link key={index} className="is-block" to={`/address/${txo.address}`}>
 									{txo.address}
 								</Link>
 							);
@@ -92,8 +92,8 @@ const Transaction = ({ transaction }) => {
 				)}
 				{!isCoinbase && (
 					<div className="ml-auto">
-						{transaction.inputs.map(input => (
-							<p className="has-text-weight-medium">
+						{transaction.inputs.map((input, index) => (
+							<p key={index} className="has-text-weight-medium">
 								{(findTxo(input).amount / params.coin).toFixed(8)} {params.symbol}
 							</p>
 						))}
@@ -103,15 +103,15 @@ const Transaction = ({ transaction }) => {
 					<i className="material-icons">arrow_right_alt</i>
 				</div>
 				<div>
-					{transaction.outputs.map(output => (
-						<Link className="is-block" to={`/address/${output.address}`}>
+					{transaction.outputs.map((output, index) => (
+						<Link key={index} className="is-block" to={`/address/${output.address}`}>
 							{output.address}
 						</Link>
 					))}
 				</div>
 				<div className="ml-auto" style={{ width: "" }}>
-					{transaction.outputs.map(output => (
-						<p className="has-text-weight-medium">
+					{transaction.outputs.map((output, index) => (
+						<p key={index} className="has-text-weight-medium">
 							{(output.amount / params.coin).toFixed(8)} {params.symbol}
 						</p>
 					))}
