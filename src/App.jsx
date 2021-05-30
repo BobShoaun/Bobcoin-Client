@@ -46,7 +46,7 @@ const App = () => {
 				to="/new-transaction"
 				className="button is-link"
 			>
-				<span className="icon material-icons md-36">attach_money</span>
+				<span className="material-icons md-36">attach_money</span>
 				{buttonWidth === "auto" && <strong>New Transaction</strong>}
 			</Link>
 			<Footer></Footer>

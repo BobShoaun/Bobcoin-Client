@@ -16,10 +16,7 @@ const Block = ({ block }) => {
 	}
 
 	return (
-		<div
-			className="card is-flex is-flex-direction-column"
-			style={{ height: "100%", overflow: "visible" }}
-		>
+		<div className="card is-flex is-flex-direction-column h-100">
 			<div className="card-header">
 				<div className="card-header-title">
 					<h1 className="title is-6 mb-0">
@@ -38,8 +35,8 @@ const Block = ({ block }) => {
 				</div>
 			</div>
 			<div
-				className="card-content is-flex is-flex-direction-column is-justify-content-between"
-				style={{ flex: "1 0 auto" }}
+				className="card-content is-flex is-flex-direction-column"
+				style={{ flex: "1", fheight: "100%" }}
 			>
 				<div className="mb-4">
 					<h3 className="subtitle is-6 mb-1">Hash</h3>
@@ -62,7 +59,7 @@ const Block = ({ block }) => {
 						</Link>
 					</p>
 				</div>
-				<Link to={`/block/${block.hash}`} className="button mt-auto">
+				<Link to={`/block/${block.hash}`} className="button is-block mt-auto">
 					View
 				</Link>
 			</div>

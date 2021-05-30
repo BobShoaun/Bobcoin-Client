@@ -24,7 +24,7 @@ const Navbar = () => (
 
 		<div id="navbarBasicExample" className="navbar-menu">
 			<div className="navbar-start">
-				<Link to="/" className="navbar-item">
+				<Link to="/" className="navbar-item has-text-weight-semi-bold">
 					Overview
 				</Link>
 
@@ -32,7 +32,7 @@ const Navbar = () => (
 					Blockchain
 				</Link>
 				<Link to="/new-transaction" className="navbar-item">
-					New Transactions
+					Create Transaction
 				</Link>
 				<Link to="/mine" className="navbar-item">
 					Mine
@@ -43,7 +43,7 @@ const Navbar = () => (
 				<div className="navbar-item">
 					<div className="buttons">
 						<Link to="/generate-key" className="button is-warning">
-							<span className="icon material-icons">vpn_key</span>
+							<span className="material-icons mr-2">vpn_key</span>
 							<strong>Generate Key</strong>
 						</Link>
 
@@ -51,7 +51,7 @@ const Navbar = () => (
 							to={`/address/${localStorage.getItem("add")}`}
 							className="button is-light has-text-weight-bold"
 						>
-							<span className="icon material-icons">account_balance_wallet</span>
+							<span className="material-icons mr-2">account_balance_wallet</span>
 							<span>My Address</span>
 						</Link>
 					</div>

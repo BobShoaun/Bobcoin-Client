@@ -31,7 +31,7 @@ const DashboardPage = () => {
 			</h2>
 			<div>
 				<button className="button is-info is-pulled-right has-text-weight-semibold">
-					<span className="icon material-icons">grid_view</span>
+					<span className="material-icons mr-2">grid_view</span>
 					<span>View all Blocks</span>
 				</button>
 				<h2 className="title is-4">Blockchain</h2>
@@ -46,7 +46,7 @@ const DashboardPage = () => {
 				to="/new-transaction"
 				className="button is-info is-pulled-right has-text-weight-semibold"
 			>
-				<span className="icon material-icons">attach_money</span>
+				<span className="material-icons mr-2">attach_money</span>
 				<span>View all Transactions</span>
 			</Link>
 			<h2 className="title is-4">Mempool - Pending transactions</h2>

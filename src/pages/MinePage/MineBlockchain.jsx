@@ -11,9 +11,9 @@ const MineBlockchain = ({ selectBlock }) => {
 	const reversedBlockchain = [...blockchain].reverse();
 
 	return (
-		<div className="is-flex is-align-items-center is-justify-content-space-between">
+		<div className="is-flex is-justify-content-space-between h-100">
 			<button
-				className="button py-6 px-1 mr-4"
+				className="button py-6 px-1 mr-4 my-auto"
 				disabled={page === 0}
 				onClick={() => setPage(page => Math.max(page - 4, 0))}
 			>
@@ -21,11 +21,11 @@ const MineBlockchain = ({ selectBlock }) => {
 			</button>
 			{reversedBlockchain.slice(page, page + blocksPerPage).map(block => (
 				<div onClick={() => selectBlock(block)} key={block.hash} className="my-3 mx-2 is-clickable">
-					<Block block={block} className="" />
+					<Block block={block} />
 				</div>
 			))}
 			<button
-				className="button py-6 px-1 ml-4"
+				className="button py-6 px-1 ml-4 my-auto"
 				disabled={page === blockchain.length - blocksPerPage}
 				onClick={() => setPage(page => Math.min(page + 4, blockchain.length - blocksPerPage))}
 			>

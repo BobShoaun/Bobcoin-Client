@@ -1,8 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
+import "./styles/index.css";
 import App from "./App.jsx";
-import "bulma/css/bulma.css";
 
 import { Provider } from "react-redux";
 import store from "./store";
