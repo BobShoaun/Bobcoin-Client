@@ -11,6 +11,8 @@ const GenerateKeyPage = () => {
 	const [skQR, setSKQR] = useState("");
 	const [addQR, setAddQR] = useState("");
 
+	const [modalOpen, setModalOpen] = useState(false);
+
 	const generateRandom = () => {
 		const { sk, _, address } = generateKeys(params);
 		setSecretKey(sk);
@@ -33,6 +35,7 @@ const GenerateKeyPage = () => {
 	const saveKeys = () => {
 		localStorage.setItem("sk", secretKey);
 		localStorage.setItem("add", address);
+		setModalOpen(true);
 	};
 
 	const generateQRCode = async (sk, add) => {
@@ -47,8 +50,11 @@ const GenerateKeyPage = () => {
 	return (
 		<section className="section">
 			<h1 className="title is-2">Generate Key</h1>
+			<p className="subtitle is-4" style={{ marginBottom: "3em" }}>
+				A private key and address pair for you to store, send and receive {params.name}.
+			</p>
 
-			<div className="is-flex mb-5">
+			<div className="is-flex" style={{ marginBottom: "6em" }}>
 				<section className=" mr-6" style={{ width: "50%" }}>
 					<div className="box mx-auto mb-6" style={{ width: "300px", height: "300px" }}>
 						<div
@@ -107,13 +113,65 @@ const GenerateKeyPage = () => {
 
 			<div className="buttons is-pulled-right">
 				<button onClick={generateRandom} className="button is-warning">
+					<span className="material-icons-outlined mr-2">casino</span>
 					Generate random key
 				</button>
 				<button onClick={saveKeys} className="button is-info">
+					<span className="material-icons-outlined mr-2">save</span>
 					Save & Use key
 				</button>
 			</div>
 			<div className="is-clearfix"></div>
+
+			<div className={`modal ${modalOpen && "is-active"}`}>
+				<div className="modal-background"></div>
+				<div className="modal-card">
+					<section className="modal-card-body p-6" style={{ borderRadius: "1em" }}>
+						<div className="mb-5 is-flex is-align-items-center is-justify-content-center">
+							<i className="material-icons-outlined md-36 mr-3 has-text-black">vpn_key</i>
+							<h3 className="title is-3">Your keys are saved!</h3>
+						</div>
+						<div className="is-flex is-justify-items-center mb-0">
+							<div className="has-text-right mr-3">
+								<p className="subtitle is-6 mb-3">Private key:</p>
+								<p className="subtitle is-6">Address:</p>
+							</div>
+							<div className="has-text-weight-semibold">
+								<p className="-subtitle is-6 mb-2">{secretKey}</p>
+								<p className="-subtitle is-6">{address}</p>
+							</div>
+						</div>
+						<img
+							style={{ width: "80%", display: "block" }}
+							className="mx-auto"
+							src="images/key.jpg"
+							alt="transaction"
+						/>
+
+						<p className="subtitle is-5 has-text-centered">
+							Your private key and address has now been stored locally for your convenience. Now you
+							can start sending and receiving {params.name}s!
+						</p>
+						<p className="help has-text-centered mb-4">
+							*It is your responsiblity to keep your private keys safe, clear your browser's local
+							storage and use a cold storage for maximum security.
+						</p>
+						<div className="has-text-centered">
+							<button
+								onClick={() => setModalOpen(false)}
+								className="button is-primary has-text-weight-semibold"
+							>
+								Alright
+							</button>
+						</div>
+					</section>
+				</div>
+				<button
+					onClick={() => setModalOpen(false)}
+					className="modal-close is-large"
+					aria-label="close"
+				></button>
+			</div>
 		</section>
 	);
 };
