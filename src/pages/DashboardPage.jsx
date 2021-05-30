@@ -30,7 +30,7 @@ const DashboardPage = () => {
 				{params.name} {params.symbol}
 			</h2>
 			<div>
-				<button className="button is-info is-pulled-right has-text-weight-semibold">
+				<button className="button is-secondary is-pulled-right has-text-weight-semibold">
 					<span className="material-icons mr-2">grid_view</span>
 					<span>View all Blocks</span>
 				</button>
@@ -44,7 +44,7 @@ const DashboardPage = () => {
 
 			<Link
 				to="/new-transaction"
-				className="button is-info is-pulled-right has-text-weight-semibold"
+				className="button is-secondary is-pulled-right has-text-weight-semibold"
 			>
 				<span className="material-icons mr-2">attach_money</span>
 				<span>Make Transaction</span>

@@ -59,7 +59,7 @@ const Block = ({ block }) => {
 						</Link>
 					</p>
 				</div>
-				<Link to={`/block/${block.hash}`} className="button is-block mt-auto">
+				<Link to={`/block/${block.hash}`} className="button is-block mt-auto is-info">
 					View
 				</Link>
 			</div>

@@ -44,7 +44,7 @@ const App = () => {
 				onMouseEnter={() => setButtonWidth("auto")}
 				onMouseLeave={() => setButtonWidth("4rem")}
 				to="/new-transaction"
-				className="button is-link"
+				className="button is-info"
 			>
 				<span className="material-icons md-36">attach_money</span>
 				{buttonWidth === "auto" && <strong>New Transaction</strong>}
