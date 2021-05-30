@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import React, { useState, useRef } from "react";
+import { useParams, Link, useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import { calculateBalance, getHighestValidBlock, isAddressValid, getAddressTxs } from "blockcrypto";
@@ -8,6 +8,7 @@ import QRCode from "qrcode";
 import Transaction from "../components/Transaction";
 
 const AddressPage = () => {
+	const history = useHistory();
 	const blockchain = useSelector(state => state.blockchain.chain);
 	const params = useSelector(state => state.blockchain.params);
 	const { address } = useParams();
@@ -21,25 +22,39 @@ const AddressPage = () => {
 
 	const [receivedTxs, sentTxs] = getAddressTxs(blockchain, address);
 
+	let isValid = false;
+	try {
+		isValid = isAddressValid(params, address);
+	} catch {}
+
+	const searchInput = useRef();
+
+	const handleSearch = event => {
+		event.preventDefault();
+		history.push(`./${searchInput.current.value}`);
+	};
+
 	return (
 		<section className="section">
-			<h1 className="title is-2">Address</h1>
-			<p className="subtitle is-4">See this address's balance and details.</p>
-
-			{/* <div className="field">
-				<label className="label">Public key</label>
-				<div className="field has-addons">
-					<div className="control is-expanded">
-						<input className="input" type="text" placeholder="Input public key"></input>
-					</div>
-					<div className="control">
-						<Link to={`/address/${publicKey}`} className="button is-info">
-							Search
-						</Link>
-					</div>
+			<div className="is-flex is-align-items-end" style={{ marginBottom: "3.3em" }}>
+				<div className="">
+					<h1 className="title is-2">Address</h1>
+					<p className="subtitle is-4">See this address's balance and details.</p>
 				</div>
-			</div> */}
-
+				<form onSubmit={handleSearch} className="ml-auto" style={{ minWidth: "20em" }}>
+					<p className="control has-icons-left">
+						<input
+							ref={searchInput}
+							className="input"
+							type="search"
+							placeholder="Search for an address"
+						/>
+						<span className="icon is-left is-small">
+							<i className="material-icons">search</i>
+						</span>
+					</p>
+				</form>
+			</div>
 			<div className="is-flex is-align-items-center mb-6">
 				<p
 					dangerouslySetInnerHTML={{ __html: addressQR }}
@@ -55,7 +70,7 @@ const AddressPage = () => {
 						<tr>
 							<td>Valid?</td>
 							<td>
-								{isAddressValid(params, address) ? (
+								{isValid ? (
 									<div className="icon has-text-success ml-auto">
 										<i className="material-icons">check_circle_outline</i>
 									</div>
@@ -91,20 +106,40 @@ const AddressPage = () => {
 			<h1 className="title is-3">Inbound Transactions</h1>
 			<hr />
 			<div className="mb-6">
-				{receivedTxs.map(tx => (
-					<div key={tx.hash} className="card card-content">
-						<Transaction transaction={tx} />
+				{receivedTxs.length ? (
+					receivedTxs.map(tx => (
+						<div key={tx.hash} className="card">
+							<div className="card-content">
+								<Transaction transaction={tx} />
+							</div>
+						</div>
+					))
+				) : (
+					<div className="py-4">
+						<p className="subtitle is-6 has-text-centered">
+							No one has sent {params.name}s to this address.
+						</p>
 					</div>
-				))}
+				)}
 			</div>
 
 			<h1 className="title is-3">Outbound Transactions</h1>
 			<hr />
-			{sentTxs.map(tx => (
-				<div key={tx.hash} className="card card-content">
-					<Transaction transaction={tx} />
+			{sentTxs.length ? (
+				sentTxs.map(tx => (
+					<div key={tx.hash} className="card">
+						<div className="card-content">
+							<Transaction transaction={tx} />
+						</div>
+					</div>
+				))
+			) : (
+				<div className="py-4">
+					<p className="subtitle is-6 has-text-centered">
+						This address has not sent any {params.name}s.
+					</p>
 				</div>
-			))}
+			)}
 		</section>
 	);
 };

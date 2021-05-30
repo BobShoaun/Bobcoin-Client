@@ -47,7 +47,7 @@ const DashboardPage = () => {
 				className="button is-info is-pulled-right has-text-weight-semibold"
 			>
 				<span className="material-icons mr-2">attach_money</span>
-				<span>View all Transactions</span>
+				<span>Make Transaction</span>
 			</Link>
 			<h2 className="title is-4">Mempool - Pending transactions</h2>
 			<p className="subtitle is-5">All pending transactions that are unconfirmed.</p>

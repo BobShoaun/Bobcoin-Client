@@ -4,8 +4,10 @@ import Transaction from "./Transaction";
 const Transactions = ({ transactions }) => (
 	<div>
 		{transactions?.map(transaction => (
-			<div key={transaction.hash} className="card card-content mb-2">
-				<Transaction transaction={transaction}></Transaction>
+			<div key={transaction.hash} className="card mb-2">
+				<div className="card-content">
+					<Transaction transaction={transaction}></Transaction>
+				</div>
 			</div>
 		))}
 	</div>

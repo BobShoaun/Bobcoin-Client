@@ -52,7 +52,7 @@ const Navbar = () => (
 							className="button is-light has-text-weight-bold"
 						>
 							<span className="material-icons mr-2">account_balance_wallet</span>
-							<span>My Address</span>
+							<span>My Wallet</span>
 						</Link>
 					</div>
 				</div>
