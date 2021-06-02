@@ -6,7 +6,7 @@ import MineMempool from "./MineMempool";
 
 import { newBlock } from "../../store/blockchainSlice";
 import { newTransaction } from "../../store/transactionsSlice";
-import { getHighestValidBlock, createCoinbaseTransaction } from "blockcrypto";
+import { getHighestValidBlock, createCoinbaseTransaction, calculateBlockReward } from "blockcrypto";
 
 import Miner from "./miner.worker";
 
@@ -22,6 +22,7 @@ const MinePage = () => {
 	const [selectedTxMap, setSelectedTxMap] = useState({});
 	const [terminalLog, setTerminalLog] = useState([]);
 	const [activeWorker, setActiveWorker] = useState(null);
+	const [modalOpen, setModalOpen] = useState(false);
 
 	useEffect(() => {
 		if (blockchain.length) setHeadBlock(getHighestValidBlock(blockchain));
@@ -70,6 +71,8 @@ const MinePage = () => {
 					]);
 					dispatch(newBlock(data.block));
 					setActiveWorker(null);
+					// TODO: show success pop up
+					setModalOpen(true);
 					break;
 			}
 		});
@@ -180,6 +183,46 @@ const MinePage = () => {
 				headBlock={headBlock}
 				updateSelectedTransactions={txs => setSelectedTxMap(txs)}
 			></MineMempool>
+
+			<div className={`modal ${modalOpen ? "is-active" : ""}`}>
+				<div className="modal-background"></div>
+				<div className="modal-card">
+					<section className="modal-card-body p-6" style={{ borderRadius: "1em" }}>
+						<div className="mb-5 is-flex is-align-items-center is-justify-content-center">
+							<i className="material-icons-outlined md-36 mr-3 has-text-black">engineering</i>
+							<h3 className="title is-3">You have mined a Block!</h3>
+						</div>
+						<img
+							style={{ width: "80%", display: "block" }}
+							className="mx-auto mb-5"
+							src="images/block.jpg"
+							alt="transaction"
+						/>
+
+						<p className="subtitle is-5 has-text-centered">
+							You have found a hash that fits the network difficulty and have been rewarded{" "}
+							{(calculateBlockReward(params, headBlock?.height + 1) / params.coin).toFixed(8)}{" "}
+							{params.symbol}. Hopefully other miners verify and build on top of your block!
+						</p>
+						<p className="help has-text-centered mb-4">
+							*You block is not mature until after at least {params.blkMaturity} confirmations.
+						</p>
+						<div className="has-text-centered">
+							<button
+								onClick={() => setModalOpen(false)}
+								className="button is-primary has-text-weight-semibold"
+							>
+								Cool
+							</button>
+						</div>
+					</section>
+				</div>
+				<button
+					onClick={() => setModalOpen(false)}
+					className="modal-close is-large"
+					aria-label="close"
+				></button>
+			</div>
 		</section>
 	);
 };

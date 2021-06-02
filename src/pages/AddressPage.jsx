@@ -108,7 +108,7 @@ const AddressPage = () => {
 			<div className="mb-6">
 				{receivedTxs.length ? (
 					receivedTxs.map(tx => (
-						<div key={tx.hash} className="card">
+						<div key={tx.hash} className="card mb-2">
 							<div className="card-content">
 								<Transaction transaction={tx} />
 							</div>
@@ -127,7 +127,7 @@ const AddressPage = () => {
 			<hr />
 			{sentTxs.length ? (
 				sentTxs.map(tx => (
-					<div key={tx.hash} className="card">
+					<div key={tx.hash} className="card mb-2">
 						<div className="card-content">
 							<Transaction transaction={tx} />
 						</div>

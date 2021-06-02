@@ -7,9 +7,9 @@ const LandingPage = () => {
 	return (
 		<section className="section">
 			<div className="has-text-centered" style={{ margin: "6em 0" }}>
-				<h1 className="title is-1">Welcome to Bobcoin</h1>
-				<p className="subtitle is-4">
-					an open source, decentralized, peer to peer, proof of work blockchain cryptocurrency.
+				<h1 className="title is-1 is-spaced mb-4">Welcome to Bobcoin</h1>
+				<p className="subtitle is-4 is-spaced mb-6">
+					an open source, decentralized, peer to peer, blockchain, proof of work, digital currency.
 				</p>
 				<a
 					href="https://github.com/BobShoaun/Blockchain-Crypto"
@@ -30,36 +30,48 @@ const LandingPage = () => {
 				src="images/rocket.jpg"
 				alt="rocket"
 			/>
-			<div className="-has-background-primary has-text-centered" style={{ margin: "8em 0" }}>
-				<h3 className="subtitle is-4 -has-text-white mb-6">
+			<div
+				className="-has-background-primary has-text-centered"
+				style={{ margin: "5em 0 10em 0", flex: "1 0 1" }}
+			>
+				<h3 className="subtitle is-4 -has-text-white" style={{ marginBottom: "4em" }}>
 					Bobcoin boast many properties that makes it safe and sustainable:
 				</h3>
-				<div className="is-flex is-justify-content-center mb-6">
-					<div className="-has-background-info has-text-white mr-6">
+				<div className="is-flex is-justify-content-center" style={{ marginBottom: "5em" }}>
+					<div
+						className="-has-background-info has-text-white"
+						style={{ marginRight: "6em", flex: "1 0 1" }}
+					>
 						<span className="material-icons-outlined md-48 has-text-info">south</span>
 						<h2 className="title is-4 is-spaced mb-2">Low fees</h2>
 						<p className="subtitle is-6">Send money globally at the cost of peanuts</p>
 					</div>
 
-					<div className="-has-background-info has-text-white mr-6">
+					<div
+						className="-has-background-info has-text-white"
+						style={{ marginRight: "6em", flex: "1 0 1" }}
+					>
 						<span class="material-icons-outlined md-48 has-text-info">emoji_emotions</span>
 						<h2 className="title is-4 is-spaced mb-2">Simple</h2>
 						<p className="subtitle is-6">Easy to use, all you need is this client</p>
 					</div>
-					<div className="-has-background-info has-text-white">
+					<div className="-has-background-info has-text-white" style={{ flex: "1 0 1" }}>
 						<span className="material-icons-outlined md-48 has-text-info">terrain</span>
 						<h2 className="title is-4 is-spaced mb-2">High Market Cap</h2>
 						<p className="subtitle is-6">Up to 819,200,000 XBC available</p>
 					</div>
 				</div>
 				<div className="is-flex is-justify-content-center mb-6">
-					<div className="-has-background-info has-text-white mr-6">
+					<div
+						className="-has-background-info has-text-white"
+						style={{ marginRight: "6em", flex: "1 0 1" }}
+					>
 						<span className="material-icons-outlined md-48 has-text-info">trending_up</span>
 						<h2 className="title is-4 is-spaced mb-2">Big Rewards</h2>
 						<p className="subtitle is-6">Get 4096 XBC for each block mined</p>
 					</div>
 
-					<div className="-has-background-info has-text-white">
+					<div className="-has-background-info has-text-white" style={{ flex: "1 0 1" }}>
 						<span className="material-icons-outlined md-48 has-text-info">monetization_on</span>
 						<h2 className="title is-4 is-spaced mb-2">Inspired by Bitcoin</h2>
 						<p className="subtitle is-6">Implemented following bitcoin's algorithms</p>

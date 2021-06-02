@@ -11,8 +11,8 @@ const Mempool = () => {
 	const [mempool, setMempool] = useState([]);
 
 	useEffect(() => {
-		if (blockchain.length)
-			setMempool(calculateMempool(blockchain, getHighestValidBlock(blockchain), transactions));
+		if (!blockchain.length) return;
+		setMempool(calculateMempool(blockchain, getHighestValidBlock(blockchain), transactions));
 	}, [transactions, blockchain]);
 
 	return (
