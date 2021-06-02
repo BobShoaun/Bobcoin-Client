@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { useParams, Link } from "react-router-dom";
 
 import Transaction from "../../components/Transaction";
-import { getBlockConfirmations, getTxBlock } from "blockcrypto";
+import { getBlockConfirmations, getHighestValidBlock, getTxBlock } from "blockcrypto";
 
 const TransactionPage = () => {
 	const { hash } = useParams();
@@ -26,8 +26,9 @@ const TransactionPage = () => {
 
 	console.log(transaction);
 	const block = getTxBlock(blockchain, transaction);
-	const confirmations = getBlockConfirmations(blockchain, block);
-	const status = confirmations === 0 ? "Unconfirmed" : `${confirmations} confirmations`;
+	const confirmations = block ? getBlockConfirmations(blockchain, block) : 0;
+	const status =
+		confirmations === 0 ? "Unconfirmed (in Mempool)" : `${confirmations} confirmations`;
 
 	return (
 		<section className="section">
@@ -60,7 +61,7 @@ const TransactionPage = () => {
 					</tr>
 					<tr>
 						<td>Block Hash</td>
-						<td>{block ? <Link to={`../block/${block.hash}`}>{block.hash}</Link> : "Mempool"}</td>
+						<td>{block ? <Link to={`../block/${block.hash}`}>{block.hash}</Link> : "-"}</td>
 					</tr>
 					<tr>
 						<td>Timestamp</td>

@@ -46,12 +46,12 @@ const Navbar = () => (
 					<div className="buttons">
 						<Link to="/generate-key" className="button is-warning mr-3">
 							<span className="material-icons mr-2">vpn_key</span>
-							<strong>Generate Key</strong>
+							<p className="has-text-weight-semibold">Generate Key</p>
 						</Link>
 
 						<Link
 							to={`/address/${localStorage.getItem("add")}`}
-							className="button is-light has-text-weight-bold"
+							className="button has-text-weight-bold"
 						>
 							<span className="material-icons mr-2">account_balance_wallet</span>
 							<span>My Wallet</span>

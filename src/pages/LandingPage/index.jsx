@@ -16,11 +16,11 @@ const LandingPage = () => {
 					target="_blank"
 					className="button mr-3"
 				>
-					<span class="material-icons-outlined mr-2">code</span>
+					<span className="material-icons-outlined mr-2">code</span>
 					Source
 				</a>
 				<Link to="overview" className="button is-warning">
-					<span class="material-icons-outlined mr-2">explore</span>
+					<span className="material-icons-outlined mr-2">explore</span>
 					Explore Bobcoin
 				</Link>
 			</div>
@@ -36,31 +36,31 @@ const LandingPage = () => {
 				</h3>
 				<div className="is-flex is-justify-content-center mb-6">
 					<div className="-has-background-info has-text-white mr-6">
-						<span className="material-icons-outlined md-48 has-text-primary">south</span>
+						<span className="material-icons-outlined md-48 has-text-info">south</span>
 						<h2 className="title is-4 is-spaced mb-2">Low fees</h2>
 						<p className="subtitle is-6">Send money globally at the cost of peanuts</p>
 					</div>
 
 					<div className="-has-background-info has-text-white mr-6">
-						<span class="material-icons-outlined md-48 has-text-primary">emoji_emotions</span>
+						<span class="material-icons-outlined md-48 has-text-info">emoji_emotions</span>
 						<h2 className="title is-4 is-spaced mb-2">Simple</h2>
 						<p className="subtitle is-6">Easy to use, all you need is this client</p>
 					</div>
 					<div className="-has-background-info has-text-white">
-						<span class="material-icons-outlined md-48 has-text-primary">terrain</span>
+						<span className="material-icons-outlined md-48 has-text-info">terrain</span>
 						<h2 className="title is-4 is-spaced mb-2">High Market Cap</h2>
 						<p className="subtitle is-6">Up to 819,200,000 XBC available</p>
 					</div>
 				</div>
 				<div className="is-flex is-justify-content-center mb-6">
 					<div className="-has-background-info has-text-white mr-6">
-						<span class="material-icons-outlined md-48 has-text-primary">trending_up</span>
+						<span className="material-icons-outlined md-48 has-text-info">trending_up</span>
 						<h2 className="title is-4 is-spaced mb-2">Big Rewards</h2>
 						<p className="subtitle is-6">Get 4096 XBC for each block mined</p>
 					</div>
 
 					<div className="-has-background-info has-text-white">
-						<span class="material-icons-outlined md-48 has-text-primary">monetization_on</span>
+						<span className="material-icons-outlined md-48 has-text-info">monetization_on</span>
 						<h2 className="title is-4 is-spaced mb-2">Inspired by Bitcoin</h2>
 						<p className="subtitle is-6">Implemented following bitcoin's algorithms</p>
 					</div>
@@ -79,7 +79,7 @@ const LandingPage = () => {
 						to="generate-key"
 						className="button is-small is-primary is-pulled-right has-text-weight-semibold"
 					>
-						Go<span class="material-icons-outlined md-18 ml-2">arrow_forward</span>
+						Go<span className="material-icons-outlined md-18 ml-2">arrow_forward</span>
 					</Link>
 				</li>
 				<li className="mb-5">
@@ -88,7 +88,7 @@ const LandingPage = () => {
 						to="mine"
 						className="button is-small is-primary is-pulled-right has-text-weight-semibold"
 					>
-						Go<span class="material-icons-outlined md-18 ml-2">arrow_forward</span>
+						Go<span className="material-icons-outlined md-18 ml-2">arrow_forward</span>
 					</Link>
 				</li>
 				<li className="mb-5">
@@ -97,7 +97,7 @@ const LandingPage = () => {
 						to="wallet"
 						className="button is-small is-primary is-pulled-right has-text-weight-semibold"
 					>
-						Go<span class="material-icons-outlined md-18 ml-2">arrow_forward</span>
+						Go<span className="material-icons-outlined md-18 ml-2">arrow_forward</span>
 					</Link>
 				</li>
 				<li className="mb-5">
@@ -106,7 +106,7 @@ const LandingPage = () => {
 						to="new-transaction"
 						className="button is-small is-primary is-pulled-right has-text-weight-semibold"
 					>
-						Go<span class="material-icons-outlined md-18 ml-2">arrow_forward</span>
+						Go<span className="material-icons-outlined md-18 ml-2">arrow_forward</span>
 					</Link>
 				</li>
 				<li className="mb-5">Rinse and repeat, and become a valuable peer in the network.</li>
