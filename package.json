@@ -165,5 +165,8 @@
 		"presets": [
 			"react-app"
 		]
+	},
+	"engines": {
+		"node": "14.12.0"
 	}
 }
