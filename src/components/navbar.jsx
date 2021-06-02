@@ -26,7 +26,7 @@ const Navbar = () => (
 
 		<div id="navbarBasicExample" className="navbar-menu">
 			<div className="navbar-start">
-				<Link to="/" className="navbar-item has-text-weight-semi-bold mr-2">
+				<Link to="/overview" className="navbar-item has-text-weight-semi-bold mr-2">
 					Overview
 				</Link>
 

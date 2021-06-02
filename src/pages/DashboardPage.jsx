@@ -30,10 +30,13 @@ const DashboardPage = () => {
 				{params.name} {params.symbol}
 			</h2>
 			<div>
-				<button className="button is-secondary is-pulled-right has-text-weight-semibold">
+				<Link
+					to="./blockchain"
+					className="button is-secondary is-pulled-right has-text-weight-semibold"
+				>
 					<span className="material-icons mr-2">grid_view</span>
 					<span>View all Blocks</span>
-				</button>
+				</Link>
 				<h2 className="title is-4">Blockchain</h2>
 				<p className="subtitle is-5">Most recently mined blocks in the blockchain.</p>
 			</div>

@@ -6,12 +6,21 @@ import "./index.css";
 const LandingPage = () => {
 	return (
 		<section className="section">
-			<div className="has-text-centered" style={{ margin: "6em" }}>
+			<div className="has-text-centered" style={{ margin: "6em 0" }}>
 				<h1 className="title is-1">Welcome to Bobcoin</h1>
 				<p className="subtitle is-4">
-					an open source, decentralized, peer to peer, blockchain cryptocurrency.
+					an open source, decentralized, peer to peer, proof of work blockchain cryptocurrency.
 				</p>
+				<a
+					href="https://github.com/BobShoaun/Blockchain-Crypto"
+					target="_blank"
+					className="button mr-3"
+				>
+					<span class="material-icons-outlined mr-2">code</span>
+					Source
+				</a>
 				<Link to="overview" className="button is-warning">
+					<span class="material-icons-outlined mr-2">explore</span>
 					Explore Bobcoin
 				</Link>
 			</div>
@@ -21,7 +30,7 @@ const LandingPage = () => {
 				src="images/rocket.jpg"
 				alt="rocket"
 			/>
-			<div className="-has-background-primary has-text-centered" style={{ margin: "8em" }}>
+			<div className="-has-background-primary has-text-centered" style={{ margin: "8em 0" }}>
 				<h3 className="subtitle is-4 -has-text-white mb-6">
 					Bobcoin boast many properties that makes it safe and sustainable:
 				</h3>
@@ -40,7 +49,7 @@ const LandingPage = () => {
 					<div className="-has-background-info has-text-white">
 						<span class="material-icons-outlined md-48 has-text-primary">terrain</span>
 						<h2 className="title is-4 is-spaced mb-2">High Market Cap</h2>
-						<p className="subtitle is-6">Up to 118,000,000 XBC available</p>
+						<p className="subtitle is-6">Up to 819,200,000 XBC available</p>
 					</div>
 				</div>
 				<div className="is-flex is-justify-content-center mb-6">
@@ -63,30 +72,42 @@ const LandingPage = () => {
 				<p className="subtitle is-4">Start investing in Bobcoins</p>
 				<hr />
 			</div>
-			<ol className="mx-auto subtitle is-5" style={{ width: "50em", marginBottom: "5em" }}>
+			<ol className="mx-auto subtitle is-5 px-6" style={{ fwidth: "50em", marginBottom: "5em" }}>
 				<li className="mb-5">
 					Generate a private key and address
-					<button className="button is-small is-primary is-pulled-right has-text-weight-semibold">
+					<Link
+						to="generate-key"
+						className="button is-small is-primary is-pulled-right has-text-weight-semibold"
+					>
 						Go<span class="material-icons-outlined md-18 ml-2">arrow_forward</span>
-					</button>
+					</Link>
 				</li>
 				<li className="mb-5">
 					Obtain XBC by mining, or ASK the creator himself for some coins.
-					<button className="button is-small is-primary is-pulled-right has-text-weight-semibold">
+					<Link
+						to="mine"
+						className="button is-small is-primary is-pulled-right has-text-weight-semibold"
+					>
 						Go<span class="material-icons-outlined md-18 ml-2">arrow_forward</span>
-					</button>
+					</Link>
 				</li>
 				<li className="mb-5">
 					Check your wallet for balance so you don't go broke!
-					<button className="button is-small is-primary is-pulled-right has-text-weight-semibold">
+					<Link
+						to="wallet"
+						className="button is-small is-primary is-pulled-right has-text-weight-semibold"
+					>
 						Go<span class="material-icons-outlined md-18 ml-2">arrow_forward</span>
-					</button>
+					</Link>
 				</li>
 				<li className="mb-5">
 					Make global transactions to anyone
-					<button className="button is-small is-primary is-pulled-right has-text-weight-semibold">
+					<Link
+						to="new-transaction"
+						className="button is-small is-primary is-pulled-right has-text-weight-semibold"
+					>
 						Go<span class="material-icons-outlined md-18 ml-2">arrow_forward</span>
-					</button>
+					</Link>
 				</li>
 				<li className="mb-5">Rinse and repeat, and become a valuable peer in the network.</li>
 			</ol>

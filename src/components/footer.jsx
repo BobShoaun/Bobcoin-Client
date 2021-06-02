@@ -9,7 +9,11 @@ const Footer = () => {
 			<div className="content has-text-centered">
 				<p>Like {params.name}? Consider donating to 8bobLqxCRPTSEhvZwQTeKnKz5429N26.</p>
 				<p>
-					<strong>{params.name}</strong> by <a href="https://bobng.me">Ng Bob Shoaun</a>.
+					<strong>{params.name}</strong> by{" "}
+					<a target="_blank" href="https://bobng.me">
+						Ng Bob Shoaun
+					</a>
+					.
 				</p>
 			</div>
 		</footer>

@@ -37,7 +37,7 @@ const TransactionPage = () => {
 
 			<h1 className="title is-4">Summary</h1>
 
-			<div className="card card-content">
+			<div className="card card-content has-background-white">
 				<Transaction transaction={transaction}></Transaction>
 			</div>
 			<hr />
@@ -81,7 +81,9 @@ const TransactionPage = () => {
 					</tr>
 					<tr>
 						<td>Signature</td>
-						<td>{transaction.inputs?.[0]?.signature ?? "-"}</td>
+						<td style={{ wordWrap: "break-word", whiteSpace: "pre-wrap", maxWidth: "50em" }}>
+							{transaction.inputs?.[0]?.signature ?? "-"}
+						</td>
 					</tr>
 				</tbody>
 			</table>
