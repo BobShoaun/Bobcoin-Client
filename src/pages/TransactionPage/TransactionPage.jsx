@@ -24,6 +24,7 @@ const TransactionPage = () => {
 
 	const isCoinbase = transaction.inputs.length === 0 && transaction.outputs.length === 1;
 
+	console.log(transaction);
 	const block = getTxBlock(blockchain, transaction);
 	const confirmations = getBlockConfirmations(blockchain, block);
 	const status = confirmations === 0 ? "Unconfirmed" : `${confirmations} confirmations`;

@@ -13,7 +13,7 @@ const MineMempool = ({ headBlock, updateSelectedTransactions }) => {
 
 	useEffect(() => {
 		if (headBlock) setMempool(calculateMempool(blockchain, headBlock, transactions));
-	}, [blockchain]);
+	}, [blockchain, headBlock, transactions]);
 
 	const handleChecked = tx => {
 		if (tx.hash in selectedTxMap)

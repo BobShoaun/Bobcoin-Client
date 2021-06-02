@@ -7,7 +7,7 @@ const Footer = () => {
 	return (
 		<footer className="footer">
 			<div className="content has-text-centered">
-				<p>This client broadcasts information to peers through a centralized node.</p>
+				<p>Like {params.name}? Consider donating to 8bobLqxCRPTSEhvZwQTeKnKz5429N26.</p>
 				<p>
 					<strong>{params.name}</strong> by <a href="https://bobng.me">Ng Bob Shoaun</a>.
 				</p>

@@ -20,7 +20,8 @@ const NewTransactionPage = () => {
 	const [senderAdd, setSenderAdd] = useState("");
 	const [recipientAdd, setRecipientAdd] = useState("");
 
-	const [modalOpen, setModalOpen] = useState(false);
+	const [confirmModal, setConfirmModal] = useState(false);
+	const [errorModal, setErrorModal] = useState(false);
 
 	useEffect(() => {
 		try {
@@ -50,6 +51,10 @@ const NewTransactionPage = () => {
 	const createTransaction = () => {
 		const headBlock = getHighestValidBlock(blockchain);
 		const utxos = findUTXOs(blockchain, headBlock, transactions, senderAdd, amount + fee);
+		if (!utxos.length) {
+			setErrorModal(true);
+			return;
+		}
 		const tx = createAndSignTransaction(
 			params,
 			utxos,
@@ -61,7 +66,7 @@ const NewTransactionPage = () => {
 			fee
 		);
 		dispatch(newTransaction(tx));
-		setModalOpen(true);
+		setConfirmModal(true);
 	};
 
 	return (
@@ -146,7 +151,7 @@ const NewTransactionPage = () => {
 			</div>
 			<div className="is-clearfix"></div>
 
-			<div className={`modal ${modalOpen && "is-active"}`}>
+			<div className={`modal ${confirmModal && "is-active"}`}>
 				<div className="modal-background"></div>
 				<div className="modal-card">
 					<section className="modal-card-body p-6" style={{ borderRadius: "1em" }}>
@@ -168,7 +173,7 @@ const NewTransactionPage = () => {
 						</p>
 						<div className="has-text-centered">
 							<button
-								onClick={() => setModalOpen(false)}
+								onClick={() => setConfirmModal(false)}
 								className="button is-primary has-text-weight-semibold"
 							>
 								Okay
@@ -177,7 +182,42 @@ const NewTransactionPage = () => {
 					</section>
 				</div>
 				<button
-					onClick={() => setModalOpen(false)}
+					onClick={() => setConfirmModal(false)}
+					className="modal-close is-large"
+					aria-label="close"
+				></button>
+			</div>
+
+			<div className={`modal ${errorModal && "is-active"}`}>
+				<div className="modal-background"></div>
+				<div className="modal-card">
+					<section className="modal-card-body p-6" style={{ borderRadius: "1em" }}>
+						<div className="mb-5 is-flex is-align-items-center is-justify-content-center">
+							<i className="material-icons-outlined md-36 mr-3 has-text-danger">dangerous</i>
+							<h3 className="title is-3">Invalid Transaction!</h3>
+						</div>
+						{/* <img
+							style={{ width: "80%", display: "block" }}
+							className="mx-auto"
+							src="images/transaction.jpg"
+							alt="transaction"
+						/> */}
+						<p className="subtitle is-5 has-text-centered mb-6">
+							You are attempting to spend coins that do not exist for this address. Your transaction
+							will be rejected by the network.
+						</p>
+						<div className="has-text-centered">
+							<button
+								onClick={() => setErrorModal(false)}
+								className="button is-primary has-text-weight-semibold"
+							>
+								Okay
+							</button>
+						</div>
+					</section>
+				</div>
+				<button
+					onClick={() => setErrorModal(false)}
 					className="modal-close is-large"
 					aria-label="close"
 				></button>

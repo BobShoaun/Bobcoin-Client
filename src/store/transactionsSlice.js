@@ -16,7 +16,6 @@ const transactionsSlice = createSlice({
 		},
 		setTransactions(state, { payload: transactions }) {
 			state.push(...transactions);
-			console.log("all tx", state);
 		},
 	},
 });

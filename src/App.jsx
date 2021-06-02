@@ -9,6 +9,7 @@ import NewTransactionPage from "./pages/NewTransactionPage";
 import BlockPage from "./pages/BlockPage";
 import TransactionPage from "./pages/TransactionPage/TransactionPage";
 import BlockchainPage from "./pages/BlockchainPage/BlockchainPage";
+import LandingPage from "./pages/LandingPage";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
@@ -36,7 +37,8 @@ const App = () => {
 
 					<Route path="/address/:address" component={AddressPage}></Route>
 					<Route path="/address" component={AddressPage}></Route>
-					<Route path="/" component={DashboardPage} />
+					<Route path="/overview" component={DashboardPage} />
+					<Route path="/" component={LandingPage} />
 				</Switch>
 			</div>
 			<Link
