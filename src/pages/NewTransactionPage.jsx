@@ -4,8 +4,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { newTransaction } from "../store/transactionsSlice";
 import { getKeys, createAndSignTransaction, getHighestValidBlock, findUTXOs } from "blockcrypto";
 
-import CurrencyInput from "../components/CurrencyInput";
-
 const NewTransactionPage = () => {
 	const dispatch = useDispatch();
 	const blockchain = useSelector(state => state.blockchain.chain);
@@ -25,7 +23,7 @@ const NewTransactionPage = () => {
 
 	useEffect(() => {
 		try {
-			const { _, pk, address } = getKeys(params, senderSK);
+			const { pk, address } = getKeys(params, senderSK);
 			setSenderPK(pk);
 			setSenderAdd(address);
 		} catch {
@@ -48,9 +46,28 @@ const NewTransactionPage = () => {
 		}
 	};
 
+	const handleAmountChange = amount => {
+		let amt = parseFloat(amount);
+		const places =
+			Math.floor(amt.valueOf()) === amt.valueOf() ? 0 : amount.split(".")[1]?.length || 0;
+		if (places > 8) amt = amt.toFixed(8);
+		setAmount(isNaN(amt) ? "" : amt);
+	};
+
+	const handleFeeChange = amount => {
+		let amt = parseFloat(amount);
+		const places =
+			Math.floor(amt.valueOf()) === amt.valueOf() ? 0 : amount.split(".")[1]?.length || 0;
+		if (places > 8) amt = amt.toFixed(8);
+		setFee(isNaN(amt) ? "" : amt);
+	};
+
 	const createTransaction = () => {
+		const _amount = Math.trunc(amount * params.coin);
+		const _fee = Math.trunc(fee * params.coin);
+
 		const headBlock = getHighestValidBlock(blockchain);
-		const utxos = findUTXOs(blockchain, headBlock, transactions, senderAdd, amount + fee);
+		const utxos = findUTXOs(blockchain, headBlock, transactions, senderAdd, _amount + _fee);
 		if (!utxos.length) {
 			setErrorModal(true);
 			return;
@@ -62,8 +79,8 @@ const NewTransactionPage = () => {
 			senderPK,
 			senderAdd,
 			recipientAdd,
-			amount,
-			fee
+			_amount,
+			_fee
 		);
 		dispatch(newTransaction(tx));
 		setConfirmModal(true);
@@ -133,12 +150,28 @@ const NewTransactionPage = () => {
 			<div className="is-flex mb-6">
 				<div className="field mr-5" style={{ flexGrow: 1 }}>
 					<label className="label">Amount ({params.symbol})</label>
-					<CurrencyInput onChange={setAmount} />
+					<input
+						className="input"
+						onChange={({ target }) => handleAmountChange(target.value)}
+						value={amount}
+						type="number"
+						min="0"
+						step=".01"
+						placeholder="0.00000000"
+					/>
 				</div>
 
 				<div className="field" style={{ flexGrow: 1 }}>
 					<label className="label">Fee ({params.symbol})</label>
-					<CurrencyInput onChange={setFee} />
+					<input
+						className="input"
+						onChange={({ target }) => handleFeeChange(target.value)}
+						value={fee}
+						type="number"
+						min="0"
+						step=".01"
+						placeholder="0.00000000"
+					/>
 				</div>
 			</div>
 

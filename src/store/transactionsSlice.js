@@ -10,12 +10,12 @@ const transactionsSlice = createSlice({
 	},
 	reducers: {
 		newTransaction(state, { payload: transaction }) {
-			state.push(transaction);
+			state.txs.push(transaction);
 			socket.emit("transaction", transaction);
 		},
 		addTransaction(state, { payload: transaction }) {
 			console.log("received transaction:", transaction);
-			state.push(transaction);
+			state.txs.push(transaction);
 		},
 		setTransactions(state, { payload: transactions }) {
 			state.txs = transactions;

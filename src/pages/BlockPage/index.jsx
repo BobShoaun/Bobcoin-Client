@@ -100,6 +100,10 @@ const BlockPage = () => {
 						</td>
 					</tr>
 					<tr>
+						<td>Fee reward</td>
+						<td>idk {params.symbol}</td>
+					</tr>
+					<tr>
 						<td>Valid</td>
 						<td>
 							{isValid ? (
