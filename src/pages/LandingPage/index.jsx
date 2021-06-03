@@ -45,7 +45,7 @@ const LandingPage = () => {
 					</div>
 
 					<div className="-has-background-info has-text-white" style={{ flex: "1 0 1" }}>
-						<span class="material-icons-outlined md-48 has-text-info">emoji_emotions</span>
+						<span className="material-icons-outlined md-48 has-text-info">emoji_emotions</span>
 						<h2 className="title is-4 is-spaced mb-2">Simple</h2>
 						<p className="subtitle is-6">Easy to use, all you need is this client</p>
 					</div>
