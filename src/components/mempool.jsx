@@ -5,9 +5,9 @@ import Transaction from "./Transaction";
 import { calculateMempool, getHighestValidBlock } from "blockcrypto";
 
 const Mempool = () => {
-	const transactions = useSelector(state => state.transactions);
+	const transactions = useSelector(state => state.transactions.txs);
 	const blockchain = useSelector(state => state.blockchain.chain);
-	const params = useSelector(state => state.blockchain.params);
+	const params = useSelector(state => state.consensus.params);
 	const [mempool, setMempool] = useState([]);
 
 	useEffect(() => {

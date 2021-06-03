@@ -37,20 +37,14 @@ const LandingPage = () => {
 				<h3 className="subtitle is-4 -has-text-white" style={{ marginBottom: "4em" }}>
 					Bobcoin boast many properties that makes it safe and sustainable:
 				</h3>
-				<div className="is-flex is-justify-content-center" style={{ marginBottom: "5em" }}>
-					<div
-						className="-has-background-info has-text-white"
-						style={{ marginRight: "6em", flex: "1 0 1" }}
-					>
+				<div className="is-flex is-justify-content-space-around" style={{ marginBottom: "5em" }}>
+					<div className="-has-background-info has-text-white" style={{ flex: "1 0 1" }}>
 						<span className="material-icons-outlined md-48 has-text-info">south</span>
 						<h2 className="title is-4 is-spaced mb-2">Low fees</h2>
 						<p className="subtitle is-6">Send money globally at the cost of peanuts</p>
 					</div>
 
-					<div
-						className="-has-background-info has-text-white"
-						style={{ marginRight: "6em", flex: "1 0 1" }}
-					>
+					<div className="-has-background-info has-text-white" style={{ flex: "1 0 1" }}>
 						<span class="material-icons-outlined md-48 has-text-info">emoji_emotions</span>
 						<h2 className="title is-4 is-spaced mb-2">Simple</h2>
 						<p className="subtitle is-6">Easy to use, all you need is this client</p>
@@ -61,11 +55,8 @@ const LandingPage = () => {
 						<p className="subtitle is-6">Up to 819,200,000 XBC available</p>
 					</div>
 				</div>
-				<div className="is-flex is-justify-content-center mb-6">
-					<div
-						className="-has-background-info has-text-white"
-						style={{ marginRight: "6em", flex: "1 0 1" }}
-					>
+				<div className="is-flex is-justify-content-space-evenly mb-6">
+					<div className="-has-background-info has-text-white" style={{ flex: "1 0 1" }}>
 						<span className="material-icons-outlined md-48 has-text-info">trending_up</span>
 						<h2 className="title is-4 is-spaced mb-2">Big Rewards</h2>
 						<p className="subtitle is-6">Get 4096 XBC for each block mined</p>

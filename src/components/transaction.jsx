@@ -5,8 +5,11 @@ import { Link } from "react-router-dom";
 import { isTransactionValid, isCoinbaseTxValid } from "blockcrypto";
 
 const Transaction = ({ transaction }) => {
-	const params = useSelector(state => state.blockchain.params);
-	const transactions = useSelector(state => state.transactions);
+	const params = useSelector(state => state.consensus.params);
+	const transactions = useSelector(state => state.transactions.txs);
+	const txsFetched = useSelector(state => state.transactions.fetched);
+
+	if (!txsFetched) return null;
 
 	const findTxo = input => {
 		const tx = transactions.find(tx => tx.hash === input.txHash);

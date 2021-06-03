@@ -9,8 +9,8 @@ import CurrencyInput from "../components/CurrencyInput";
 const NewTransactionPage = () => {
 	const dispatch = useDispatch();
 	const blockchain = useSelector(state => state.blockchain.chain);
-	const transactions = useSelector(state => state.transactions);
-	const params = useSelector(state => state.blockchain.params);
+	const transactions = useSelector(state => state.transactions.txs);
+	const params = useSelector(state => state.consensus.params);
 
 	const [showSK, setShowSK] = useState(false);
 	const [amount, setAmount] = useState("");

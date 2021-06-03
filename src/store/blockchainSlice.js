@@ -7,8 +7,8 @@ import socket from "../socket";
 const blockchainSlice = createSlice({
 	name: "blockchain",
 	initialState: {
-		params: {},
 		chain: createBlockchain([]),
+		fetched: false,
 	},
 	reducers: {
 		newBlock: (state, { payload: block }) => {
@@ -19,16 +19,12 @@ const blockchainSlice = createSlice({
 			console.log("received block:", block);
 			addBlockToBlockchain(state.chain, block);
 		},
-
 		setBlockchain(state, { payload: blockchain }) {
 			state.chain = createBlockchain(blockchain);
-		},
-		setParams(state, { payload: params }) {
-			state.params = params;
+			state.fetched = true;
 		},
 	},
 });
 
-export const { addBlock, newBlock, setBlockchain, setParams } = blockchainSlice.actions;
-
+export const { addBlock, newBlock, setBlockchain } = blockchainSlice.actions;
 export default blockchainSlice.reducer;

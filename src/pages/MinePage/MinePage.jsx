@@ -15,8 +15,8 @@ import "./mine.css";
 const MinePage = () => {
 	const dispatch = useDispatch();
 	const blockchain = useSelector(state => state.blockchain.chain);
-	const params = useSelector(state => state.blockchain.params);
-	const transactions = useSelector(state => state.transactions);
+	const params = useSelector(state => state.consensus.params);
+	const transactions = useSelector(state => state.transactions.txs);
 	const [miner, setMiner] = useState(localStorage.getItem("add"));
 	const [headBlock, setHeadBlock] = useState(null);
 	const [selectedTxMap, setSelectedTxMap] = useState({});

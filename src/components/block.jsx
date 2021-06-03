@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { isBlockValidInBlockchain } from "blockcrypto";
 
 const Block = ({ block }) => {
-	const params = useSelector(state => state.blockchain.params);
+	const params = useSelector(state => state.consensus.params);
 	const blockchain = useSelector(state => state.blockchain.chain);
 
 	let isValid = false;

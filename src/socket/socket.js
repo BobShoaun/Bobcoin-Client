@@ -1,4 +1,5 @@
-import { addBlock, setBlockchain, setParams } from "../store/blockchainSlice";
+import { addBlock, setBlockchain } from "../store/blockchainSlice";
+import { setParams } from "../store/consensusSlice";
 import { addTransaction, setTransactions } from "../store/transactionsSlice";
 
 import store from "../store";

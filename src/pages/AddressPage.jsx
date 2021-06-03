@@ -10,11 +10,14 @@ import Transaction from "../components/Transaction";
 const AddressPage = () => {
 	const history = useHistory();
 	const blockchain = useSelector(state => state.blockchain.chain);
-	const params = useSelector(state => state.blockchain.params);
+	const blockchainFetched = useSelector(state => state.blockchain.fetched);
+	const params = useSelector(state => state.consensus.params);
+	const paramsFetched = useSelector(state => state.consensus.fetched);
 	const { address } = useParams();
 	const [addressQR, setAddressQR] = useState("");
+	const searchInput = useRef();
 
-	QRCode.toString(address).then(setAddressQR);
+	if (!blockchainFetched || !paramsFetched) return null;
 
 	const balance = (
 		calculateBalance(blockchain, getHighestValidBlock(blockchain), address) / params.coin
@@ -27,7 +30,7 @@ const AddressPage = () => {
 		isValid = isAddressValid(params, address);
 	} catch {}
 
-	const searchInput = useRef();
+	QRCode.toString(address).then(setAddressQR);
 
 	const handleSearch = event => {
 		event.preventDefault();

@@ -6,8 +6,8 @@ import Blockchain from "../components/Blockchain";
 import Mempool from "../components/Mempool";
 
 const DashboardPage = () => {
-	const transactions = useSelector(state => state.transactions);
-	const params = useSelector(state => state.blockchain.params);
+	const transactions = useSelector(state => state.transactions.txs);
+	const params = useSelector(state => state.consensus.params);
 	return (
 		<section className="section">
 			<div className="columns mb-4">

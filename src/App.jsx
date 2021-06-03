@@ -7,7 +7,7 @@ import MinePage from "./pages/MinePage/MinePage";
 import AddressPage from "./pages/AddressPage";
 import NewTransactionPage from "./pages/NewTransactionPage";
 import BlockPage from "./pages/BlockPage";
-import TransactionPage from "./pages/TransactionPage/TransactionPage";
+import TransactionPage from "./pages/TransactionPage";
 import BlockchainPage from "./pages/BlockchainPage/BlockchainPage";
 import LandingPage from "./pages/LandingPage";
 import Navbar from "./components/Navbar";

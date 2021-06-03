@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import "./currencyinput.css";
 
 const CurrencyInput = ({ onChange }) => {
-	const params = useSelector(state => state.blockchain.params);
+	const params = useSelector(state => state.consensus.params);
 
 	const [amount, setAmount] = useState(0);
 	const [cents, setCents] = useState(0);

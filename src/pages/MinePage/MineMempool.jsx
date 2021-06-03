@@ -5,9 +5,9 @@ import { calculateMempool } from "blockcrypto";
 import Transaction from "../../components/Transaction";
 
 const MineMempool = ({ headBlock, updateSelectedTransactions }) => {
-	const transactions = useSelector(state => state.transactions);
+	const transactions = useSelector(state => state.transactions.txs);
 	const blockchain = useSelector(state => state.blockchain.chain);
-	const params = useSelector(state => state.blockchain.params);
+	const params = useSelector(state => state.consensus.params);
 	const [selectedTxMap, setSelectedTxMap] = useState({});
 	const [mempool, setMempool] = useState([]);
 

@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 
 const Footer = () => {
-	const params = useSelector(state => state.blockchain.params);
+	const params = useSelector(state => state.consensus.params);
 
 	return (
 		<footer className="footer">

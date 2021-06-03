@@ -5,7 +5,7 @@ import { generateKeys, getKeys } from "blockcrypto";
 import QRCode from "qrcode";
 
 const GenerateKeyPage = () => {
-	const params = useSelector(state => state.blockchain.params);
+	const params = useSelector(state => state.consensus.params);
 	const [secretKey, setSecretKey] = useState("");
 	const [address, setAddress] = useState("");
 	const [skQR, setSKQR] = useState("");

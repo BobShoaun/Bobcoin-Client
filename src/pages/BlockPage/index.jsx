@@ -2,16 +2,17 @@ import React from "react";
 import { useParams, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-import Transactions from "../components/Transactions";
+import Transactions from "../../components/Transactions";
 
 import { calculateBlockReward, getBlockConfirmations, isBlockValidInBlockchain } from "blockcrypto";
 
 const BlockPage = () => {
 	const { hash } = useParams();
 	const blockchain = useSelector(state => state.blockchain.chain);
-	const params = useSelector(state => state.blockchain.params);
+	const params = useSelector(state => state.consensus.params);
 
 	const block = blockchain.find(block => block.hash === hash);
+	if (!block) return null;
 
 	let isValid = false;
 	try {

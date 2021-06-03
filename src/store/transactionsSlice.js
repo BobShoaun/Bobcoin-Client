@@ -4,7 +4,10 @@ import socket from "../socket";
 
 const transactionsSlice = createSlice({
 	name: "transactions",
-	initialState: [],
+	initialState: {
+		txs: [],
+		fetched: false,
+	},
 	reducers: {
 		newTransaction(state, { payload: transaction }) {
 			state.push(transaction);
@@ -15,11 +18,11 @@ const transactionsSlice = createSlice({
 			state.push(transaction);
 		},
 		setTransactions(state, { payload: transactions }) {
-			state.push(...transactions);
+			state.txs = transactions;
+			state.fetched = true;
 		},
 	},
 });
 
 export const { newTransaction, addTransaction, setTransactions } = transactionsSlice.actions;
-
 export default transactionsSlice.reducer;

@@ -1,25 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 import { useSelector } from "react-redux";
 
 import { useParams, Link } from "react-router-dom";
 
 import Transaction from "../../components/Transaction";
-import { getBlockConfirmations, getHighestValidBlock, getTxBlock } from "blockcrypto";
+import { getBlockConfirmations, getTxBlock } from "blockcrypto";
 
 const TransactionPage = () => {
 	const { hash } = useParams();
 
-	const transactions = useSelector(state => state.transactions);
-	const params = useSelector(state => state.blockchain.params);
+	const transactions = useSelector(state => state.transactions.txs);
+	const params = useSelector(state => state.consensus.params);
 	const blockchain = useSelector(state => state.blockchain.chain);
 	const transaction = transactions.find(tx => tx.hash === hash);
 
-	const totalInputAmount = transaction.inputs?.reduce((total, input) => total + input.amount, 0);
-	const totalOutputAmount = transaction.outputs?.reduce(
-		(total, output) => total + output.amount,
-		0
-	);
+	if (!transaction) return null;
+
+	const totalInputAmount = transaction.inputs.reduce((total, input) => total + input.amount, 0);
+	const totalOutputAmount = transaction.outputs.reduce((total, output) => total + output.amount, 0);
 	const fee = totalInputAmount - totalOutputAmount;
 
 	const isCoinbase = transaction.inputs.length === 0 && transaction.outputs.length === 1;
