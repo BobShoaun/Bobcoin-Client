@@ -80,7 +80,7 @@ const LandingPage = () => {
 					Generate a private key and address
 					<Link
 						to="generate-key"
-						className="button is-small is-link is-pulled-right has-text-weight-semibold"
+						className="button is-small is-info is-pulled-right has-text-weight-semibold"
 					>
 						Go<span className="material-icons-outlined md-18 ml-2">arrow_forward</span>
 					</Link>
@@ -89,7 +89,7 @@ const LandingPage = () => {
 					Obtain XBC by mining, or ASK the creator himself for some coins.
 					<Link
 						to="mine"
-						className="button is-small is-link is-pulled-right has-text-weight-semibold"
+						className="button is-small is-info is-pulled-right has-text-weight-semibold"
 					>
 						Go<span className="material-icons-outlined md-18 ml-2">arrow_forward</span>
 					</Link>
@@ -98,7 +98,7 @@ const LandingPage = () => {
 					Check your wallet for balance so you don't go broke!
 					<Link
 						to="wallet"
-						className="button is-small is-link is-pulled-right has-text-weight-semibold"
+						className="button is-small is-info is-pulled-right has-text-weight-semibold"
 					>
 						Go<span className="material-icons-outlined md-18 ml-2">arrow_forward</span>
 					</Link>
@@ -107,7 +107,7 @@ const LandingPage = () => {
 					Make global transactions to anyone
 					<Link
 						to="new-transaction"
-						className="button is-small is-link is-pulled-right has-text-weight-semibold"
+						className="button is-small is-info is-pulled-right has-text-weight-semibold"
 					>
 						Go<span className="material-icons-outlined md-18 ml-2">arrow_forward</span>
 					</Link>

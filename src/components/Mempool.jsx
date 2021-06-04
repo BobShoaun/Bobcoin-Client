@@ -27,10 +27,7 @@ const Mempool = () => {
 				))
 			) : (
 				<div className="py-6">
-					<p className="subtitle is-6 has-text-centered">
-						There are currently no pending transactions, looks like {params.name} ain't going to the
-						moon.
-					</p>
+					<p className="subtitle is-6 has-text-centered">There are no pending transactions...</p>
 				</div>
 			)}
 		</div>

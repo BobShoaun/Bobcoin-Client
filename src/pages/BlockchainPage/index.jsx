@@ -37,7 +37,11 @@ const BlockchainPage = () => {
 						<p className="subtitle is-6 mb-0">
 							{formatDistanceToNow(block.timestamp, { addSuffix: true, includeSeconds: true })}
 						</p>
-						<p className="subtitle is-6 mb-0">{block.transactions[0].outputs[0].address}</p>
+						<p className="subtitle is-6 mb-0">
+							<Link to={`/address/${block.transactions[0].outputs[0].address}`}>
+								{block.transactions[0].outputs[0].address ?? "-"}
+							</Link>
+						</p>
 					</React.Fragment>
 					// <Block key={block.hash} block={block} />
 				))}
