@@ -112,11 +112,11 @@ const GenerateKeyPage = () => {
 			</div>
 
 			<div className="buttons is-pulled-right">
-				<button onClick={generateRandom} className="button is-warning">
+				<button onClick={generateRandom} className="button is-dark has-text-weight-medium">
 					<span className="material-icons-outlined mr-2">casino</span>
 					Generate random key
 				</button>
-				<button onClick={saveKeys} className="button is-info">
+				<button onClick={saveKeys} className="button is-info has-text-weight-medium">
 					<span className="material-icons-outlined mr-2">save</span>
 					Save & Use key
 				</button>
@@ -159,7 +159,7 @@ const GenerateKeyPage = () => {
 						<div className="has-text-centered">
 							<button
 								onClick={() => setModalOpen(false)}
-								className="button is-primary has-text-weight-semibold"
+								className="button is-dark has-text-weight-semibold"
 							>
 								Alright
 							</button>

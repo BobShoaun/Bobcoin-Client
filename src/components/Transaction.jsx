@@ -122,8 +122,8 @@ const Transaction = ({ transaction }) => {
 			</div>
 			<div className="has-text-right">
 				<span
-					className="title is-6 is-inline-block mb-1 py-1 px-3"
-					style={{ background: "#353535", color: "white", borderRadius: "0.3em" }}
+					className="title is-6 is-inline-block mb-1 py-1 px-3 has-background-dark has-text-white"
+					style={{ borderRadius: "0.3em" }}
 				>
 					Amount = {(totalOutputAmount / params.coin).toFixed(8)} {params.symbol}
 				</span>

@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import Transactions from "../../components/Transactions";
+import { copyToClipboard } from "../../helpers";
 
 import { calculateBlockReward, getBlockConfirmations, isBlockValidInBlockchain } from "blockcrypto";
 
@@ -55,9 +56,18 @@ const BlockPage = () => {
 						<td>Miner</td>
 						<td>
 							{block.transactions[0].outputs[0].address ? (
-								<Link to={`/address/${block.transactions[0].outputs[0].address}`}>
-									{block.transactions[0].outputs[0].address}
-								</Link>
+								<div className="is-flex">
+									<Link to={`/address/${block.transactions[0].outputs[0].address}`}>
+										{block.transactions[0].outputs[0].address}
+									</Link>
+									<span
+										onClick={() => copyToClipboard(block.transactions[0].outputs[0].address)}
+										className="material-icons-outlined md-18 my-auto ml-2 is-clickable"
+										style={{ color: "lightgray" }}
+									>
+										content_copy
+									</span>
+								</div>
 							) : (
 								"-"
 							)}
@@ -69,7 +79,7 @@ const BlockPage = () => {
 					</tr>
 					<tr>
 						<td>Difficulty</td>
-						<td>3</td>
+						<td>{block.difficulty}</td>
 					</tr>
 					<tr>
 						<td>Previous block</td>

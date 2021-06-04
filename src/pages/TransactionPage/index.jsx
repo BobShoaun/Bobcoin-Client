@@ -7,6 +7,8 @@ import { useParams, Link } from "react-router-dom";
 import Transaction from "../../components/Transaction";
 import { getBlockConfirmations, getTxBlock } from "blockcrypto";
 
+import { copyToClipboard } from "../../helpers";
+
 const TransactionPage = () => {
 	const { hash } = useParams();
 
@@ -143,8 +145,14 @@ const TransactionPage = () => {
 								</tr>
 								<tr>
 									<td>Address</td>
-									<td>
+									<td className="is-flex">
 										<Link to={`/address/${output.address}`}>{output.address}</Link>
+										<span
+											onClick={() => copyToClipboard(output.address)}
+											className="material-icons-outlined md-18 my-auto ml-2 is-clickable is-dark"
+										>
+											content_copy
+										</span>
 									</td>
 								</tr>
 								<tr>

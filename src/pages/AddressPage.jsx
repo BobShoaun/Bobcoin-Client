@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 
 import { calculateBalance, getHighestValidBlock, isAddressValid, getAddressTxs } from "blockcrypto";
 import QRCode from "qrcode";
+import { copyToClipboard } from "../helpers";
 
 import Transaction from "../components/Transaction";
 
@@ -68,7 +69,17 @@ const AddressPage = () => {
 					<tbody>
 						<tr>
 							<td>Address</td>
-							<td>{address}</td>
+							<td className="is-flex">
+								{address}
+
+								<span
+									onClick={() => copyToClipboard(address)}
+									className="material-icons-outlined md-18 my-auto ml-2 is-clickable"
+									style={{ color: "lightgrey" }}
+								>
+									content_copy
+								</span>
+							</td>
 						</tr>
 						<tr>
 							<td>Valid?</td>

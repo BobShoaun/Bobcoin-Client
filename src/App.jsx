@@ -8,7 +8,7 @@ import AddressPage from "./pages/AddressPage";
 import NewTransactionPage from "./pages/NewTransactionPage";
 import BlockPage from "./pages/BlockPage";
 import TransactionPage from "./pages/TransactionPage";
-import BlockchainPage from "./pages/BlockchainPage/BlockchainPage";
+import BlockchainPage from "./pages/BlockchainPage";
 import LandingPage from "./pages/LandingPage";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -46,7 +46,7 @@ const App = () => {
 				onMouseEnter={() => setButtonWidth("auto")}
 				onMouseLeave={() => setButtonWidth("4rem")}
 				to="/new-transaction"
-				className="button is-info"
+				className="button is-link"
 			>
 				<span className="material-icons md-36">attach_money</span>
 				{buttonWidth === "auto" && <strong>New Transaction</strong>}

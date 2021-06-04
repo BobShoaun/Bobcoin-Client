@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 import { newTransaction } from "../store/transactionsSlice";
 import { getKeys, createAndSignTransaction, getHighestValidBlock, findUTXOs } from "blockcrypto";
 
 const NewTransactionPage = () => {
 	const dispatch = useDispatch();
+	const history = useHistory();
 	const blockchain = useSelector(state => state.blockchain.chain);
 	const transactions = useSelector(state => state.transactions.txs);
 	const params = useSelector(state => state.consensus.params);
@@ -104,7 +106,7 @@ const NewTransactionPage = () => {
 						></input>
 					</div>
 					<p className="control">
-						<button onClick={() => setShowSK(showSK => !showSK)} className="button is-light">
+						<button onClick={() => setShowSK(showSK => !showSK)} className="button">
 							<i className="material-icons md-18">{showSK ? "visibility_off" : "visibility"}</i>
 						</button>
 					</p>
@@ -121,7 +123,9 @@ const NewTransactionPage = () => {
 					placeholder="Input private key above to get public key"
 					readOnly
 				></input>
-				<p className="help">The public key of the sender generated from the private key above.</p>
+				<p className="help">
+					The public key of the sender generated from the private key above. (read only)
+				</p>
 			</div>
 
 			<div className="field mb-4">
@@ -133,17 +137,32 @@ const NewTransactionPage = () => {
 					placeholder="Input private key above to get address"
 					readOnly
 				></input>
-				<p className="help">The address of the sender generated from the public key above.</p>
+				<p className="help">
+					The address of the sender generated from the public key above. (read only)
+				</p>
 			</div>
 
-			<div className="field mb-4">
+			<div className="field mb-5">
 				<label className="label">Recipient's Address</label>
-				<input
-					className="input"
-					type="text"
-					placeholder="Enter Address"
-					onChange={({ target: { value } }) => setRecipientAdd(value)}
-				></input>
+				<div className="field has-addons mb-0">
+					<div className="control is-expanded">
+						<input
+							className="input"
+							type="text"
+							placeholder="Enter Address"
+							value={recipientAdd}
+							onChange={({ target: { value } }) => setRecipientAdd(value)}
+						></input>
+					</div>
+					<p className="control">
+						<button
+							onClick={async () => setRecipientAdd(await navigator.clipboard.readText())}
+							className="button"
+						>
+							<i className="material-icons md-18">content_paste</i>
+						</button>
+					</p>
+				</div>
 				{/* <p className="help">The public key of the recipient of this transaction.</p> */}
 			</div>
 
@@ -176,7 +195,9 @@ const NewTransactionPage = () => {
 			</div>
 
 			<div className="buttons is-pulled-right">
-				<button className="button">Cancel</button>
+				<button onClick={history.goBack} className="button">
+					Cancel
+				</button>
 				<button className="button is-info has-text-weight-semibold" onClick={createTransaction}>
 					<span className="material-icons-outlined mr-2">payments</span>
 					Create & Sign
@@ -207,7 +228,7 @@ const NewTransactionPage = () => {
 						<div className="has-text-centered">
 							<button
 								onClick={() => setConfirmModal(false)}
-								className="button is-primary has-text-weight-semibold"
+								className="button is-dark has-text-weight-semibold"
 							>
 								Okay
 							</button>
@@ -242,7 +263,7 @@ const NewTransactionPage = () => {
 						<div className="has-text-centered">
 							<button
 								onClick={() => setErrorModal(false)}
-								className="button is-primary has-text-weight-semibold"
+								className="button is-dark has-text-weight-semibold"
 							>
 								Okay
 							</button>

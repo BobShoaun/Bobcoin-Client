@@ -19,9 +19,9 @@ const LandingPage = () => {
 					<span className="material-icons-outlined mr-2">code</span>
 					Source
 				</a>
-				<Link to="overview" className="button is-warning">
+				<Link to="overview" className="button is-primary">
 					<span className="material-icons-outlined mr-2">explore</span>
-					Explore Bobcoin
+					Explore
 				</Link>
 			</div>
 			<img
@@ -72,7 +72,7 @@ const LandingPage = () => {
 
 			<div className="has-text-centered mb-6">
 				<h1 className="title is-3">What are you waiting for?</h1>
-				<p className="subtitle is-4">Start investing in Bobcoins</p>
+				<p className="subtitle is-4">Start investing in bobcoins</p>
 				<hr />
 			</div>
 			<ol className="mx-auto subtitle is-5 px-6" style={{ fwidth: "50em", marginBottom: "5em" }}>
@@ -80,7 +80,7 @@ const LandingPage = () => {
 					Generate a private key and address
 					<Link
 						to="generate-key"
-						className="button is-small is-primary is-pulled-right has-text-weight-semibold"
+						className="button is-small is-link is-pulled-right has-text-weight-semibold"
 					>
 						Go<span className="material-icons-outlined md-18 ml-2">arrow_forward</span>
 					</Link>
@@ -89,7 +89,7 @@ const LandingPage = () => {
 					Obtain XBC by mining, or ASK the creator himself for some coins.
 					<Link
 						to="mine"
-						className="button is-small is-primary is-pulled-right has-text-weight-semibold"
+						className="button is-small is-link is-pulled-right has-text-weight-semibold"
 					>
 						Go<span className="material-icons-outlined md-18 ml-2">arrow_forward</span>
 					</Link>
@@ -98,7 +98,7 @@ const LandingPage = () => {
 					Check your wallet for balance so you don't go broke!
 					<Link
 						to="wallet"
-						className="button is-small is-primary is-pulled-right has-text-weight-semibold"
+						className="button is-small is-link is-pulled-right has-text-weight-semibold"
 					>
 						Go<span className="material-icons-outlined md-18 ml-2">arrow_forward</span>
 					</Link>
@@ -107,7 +107,7 @@ const LandingPage = () => {
 					Make global transactions to anyone
 					<Link
 						to="new-transaction"
-						className="button is-small is-primary is-pulled-right has-text-weight-semibold"
+						className="button is-small is-link is-pulled-right has-text-weight-semibold"
 					>
 						Go<span className="material-icons-outlined md-18 ml-2">arrow_forward</span>
 					</Link>

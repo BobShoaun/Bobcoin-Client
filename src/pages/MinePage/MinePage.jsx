@@ -189,7 +189,7 @@ const MinePage = () => {
 				<div className="modal-card">
 					<section className="modal-card-body p-6" style={{ borderRadius: "1em" }}>
 						<div className="mb-5 is-flex is-align-items-center is-justify-content-center">
-							<i className="material-icons-outlined md-36 mr-3 has-text-black">engineering</i>
+							<i className="material-icons-outlined md-36 mr-3 has-text-black">view_in_ar</i>
 							<h3 className="title is-3">You have mined a Block!</h3>
 						</div>
 						<img
@@ -210,7 +210,7 @@ const MinePage = () => {
 						<div className="has-text-centered">
 							<button
 								onClick={() => setModalOpen(false)}
-								className="button is-primary has-text-weight-semibold"
+								className="button is-dark has-text-weight-semibold"
 							>
 								Cool
 							</button>

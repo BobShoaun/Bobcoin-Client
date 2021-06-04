@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const Navbar = () => (
-	<nav className="navbar is-primary" role="navigation" aria-label="main navigation">
+	<nav className="navbar is-dark" role="navigation" aria-label="main navigation">
 		<div className="navbar-brand">
 			<Link className="navbar-item mr-2" to="/">
 				<span className="material-icons-outlined mr-2">monetization_on</span>
@@ -44,7 +44,7 @@ const Navbar = () => (
 			<div className="navbar-end">
 				<div className="navbar-item">
 					<div className="buttons">
-						<Link to="/generate-key" className="button is-warning mr-3">
+						<Link to="/generate-key" className="button is-primary mr-3">
 							<span className="material-icons mr-2">vpn_key</span>
 							<p className="has-text-weight-semibold">Generate Key</p>
 						</Link>
