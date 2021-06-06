@@ -2,10 +2,17 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-import { isTransactionValid, isCoinbaseTxValid, RESULT } from "blockcrypto";
+import {
+	isTransactionValid,
+	isCoinbaseTxValid,
+	getTxBlock,
+	getBlockConfirmations,
+	RESULT,
+} from "blockcrypto";
 
 const Transaction = ({ transaction }) => {
 	const params = useSelector(state => state.consensus.params);
+	const blockchain = useSelector(state => state.blockchain.chain);
 	const transactions = useSelector(state => state.transactions.txs);
 	const txsFetched = useSelector(state => state.transactions.fetched);
 
@@ -28,6 +35,9 @@ const Transaction = ({ transaction }) => {
 	const isValid =
 		(isCoinbase ? isCoinbaseTxValid(params, transaction) : isTransactionValid(params, transaction))
 			.code === RESULT.VALID;
+
+	const block = getTxBlock(blockchain, transaction);
+	const confirmations = block ? getBlockConfirmations(blockchain, block) : 0;
 
 	const keyText = {
 		// maxWidth: "20em",
@@ -115,24 +125,38 @@ const Transaction = ({ transaction }) => {
 					))}
 				</div>
 			</div>
-			<div className="has-text-right">
-				<span
-					className="title is-6 is-inline-block mb-1 py-1 px-3 has-background-dark has-text-white"
-					style={{ borderRadius: "0.3em" }}
-				>
-					Amount = {(totalOutputAmount / params.coin).toFixed(8)} {params.symbol}
-				</span>
-				{!isCoinbase && (
-					<div>
-						<span
-							className="title is-6 is-inline-block mb-1 py-1 px-3"
-							style={{ background: "lightgray", borderRadius: "0.3em" }}
-						>
-							Fee = {(fee / params.coin).toFixed(8)} {params.symbol}
-						</span>
-					</div>
-				)}
-			</div>
+			<section className="is-flex">
+				<div className="mt-auto">
+					<span
+						className={`subtitle is-6 is-inline-block mb-1 py-1 px-3  has-text-white ${
+							confirmations < params.blkMaturity
+								? "has-background-warning"
+								: "has-background-success"
+						}`}
+						style={{ borderRadius: "0.3em" }}
+					>
+						{confirmations > 0 ? `${confirmations} Confirmations` : "Unconfirmed (Mempool)"}
+					</span>
+				</div>
+				<div className="has-text-right ml-auto">
+					<span
+						className="title is-6 is-inline-block mb-1 py-1 px-3 has-background-dark has-text-white"
+						style={{ borderRadius: "0.3em" }}
+					>
+						Amount = {(totalOutputAmount / params.coin).toFixed(8)} {params.symbol}
+					</span>
+					{!isCoinbase && (
+						<div>
+							<span
+								className="title is-6 is-inline-block mb-1 py-1 px-3"
+								style={{ background: "lightgray", borderRadius: "0.3em" }}
+							>
+								Fee = {(fee / params.coin).toFixed(8)} {params.symbol}
+							</span>
+						</div>
+					)}
+				</div>
+			</section>
 		</div>
 	);
 };
