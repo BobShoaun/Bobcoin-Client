@@ -8,9 +8,23 @@ import {
 	getTxBlock,
 	getBlockConfirmations,
 	RESULT,
+	getHighestValidBlock,
 } from "blockcrypto";
 
-const Transaction = ({ transaction }) => {
+function getBlockConfirmations2(blockchain, block) {
+	let confirmations = 0;
+	let currHash = block.hash;
+	for (const blk of blockchain) {
+		if (blk.hash === currHash) confirmations++;
+		if (blk.previousHash === currHash) {
+			currHash = blk.hash;
+			confirmations++;
+		}
+	}
+	return confirmations;
+}
+
+const Transaction = ({ transaction, block }) => {
 	const params = useSelector(state => state.consensus.params);
 	const blockchain = useSelector(state => state.blockchain.chain);
 	const transactions = useSelector(state => state.transactions.txs);
@@ -36,8 +50,10 @@ const Transaction = ({ transaction }) => {
 		(isCoinbase ? isCoinbaseTxValid(params, transaction) : isTransactionValid(params, transaction))
 			.code === RESULT.VALID;
 
-	const block = getTxBlock(blockchain, transaction);
-	const confirmations = block ? getBlockConfirmations(blockchain, block) : 0;
+	// const block = getTxBlock2(blockchain, transaction);
+	// console.log(block);
+	const txBlock = block ?? getHighestValidBlock(blockchain);
+	const confirmations = block ? getBlockConfirmations2(blockchain, block) : 0;
 
 	const keyText = {
 		// maxWidth: "20em",
@@ -57,7 +73,7 @@ const Transaction = ({ transaction }) => {
 		<div className="">
 			<div className="is-flex mb-1">
 				<h3 className="title is-6 mb-0">Hash: &nbsp;</h3>
-				<Link to={`/transaction/${transaction.hash}`} className="">
+				<Link to={`/transaction/${transaction.hash}?block=${txBlock.hash}`} className="">
 					<p className="subtitle is-6 mb-0"> {transaction.hash ?? "no hash"}</p>
 				</Link>
 				<p className="ml-auto subtitle is-6 mb-0">

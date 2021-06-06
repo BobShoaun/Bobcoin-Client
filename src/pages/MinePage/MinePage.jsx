@@ -6,7 +6,15 @@ import MineMempool from "./MineMempool";
 
 import { newBlock } from "../../store/blockchainSlice";
 import { newTransaction } from "../../store/transactionsSlice";
-import { getHighestValidBlock, createCoinbaseTransaction, calculateBlockReward } from "blockcrypto";
+import {
+	getHighestValidBlock,
+	createCoinbaseTransaction,
+	calculateBlockReward,
+	isBlockValidInBlockchain,
+	addBlockToBlockchain,
+	isBlockchainValid,
+	RESULT,
+} from "blockcrypto";
 
 import Miner from "./miner.worker";
 
@@ -69,8 +77,18 @@ const MinePage = () => {
 						...log,
 						`\nMining successful! New block mined with...\nhash: ${data.block.hash}\nnonce: ${data.block.nonce}`,
 					]);
-					dispatch(newBlock(data.block));
 					setActiveWorker(null);
+
+					const blockchainCopy = [...blockchain];
+					const block = data.block;
+					addBlockToBlockchain(blockchainCopy, block);
+
+					if (isBlockchainValid(params, blockchainCopy, block).code !== RESULT.VALID) {
+						console.error("Block is invalid, not broadcasting...: ", block);
+						break;
+					}
+
+					dispatch(newBlock(data.block));
 					// TODO: show success pop up
 					setModalOpen(true);
 					break;

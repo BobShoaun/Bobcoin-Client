@@ -162,7 +162,7 @@ const BlockPage = () => {
 			<hr />
 			<div className="mb-5">
 				{block.transactions.length ? (
-					<Transactions transactions={block.transactions}></Transactions>
+					<Transactions transactions={block.transactions} block={block}></Transactions>
 				) : (
 					<p className="subtitle has-text-centered is-6">
 						This block does not contain any transactions.

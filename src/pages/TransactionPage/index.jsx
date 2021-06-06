@@ -2,12 +2,12 @@ import React from "react";
 
 import { useSelector } from "react-redux";
 
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useLocation } from "react-router-dom";
 
 import Transaction from "../../components/Transaction";
 import {
 	getBlockConfirmations,
-	getTxBlock,
+	getHighestValidBlock,
 	isCoinbaseTxValid,
 	isTransactionValid,
 	RESULT,
@@ -17,6 +17,8 @@ import { copyToClipboard } from "../../helpers";
 
 const TransactionPage = () => {
 	const { hash } = useParams();
+	const location = useLocation();
+	const blockHash = new URLSearchParams(location.search).get("block");
 
 	const transactions = useSelector(state => state.transactions.txs);
 	const params = useSelector(state => state.consensus.params);
@@ -31,8 +33,8 @@ const TransactionPage = () => {
 
 	const isCoinbase = transaction.inputs.length === 0 && transaction.outputs.length === 1;
 
-	console.log(transaction);
-	const block = getTxBlock(blockchain, transaction);
+	const block =
+		blockchain.find(block => block.hash === blockHash) ?? getHighestValidBlock(blockchain);
 	const confirmations = block ? getBlockConfirmations(blockchain, block) : 0;
 	const status =
 		confirmations === 0 ? "Unconfirmed (in Mempool)" : `${confirmations} confirmations`;
@@ -52,7 +54,7 @@ const TransactionPage = () => {
 			<h1 className="title is-4">Summary</h1>
 
 			<div className="card card-content has-background-white">
-				<Transaction transaction={transaction}></Transaction>
+				<Transaction transaction={transaction} block={block}></Transaction>
 			</div>
 			<hr />
 

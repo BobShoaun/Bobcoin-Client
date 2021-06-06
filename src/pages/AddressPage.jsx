@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { useParams, Link, useHistory } from "react-router-dom";
+import { useParams, useHistory, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import {
@@ -14,8 +14,19 @@ import { copyToClipboard } from "../helpers";
 
 import Transaction from "../components/Transaction";
 
-function getAddressTxs2(blockchain, address) {
-	const transactions = calculateTransactionSet(blockchain, getHighestValidBlock(blockchain));
+function getTxBlock2(blockchain, headBlockHash, transaction) {
+	let prevBlockHash = headBlockHash;
+	for (let i = blockchain.length - 1; i >= 0; i--) {
+		if (blockchain[i].hash !== prevBlockHash) continue;
+		if (blockchain[i].transactions.some(tx => tx.hash === transaction.hash)) return blockchain[i];
+		prevBlockHash = blockchain[i].previousHash;
+	}
+	// tx does not exist in chain.
+	return null;
+}
+
+function getAddressTxs2(blockchain, headBlock, address) {
+	const transactions = calculateTransactionSet(blockchain, headBlock);
 	const receivedTxs = [];
 	const sentTxs = [];
 	for (const transaction of transactions) {
@@ -39,6 +50,9 @@ function getAddressTxs2(blockchain, address) {
 
 const AddressPage = () => {
 	const history = useHistory();
+	const location = useLocation();
+	const headBlockHash = new URLSearchParams(location.search).get("head");
+
 	const blockchain = useSelector(state => state.blockchain.chain);
 	const blockchainFetched = useSelector(state => state.blockchain.fetched);
 	const params = useSelector(state => state.consensus.params);
@@ -52,9 +66,9 @@ const AddressPage = () => {
 
 	if (!blockchainFetched || !paramsFetched || !transactionsFetched) return null;
 
-	const balance = (
-		calculateBalance(blockchain, getHighestValidBlock(blockchain), address) / params.coin
-	).toFixed(8);
+	const headBlock =
+		blockchain.find(block => block.hash === headBlockHash) ?? getHighestValidBlock(blockchain);
+	const balance = (calculateBalance(blockchain, headBlock, address) / params.coin).toFixed(8);
 
 	const findTxo = input => {
 		const tx = transactions.find(tx => tx.hash === input.txHash);
@@ -62,7 +76,7 @@ const AddressPage = () => {
 		return output;
 	};
 
-	const [receivedTxs, sentTxs] = getAddressTxs2(blockchain, address);
+	const [receivedTxs, sentTxs] = getAddressTxs2(blockchain, headBlock, address);
 	const totalReceived = receivedTxs.reduce(
 		(total, curr) =>
 			total +
@@ -181,7 +195,7 @@ const AddressPage = () => {
 					receivedTxs.map(tx => (
 						<div key={tx.hash} className="card mb-2">
 							<div className="card-content">
-								<Transaction transaction={tx} />
+								<Transaction transaction={tx} block={getTxBlock2(blockchain, headBlock.hash, tx)} />
 							</div>
 						</div>
 					))
@@ -200,7 +214,7 @@ const AddressPage = () => {
 				sentTxs.map(tx => (
 					<div key={tx.hash} className="card mb-2">
 						<div className="card-content">
-							<Transaction transaction={tx} />
+							<Transaction transaction={tx} block={getTxBlock2(blockchain, headBlock.hash, tx)} />
 						</div>
 					</div>
 				))
