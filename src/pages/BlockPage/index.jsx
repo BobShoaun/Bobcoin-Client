@@ -5,22 +5,44 @@ import { useSelector } from "react-redux";
 import Transactions from "../../components/Transactions";
 import { copyToClipboard } from "../../helpers";
 
-import { calculateBlockReward, getBlockConfirmations, isBlockValidInBlockchain } from "blockcrypto";
+import {
+	calculateBlockReward,
+	getBlockConfirmations,
+	isBlockValidInBlockchain,
+	calculateHashTarget,
+	bigIntToHex64,
+	RESULT,
+} from "blockcrypto";
 
 const BlockPage = () => {
 	const { hash } = useParams();
 	const blockchain = useSelector(state => state.blockchain.chain);
+	const transactions = useSelector(state => state.transactions.txs);
+	const transactionsFetched = useSelector(state => state.transactions.fetched);
 	const params = useSelector(state => state.consensus.params);
 
 	const block = blockchain.find(block => block.hash === hash);
-	if (!block) return null;
+	if (!block || !transactionsFetched) return null;
 
-	let isValid = false;
-	try {
-		isValid = isBlockValidInBlockchain(params, blockchain, block);
-	} catch (e) {
-		console.log(e);
-	}
+	const validation = isBlockValidInBlockchain(params, blockchain, block);
+	const isValid = validation.code === RESULT.VALID;
+
+	const findTxo = input => {
+		const tx = transactions.find(tx => tx.hash === input.txHash);
+		const output = tx.outputs[input.outIndex];
+		return output;
+	};
+
+	const totalInputAmount = block.transactions
+		.slice(1)
+		.reduce(
+			(total, tx) => total + tx.inputs.reduce((inT, input) => inT + findTxo(input).amount, 0),
+			0
+		);
+	const totalOutputAmount = block.transactions
+		.slice(1)
+		.reduce((total, tx) => total + tx.outputs.reduce((outT, output) => outT + output.amount, 0), 0);
+	const fee = totalInputAmount - totalOutputAmount;
 
 	return (
 		<section className="section">
@@ -73,13 +95,18 @@ const BlockPage = () => {
 							)}
 						</td>
 					</tr>
-					<tr>
-						<td>Nonce</td>
-						<td>{block.nonce}</td>
-					</tr>
+
 					<tr>
 						<td>Difficulty</td>
 						<td>{block.difficulty}</td>
+					</tr>
+					<tr>
+						<td>Target Hash</td>
+						<td>{bigIntToHex64(calculateHashTarget(params, block))}</td>
+					</tr>
+					<tr>
+						<td>Nonce</td>
+						<td>{block.nonce}</td>
 					</tr>
 					<tr>
 						<td>Previous block</td>
@@ -98,8 +125,7 @@ const BlockPage = () => {
 					<tr>
 						<td>Total transaction volume</td>
 						<td>
-							{block.transactions.reduce((prev, curr) => prev + parseFloat(curr.amount), 0)}{" "}
-							{params.symbol}
+							{(totalInputAmount / params.coin).toFixed(8)} {params.symbol}
 						</td>
 					</tr>
 					<tr>
@@ -110,19 +136,22 @@ const BlockPage = () => {
 						</td>
 					</tr>
 					<tr>
-						<td>Fee reward</td>
-						<td>idk {params.symbol}</td>
+						<td>Total Fees</td>
+						<td>
+							{(fee / params.coin).toFixed(8)} {params.symbol}
+						</td>
 					</tr>
 					<tr>
 						<td>Valid</td>
 						<td>
 							{isValid ? (
-								<div className="icon has-text-success ml-auto">
-									<i className="material-icons">check_circle_outline</i>
+								<div className="">
+									<i className="material-icons has-text-success">check_circle_outline</i>
 								</div>
 							) : (
-								<div className="icon has-text-danger ml-auto">
-									<i className="material-icons">dangerous</i>
+								<div className="is-flex">
+									<i className="material-icons has-text-danger">dangerous</i>
+									<p className="ml-2">{validation.msg}</p>
 								</div>
 							)}
 						</td>

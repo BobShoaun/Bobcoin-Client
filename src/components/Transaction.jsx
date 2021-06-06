@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-import { isTransactionValid, isCoinbaseTxValid } from "blockcrypto";
+import { isTransactionValid, isCoinbaseTxValid, RESULT } from "blockcrypto";
 
 const Transaction = ({ transaction }) => {
 	const params = useSelector(state => state.consensus.params);
@@ -25,14 +25,9 @@ const Transaction = ({ transaction }) => {
 	const totalOutputAmount = transaction.outputs.reduce((total, output) => total + output.amount, 0);
 	const fee = totalInputAmount - totalOutputAmount;
 
-	let isValid = false;
-	try {
-		isValid = isCoinbase
-			? isCoinbaseTxValid(params, transaction)
-			: isTransactionValid(params, transaction);
-	} catch (e) {
-		console.log(e);
-	}
+	const isValid =
+		(isCoinbase ? isCoinbaseTxValid(params, transaction) : isTransactionValid(params, transaction))
+			.code === RESULT.VALID;
 
 	const keyText = {
 		// maxWidth: "20em",
@@ -96,7 +91,7 @@ const Transaction = ({ transaction }) => {
 				{!isCoinbase && (
 					<div className="ml-auto">
 						{transaction.inputs.map((input, index) => (
-							<p key={index} className="has-text-weight-medium">
+							<p key={index} className="has-text-weight-medium has-text-right">
 								{(findTxo(input).amount / params.coin).toFixed(8)} {params.symbol}
 							</p>
 						))}
@@ -114,7 +109,7 @@ const Transaction = ({ transaction }) => {
 				</div>
 				<div className="ml-auto" style={{ width: "" }}>
 					{transaction.outputs.map((output, index) => (
-						<p key={index} className="has-text-weight-medium">
+						<p key={index} className="has-text-weight-medium has-text-right">
 							{(output.amount / params.coin).toFixed(8)} {params.symbol}
 						</p>
 					))}

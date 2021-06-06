@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { generateKeys, getKeys } from "blockcrypto";
 import QRCode from "qrcode";
+import { copyToClipboard } from "../helpers";
 
 const GenerateKeyPage = () => {
 	const params = useSelector(state => state.consensus.params);
@@ -76,9 +77,9 @@ const GenerateKeyPage = () => {
 								></input>
 							</div>
 							<p className="control">
-								<Link className="button is-light">
+								<button className="button" onClick={() => copyToClipboard(secretKey)}>
 									<i className="material-icons md-18">content_copy</i>
-								</Link>
+								</button>
 							</p>
 						</div>
 						<p className="help is-danger">
@@ -101,9 +102,9 @@ const GenerateKeyPage = () => {
 								<input className="input" type="text" value={address} readOnly />
 							</div>
 							<p className="control">
-								<Link className="button is-light">
+								<button className="button" onClick={() => copyToClipboard(address)}>
 									<i className="material-icons md-18">content_copy</i>
-								</Link>
+								</button>
 							</p>
 						</div>
 						<p className="help">This is used as an address to send and receive {params.symbol}.</p>

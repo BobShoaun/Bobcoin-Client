@@ -2,11 +2,40 @@ import React, { useState, useRef } from "react";
 import { useParams, Link, useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-import { calculateBalance, getHighestValidBlock, isAddressValid, getAddressTxs } from "blockcrypto";
+import {
+	calculateBalance,
+	getHighestValidBlock,
+	isAddressValid,
+	getAddressTxs,
+	calculateTransactionSet,
+} from "blockcrypto";
 import QRCode from "qrcode";
 import { copyToClipboard } from "../helpers";
 
 import Transaction from "../components/Transaction";
+
+function getAddressTxs2(blockchain, address) {
+	const transactions = calculateTransactionSet(blockchain, getHighestValidBlock(blockchain));
+	const receivedTxs = [];
+	const sentTxs = [];
+	for (const transaction of transactions) {
+		if (transaction.outputs.some(output => output.address === address))
+			receivedTxs.push(transaction);
+	}
+	for (const transaction of transactions) {
+		if (
+			transaction.inputs.some(input =>
+				receivedTxs.some(
+					tx => input.txHash === tx.hash && tx.outputs[input.outIndex].address === address
+				)
+			)
+		)
+			sentTxs.push(transaction);
+	}
+	// really doesnt make sense to split into received and sent because they are not mutually exclusive..
+	// but for ui sake its good, maybe return all txs too.
+	return [receivedTxs, sentTxs];
+}
 
 const AddressPage = () => {
 	const history = useHistory();
@@ -14,22 +43,46 @@ const AddressPage = () => {
 	const blockchainFetched = useSelector(state => state.blockchain.fetched);
 	const params = useSelector(state => state.consensus.params);
 	const paramsFetched = useSelector(state => state.consensus.fetched);
+	const transactions = useSelector(state => state.transactions.txs);
+	const transactionsFetched = useSelector(state => state.transactions.fetched);
+
 	const { address } = useParams();
 	const [addressQR, setAddressQR] = useState("");
 	const searchInput = useRef();
 
-	if (!blockchainFetched || !paramsFetched) return null;
+	if (!blockchainFetched || !paramsFetched || !transactionsFetched) return null;
 
 	const balance = (
 		calculateBalance(blockchain, getHighestValidBlock(blockchain), address) / params.coin
 	).toFixed(8);
 
-	const [receivedTxs, sentTxs] = getAddressTxs(blockchain, address);
+	const findTxo = input => {
+		const tx = transactions.find(tx => tx.hash === input.txHash);
+		const output = tx.outputs[input.outIndex];
+		return output;
+	};
 
-	let isValid = false;
-	try {
-		isValid = isAddressValid(params, address);
-	} catch {}
+	const [receivedTxs, sentTxs] = getAddressTxs2(blockchain, address);
+	const totalReceived = receivedTxs.reduce(
+		(total, curr) =>
+			total +
+			curr.outputs
+				.filter(out => out.address === address)
+				.reduce((outT, outC) => outT + outC.amount, 0),
+		0
+	);
+
+	const totalSent = sentTxs.reduce(
+		(total, curr) =>
+			total +
+			curr.inputs.reduce((inT, inC) => {
+				const txo = findTxo(inC);
+				return inT + (txo.address === address ? txo.amount : 0);
+			}, 0),
+		0
+	);
+
+	const isValid = isAddressValid(params, address);
 
 	QRCode.toString(address).then(setAddressQR);
 
@@ -101,11 +154,15 @@ const AddressPage = () => {
 						</tr>
 						<tr>
 							<td>Total Received</td>
-							<td>0</td>
+							<td>
+								{(totalReceived / params.coin).toFixed(8)} {params.symbol}
+							</td>
 						</tr>
 						<tr>
 							<td>Total Sent</td>
-							<td>0</td>
+							<td>
+								{(totalSent / params.coin).toFixed(8)} {params.symbol}
+							</td>
 						</tr>
 						<tr>
 							<td>Final Balance</td>

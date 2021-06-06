@@ -2,18 +2,13 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-import { isBlockValidInBlockchain } from "blockcrypto";
+import { isBlockValidInBlockchain, RESULT } from "blockcrypto";
 
 const Block = ({ block }) => {
 	const params = useSelector(state => state.consensus.params);
 	const blockchain = useSelector(state => state.blockchain.chain);
 
-	let isValid = false;
-	try {
-		isValid = isBlockValidInBlockchain(params, blockchain, block);
-	} catch (e) {
-		console.log(e);
-	}
+	const isValid = isBlockValidInBlockchain(params, blockchain, block).code === RESULT.VALID;
 
 	return (
 		<div className="card is-flex is-flex-direction-column h-100">

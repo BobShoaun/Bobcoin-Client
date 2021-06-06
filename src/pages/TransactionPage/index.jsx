@@ -5,7 +5,13 @@ import { useSelector } from "react-redux";
 import { useParams, Link } from "react-router-dom";
 
 import Transaction from "../../components/Transaction";
-import { getBlockConfirmations, getTxBlock } from "blockcrypto";
+import {
+	getBlockConfirmations,
+	getTxBlock,
+	isCoinbaseTxValid,
+	isTransactionValid,
+	RESULT,
+} from "blockcrypto";
 
 import { copyToClipboard } from "../../helpers";
 
@@ -30,6 +36,12 @@ const TransactionPage = () => {
 	const confirmations = block ? getBlockConfirmations(blockchain, block) : 0;
 	const status =
 		confirmations === 0 ? "Unconfirmed (in Mempool)" : `${confirmations} confirmations`;
+
+	const validation = isCoinbase
+		? isCoinbaseTxValid(params, transaction)
+		: isTransactionValid(params, transaction);
+
+	const isValid = validation.code === RESULT.VALID;
 
 	return (
 		<section className="section">
@@ -71,11 +83,15 @@ const TransactionPage = () => {
 
 					<tr>
 						<td>Total Input Amount</td>
-						<td>{totalInputAmount}</td>
+						<td>
+							{(totalInputAmount / params.coin).toFixed(8)} {params.symbol}
+						</td>
 					</tr>
 					<tr>
 						<td>Total Output Amount</td>
-						<td>{totalOutputAmount}</td>
+						<td>
+							{(totalOutputAmount / params.coin).toFixed(8)} {params.symbol}
+						</td>
 					</tr>
 					<tr>
 						<td>Fee</td>
@@ -87,6 +103,21 @@ const TransactionPage = () => {
 							{transaction.inputs?.[0]?.signature ?? "-"}
 						</td>
 					</tr>
+					<tr>
+						<td>Valid?</td>
+						<td>
+							{isValid ? (
+								<div className="">
+									<i className="material-icons has-text-success">check_circle_outline</i>
+								</div>
+							) : (
+								<div className="is-flex">
+									<i className="material-icons has-text-danger">dangerous</i>
+									<p className="ml-2">{validation.msg}</p>
+								</div>
+							)}
+						</td>
+					</tr>
 				</tbody>
 			</table>
 
@@ -95,8 +126,8 @@ const TransactionPage = () => {
 			<div className="mb-6">
 				<table className="-table mb-5" style={{ width: "100%", borderSpacing: "10px" }}>
 					<tbody>
-						{transaction.inputs.map(input => (
-							<>
+						{transaction.inputs.map((input, index) => (
+							<React.Fragment key={index}>
 								<tr>
 									<td>Transaction Hash</td>
 									<td>
@@ -126,7 +157,7 @@ const TransactionPage = () => {
 										{input.signature}
 									</td>
 								</tr>
-							</>
+							</React.Fragment>
 						))}
 					</tbody>
 				</table>
@@ -138,7 +169,7 @@ const TransactionPage = () => {
 				<table className="mb-5" style={{ width: "100%", borderSpacing: "10px" }}>
 					<tbody>
 						{transaction.outputs.map((output, index) => (
-							<>
+							<React.Fragment key={index}>
 								<tr>
 									<td>Index</td>
 									<td>{index}</td>
@@ -161,7 +192,7 @@ const TransactionPage = () => {
 										{(output.amount / params.coin).toFixed(8)} {params.symbol}
 									</td>
 								</tr>
-							</>
+							</React.Fragment>
 						))}
 					</tbody>
 				</table>
