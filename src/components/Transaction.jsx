@@ -2,15 +2,18 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
+import ReactTooltip from "react-tooltip";
+
 import {
 	isTransactionValid,
 	isCoinbaseTxValid,
 	getBlockConfirmations,
 	RESULT,
 	getHighestValidBlock,
+	calculateUTXOSet,
 } from "blockcrypto";
 
-const Transaction = ({ transaction, block }) => {
+const Transaction = ({ transaction, block, headBlock }) => {
 	const params = useSelector(state => state.consensus.params);
 	const blockchain = useSelector(state => state.blockchain.chain);
 	const blockchainFetched = useSelector(state => state.blockchain.fetched);
@@ -37,26 +40,24 @@ const Transaction = ({ transaction, block }) => {
 		(isCoinbase ? isCoinbaseTxValid(params, transaction) : isTransactionValid(params, transaction))
 			.code === RESULT.VALID;
 
-	// const txBlock = block ?? getHighestValidBlock(params, blockchain);
+	const inMempool = !block;
 	const confirmations = block ? getBlockConfirmations(blockchain, block) : 0;
+	const head = headBlock ?? getHighestValidBlock(params, blockchain);
 
-	const keyText = {
-		// maxWidth: "20em",
-		display: "block",
-		whiteSpace: "pre-wrap",
-		wordWrap: "break-word",
-	};
-	const signatureText = {
-		// display: "block",
-		maxWidth: "55em",
-		whiteSpace: "nowrap",
-		overflow: "hidden",
-		textOverflow: "ellipsis",
-	};
+	const utxos = calculateUTXOSet(blockchain, head);
 
 	return (
 		<div className="">
-			<div className="is-flex mb-1">
+			<div className="is-flex is-align-items-center mb-1">
+				{isValid ? (
+					<div className="icon mr-2">
+						<i className="material-icons md-18">check_circle</i>
+					</div>
+				) : (
+					<div className="icon has-text-danger mr-2">
+						<i className="material-icons md-18">dangerous</i>
+					</div>
+				)}
 				<h3 className="title is-6 mb-0">Hash: &nbsp;</h3>
 				<Link
 					to={
@@ -70,15 +71,6 @@ const Transaction = ({ transaction, block }) => {
 				<p className="ml-auto subtitle is-6 mb-0">
 					{new Date(transaction.timestamp).toUTCString()}
 				</p>
-				{isValid ? (
-					<div className="icon has-text-success ml-3">
-						<i className="material-icons">check_circle_outline</i>
-					</div>
-				) : (
-					<div className="icon has-text-danger ml-3">
-						<i className="material-icons">dangerous</i>
-					</div>
-				)}
 			</div>
 
 			{/* {normalTransaction && (
@@ -115,7 +107,9 @@ const Transaction = ({ transaction, block }) => {
 					</div>
 				)}
 				<div className="has-text-centered" style={{ width: "5em" }}>
-					<i className="material-icons">arrow_right_alt</i>
+					<i className="material-icons md-28" style={{ lineHeight: "24px" }}>
+						arrow_right_alt
+					</i>
 				</div>
 				<div>
 					{transaction.outputs.map((output, index) => (
@@ -126,9 +120,36 @@ const Transaction = ({ transaction, block }) => {
 				</div>
 				<div className="ml-auto" style={{ width: "" }}>
 					{transaction.outputs.map((output, index) => (
-						<p key={index} className="has-text-weight-medium has-text-right">
-							{(output.amount / params.coin).toFixed(8)} {params.symbol}
-						</p>
+						<div key={index} className="is-flex is-align-items-center is-justify-content-flex-end">
+							<p className="has-text-weight-medium has-text-right">
+								{(output.amount / params.coin).toFixed(8)} {params.symbol}
+							</p>
+							{utxos.some(
+								utxo =>
+									utxo.address === output.address &&
+									utxo.amount === output.amount &&
+									utxo.txHash === transaction.hash &&
+									utxo.outIndex === index
+							) || inMempool ? (
+								<a data-tip data-for="unspent">
+									<span className="has-text-success material-icons-outlined ml-2 md-18 is-block my-auto">
+										credit_card
+									</span>
+									<ReactTooltip id="unspent" type="dark" effect="solid">
+										<span>Unspent output</span>
+									</ReactTooltip>
+								</a>
+							) : (
+								<a data-tip data-for="spent">
+									<span className="has-text-danger material-icons-outlined ml-2 md-18 is-block my-auto">
+										credit_card_off
+									</span>
+									<ReactTooltip id="spent" type="error" effect="solid">
+										<span>Spent output</span>
+									</ReactTooltip>
+								</a>
+							)}
+						</div>
 					))}
 				</div>
 			</div>

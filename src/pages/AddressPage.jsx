@@ -163,7 +163,11 @@ const AddressPage = () => {
 					receivedTxs.map(tx => (
 						<div key={tx.hash} className="card mb-2">
 							<div className="card-content">
-								<Transaction transaction={tx} block={getTxBlock(blockchain, headBlock.hash, tx)} />
+								<Transaction
+									transaction={tx}
+									block={getTxBlock(blockchain, headBlock.hash, tx)}
+									headBlock={headBlock}
+								/>
 							</div>
 						</div>
 					))
@@ -182,7 +186,11 @@ const AddressPage = () => {
 				sentTxs.map(tx => (
 					<div key={tx.hash} className="card mb-2">
 						<div className="card-content">
-							<Transaction transaction={tx} block={getTxBlock(blockchain, headBlock.hash, tx)} />
+							<Transaction
+								transaction={tx}
+								block={getTxBlock(blockchain, headBlock.hash, tx)}
+								headBlock={headBlock}
+							/>
 						</div>
 					</div>
 				))
