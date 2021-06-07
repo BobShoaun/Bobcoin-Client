@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 
 import MineBlockchain from "./MineBlockchain";
 import MineMempool from "./MineMempool";
+import MineSuccessModal from "./MineSuccessModal";
+import MineFailureModal from "./MineFailureModal";
 
 import { newBlock } from "../../store/blockchainSlice";
 import { newTransaction } from "../../store/transactionsSlice";
@@ -10,7 +12,6 @@ import {
 	getHighestValidBlock,
 	createCoinbaseTransaction,
 	calculateBlockReward,
-	isBlockValidInBlockchain,
 	addBlockToBlockchain,
 	isBlockchainValid,
 	RESULT,
@@ -30,7 +31,9 @@ const MinePage = () => {
 	const [selectedTxMap, setSelectedTxMap] = useState({});
 	const [terminalLog, setTerminalLog] = useState([]);
 	const [activeWorker, setActiveWorker] = useState(null);
-	const [modalOpen, setModalOpen] = useState(false);
+	const [successModal, setSuccessModal] = useState(false);
+	const [errorModal, setErrorModal] = useState(false);
+	const [error, setError] = useState({});
 
 	useEffect(() => {
 		if (blockchain.length) setHeadBlock(getHighestValidBlock(params, blockchain));
@@ -47,7 +50,6 @@ const MinePage = () => {
 
 		const txToMine = transactions.filter(tx => selectedTxMap[tx.hash]);
 
-		console.log(headBlock, txToMine);
 		const coinbase = createCoinbaseTransaction(params, blockchain, headBlock, txToMine, miner);
 		dispatch(newTransaction(coinbase));
 
@@ -84,15 +86,19 @@ const MinePage = () => {
 					const block = data.block;
 					addBlockToBlockchain(blockchainCopy, block);
 
-					if (isBlockchainValid(params, blockchainCopy, block).code !== RESULT.VALID) {
+					const validation = isBlockchainValid(params, blockchainCopy, block);
+					if (validation.code !== RESULT.VALID) {
 						console.error("Block is invalid, not broadcasting...: ", block);
+						setError(validation);
+						setErrorModal(true);
 						break;
 					}
 
 					dispatch(newBlock(data.block));
-					// TODO: show success pop up
-					setModalOpen(true);
+					setSuccessModal(true);
 					break;
+				default:
+					console.error("invalid worker case");
 			}
 		});
 	};
@@ -203,45 +209,14 @@ const MinePage = () => {
 				updateSelectedTransactions={txs => setSelectedTxMap(txs)}
 			></MineMempool>
 
-			<div className={`modal ${modalOpen ? "is-active" : ""}`}>
-				<div className="modal-background"></div>
-				<div className="modal-card">
-					<section className="modal-card-body p-6" style={{ borderRadius: "1em" }}>
-						<div className="mb-5 is-flex is-align-items-center is-justify-content-center">
-							<i className="material-icons-outlined md-36 mr-3 has-text-black">view_in_ar</i>
-							<h3 className="title is-3">You have mined a Block!</h3>
-						</div>
-						<img
-							style={{ width: "80%", display: "block" }}
-							className="mx-auto mb-5"
-							src="images/block.jpg"
-							alt="transaction"
-						/>
+			<MineSuccessModal
+				isOpen={successModal}
+				close={() => setSuccessModal(false)}
+				params={params}
+				blockReward={(calculateBlockReward(params, headBlock?.height + 1) / params.coin).toFixed(8)}
+			/>
 
-						<p className="subtitle is-5 has-text-centered">
-							You have found a hash that fits the network difficulty and have been rewarded{" "}
-							{(calculateBlockReward(params, headBlock?.height + 1) / params.coin).toFixed(8)}{" "}
-							{params.symbol}. Hopefully other miners verify and build on top of your block!
-						</p>
-						<p className="help has-text-centered mb-4">
-							*You block is not mature until after at least {params.blkMaturity} confirmations.
-						</p>
-						<div className="has-text-centered">
-							<button
-								onClick={() => setModalOpen(false)}
-								className="button is-dark has-text-weight-semibold"
-							>
-								Cool
-							</button>
-						</div>
-					</section>
-				</div>
-				<button
-					onClick={() => setModalOpen(false)}
-					className="modal-close is-large"
-					aria-label="close"
-				></button>
-			</div>
+			<MineFailureModal isOpen={errorModal} close={() => setErrorModal(false)} error={error} />
 		</section>
 	);
 };

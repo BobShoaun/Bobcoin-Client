@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 
 import DashboardPage from "./pages/DashboardPage";
 import GenerateKeyPage from "./pages/GenerateKeyPage";
-import MinePage from "./pages/MinePage/MinePage";
+import MinePage from "./pages/MinePage";
 import AddressPage from "./pages/AddressPage";
 import NewTransactionPage from "./pages/NewTransactionPage";
 import BlockPage from "./pages/BlockPage";
