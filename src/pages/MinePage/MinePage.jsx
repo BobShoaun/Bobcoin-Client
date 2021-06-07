@@ -33,7 +33,7 @@ const MinePage = () => {
 	const [modalOpen, setModalOpen] = useState(false);
 
 	useEffect(() => {
-		if (blockchain.length) setHeadBlock(getHighestValidBlock(blockchain));
+		if (blockchain.length) setHeadBlock(getHighestValidBlock(params, blockchain));
 	}, [blockchain]);
 
 	const startMining = () => {
@@ -47,6 +47,7 @@ const MinePage = () => {
 
 		const txToMine = transactions.filter(tx => selectedTxMap[tx.hash]);
 
+		console.log(headBlock, txToMine);
 		const coinbase = createCoinbaseTransaction(params, blockchain, headBlock, txToMine, miner);
 		dispatch(newTransaction(coinbase));
 

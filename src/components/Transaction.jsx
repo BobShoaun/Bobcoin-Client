@@ -5,32 +5,19 @@ import { Link } from "react-router-dom";
 import {
 	isTransactionValid,
 	isCoinbaseTxValid,
-	getTxBlock,
 	getBlockConfirmations,
 	RESULT,
 	getHighestValidBlock,
 } from "blockcrypto";
 
-function getBlockConfirmations2(blockchain, block) {
-	let confirmations = 0;
-	let currHash = block.hash;
-	for (const blk of blockchain) {
-		if (blk.hash === currHash) confirmations++;
-		if (blk.previousHash === currHash) {
-			currHash = blk.hash;
-			confirmations++;
-		}
-	}
-	return confirmations;
-}
-
 const Transaction = ({ transaction, block }) => {
 	const params = useSelector(state => state.consensus.params);
 	const blockchain = useSelector(state => state.blockchain.chain);
+	const blockchainFetched = useSelector(state => state.blockchain.fetched);
 	const transactions = useSelector(state => state.transactions.txs);
 	const txsFetched = useSelector(state => state.transactions.fetched);
 
-	if (!txsFetched) return null;
+	if (!txsFetched || !blockchainFetched) return null;
 
 	const findTxo = input => {
 		const tx = transactions.find(tx => tx.hash === input.txHash);
@@ -50,10 +37,8 @@ const Transaction = ({ transaction, block }) => {
 		(isCoinbase ? isCoinbaseTxValid(params, transaction) : isTransactionValid(params, transaction))
 			.code === RESULT.VALID;
 
-	// const block = getTxBlock2(blockchain, transaction);
-	// console.log(block);
-	const txBlock = block ?? getHighestValidBlock(blockchain);
-	const confirmations = block ? getBlockConfirmations2(blockchain, block) : 0;
+	// const txBlock = block ?? getHighestValidBlock(params, blockchain);
+	const confirmations = block ? getBlockConfirmations(blockchain, block) : 0;
 
 	const keyText = {
 		// maxWidth: "20em",
@@ -73,7 +58,13 @@ const Transaction = ({ transaction, block }) => {
 		<div className="">
 			<div className="is-flex mb-1">
 				<h3 className="title is-6 mb-0">Hash: &nbsp;</h3>
-				<Link to={`/transaction/${transaction.hash}?block=${txBlock.hash}`} className="">
+				<Link
+					to={
+						block
+							? `/transaction/${transaction.hash}?block=${block.hash}`
+							: `/transaction/${transaction.hash}`
+					}
+				>
 					<p className="subtitle is-6 mb-0"> {transaction.hash ?? "no hash"}</p>
 				</Link>
 				<p className="ml-auto subtitle is-6 mb-0">

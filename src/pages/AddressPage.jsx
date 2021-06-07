@@ -7,46 +7,13 @@ import {
 	getHighestValidBlock,
 	isAddressValid,
 	getAddressTxs,
+	getTxBlock,
 	calculateTransactionSet,
 } from "blockcrypto";
 import QRCode from "qrcode";
 import { copyToClipboard } from "../helpers";
 
 import Transaction from "../components/Transaction";
-
-function getTxBlock2(blockchain, headBlockHash, transaction) {
-	let prevBlockHash = headBlockHash;
-	for (let i = blockchain.length - 1; i >= 0; i--) {
-		if (blockchain[i].hash !== prevBlockHash) continue;
-		if (blockchain[i].transactions.some(tx => tx.hash === transaction.hash)) return blockchain[i];
-		prevBlockHash = blockchain[i].previousHash;
-	}
-	// tx does not exist in chain.
-	return null;
-}
-
-function getAddressTxs2(blockchain, headBlock, address) {
-	const transactions = calculateTransactionSet(blockchain, headBlock);
-	const receivedTxs = [];
-	const sentTxs = [];
-	for (const transaction of transactions) {
-		if (transaction.outputs.some(output => output.address === address))
-			receivedTxs.push(transaction);
-	}
-	for (const transaction of transactions) {
-		if (
-			transaction.inputs.some(input =>
-				receivedTxs.some(
-					tx => input.txHash === tx.hash && tx.outputs[input.outIndex].address === address
-				)
-			)
-		)
-			sentTxs.push(transaction);
-	}
-	// really doesnt make sense to split into received and sent because they are not mutually exclusive..
-	// but for ui sake its good, maybe return all txs too.
-	return [receivedTxs, sentTxs];
-}
 
 const AddressPage = () => {
 	const history = useHistory();
@@ -67,7 +34,8 @@ const AddressPage = () => {
 	if (!blockchainFetched || !paramsFetched || !transactionsFetched) return null;
 
 	const headBlock =
-		blockchain.find(block => block.hash === headBlockHash) ?? getHighestValidBlock(blockchain);
+		blockchain.find(block => block.hash === headBlockHash) ??
+		getHighestValidBlock(params, blockchain);
 	const balance = (calculateBalance(blockchain, headBlock, address) / params.coin).toFixed(8);
 
 	const findTxo = input => {
@@ -76,7 +44,7 @@ const AddressPage = () => {
 		return output;
 	};
 
-	const [receivedTxs, sentTxs] = getAddressTxs2(blockchain, headBlock, address);
+	const [receivedTxs, sentTxs] = getAddressTxs(blockchain, headBlock, address);
 	const totalReceived = receivedTxs.reduce(
 		(total, curr) =>
 			total +
@@ -195,7 +163,7 @@ const AddressPage = () => {
 					receivedTxs.map(tx => (
 						<div key={tx.hash} className="card mb-2">
 							<div className="card-content">
-								<Transaction transaction={tx} block={getTxBlock2(blockchain, headBlock.hash, tx)} />
+								<Transaction transaction={tx} block={getTxBlock(blockchain, headBlock.hash, tx)} />
 							</div>
 						</div>
 					))
@@ -214,7 +182,7 @@ const AddressPage = () => {
 				sentTxs.map(tx => (
 					<div key={tx.hash} className="card mb-2">
 						<div className="card-content">
-							<Transaction transaction={tx} block={getTxBlock2(blockchain, headBlock.hash, tx)} />
+							<Transaction transaction={tx} block={getTxBlock(blockchain, headBlock.hash, tx)} />
 						</div>
 					</div>
 				))

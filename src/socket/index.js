@@ -1,5 +1,6 @@
 import io from "socket.io-client";
+import { bobcoinNode } from "../config";
 
-const socket = io(process.env.REACT_APP_BOBCOIN_NODE);
+const socket = io(bobcoinNode);
 
 export default socket;

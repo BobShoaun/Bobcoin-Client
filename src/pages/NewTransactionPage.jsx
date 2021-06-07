@@ -68,7 +68,7 @@ const NewTransactionPage = () => {
 		const _amount = Math.trunc(amount * params.coin);
 		const _fee = Math.trunc(fee * params.coin);
 
-		const headBlock = getHighestValidBlock(blockchain);
+		const headBlock = getHighestValidBlock(params, blockchain);
 		const utxos = findUTXOs(blockchain, headBlock, transactions, senderAdd, _amount + _fee);
 		if (!utxos.length) {
 			setErrorModal(true);

@@ -27,15 +27,24 @@ const TransactionPage = () => {
 
 	if (!transaction) return null;
 
-	const totalInputAmount = transaction.inputs.reduce((total, input) => total + input.amount, 0);
+	const findTxo = input => {
+		const tx = transactions.find(tx => tx.hash === input.txHash);
+		const output = tx.outputs[input.outIndex];
+		return output;
+	};
+
+	const totalInputAmount = transaction.inputs.reduce(
+		(total, input) => total + findTxo(input).amount,
+		0
+	);
 	const totalOutputAmount = transaction.outputs.reduce((total, output) => total + output.amount, 0);
 	const fee = totalInputAmount - totalOutputAmount;
 
 	const isCoinbase = transaction.inputs.length === 0 && transaction.outputs.length === 1;
 
 	const block =
-		blockchain.find(block => block.hash === blockHash) ?? getHighestValidBlock(blockchain);
-	const confirmations = block ? getBlockConfirmations(blockchain, block) : 0;
+		blockchain.find(block => block.hash === blockHash) ?? getHighestValidBlock(params, blockchain);
+	const confirmations = getBlockConfirmations(blockchain, block);
 	const status =
 		confirmations === 0 ? "Unconfirmed (in Mempool)" : `${confirmations} confirmations`;
 
@@ -97,14 +106,14 @@ const TransactionPage = () => {
 					</tr>
 					<tr>
 						<td>Fee</td>
-						<td>{isCoinbase ? 0 : fee}</td>
+						<td>{isCoinbase ? "-" : (fee / params.coin).toFixed(8) + " " + params.symbol}</td>
 					</tr>
-					<tr>
+					{/* <tr>
 						<td>Signature</td>
 						<td style={{ wordWrap: "break-word", whiteSpace: "pre-wrap", maxWidth: "50em" }}>
 							{transaction.inputs?.[0]?.signature ?? "-"}
 						</td>
-					</tr>
+					</tr> */}
 					<tr>
 						<td>Valid?</td>
 						<td>

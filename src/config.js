@@ -1,0 +1,4 @@
+const { NODE_ENV, REACT_APP_BOBCOIN_NODE, REACT_APP_BOBCOIN_NODE_LOCAL } = process.env;
+
+export const bobcoinNode =
+	NODE_ENV === "development" ? REACT_APP_BOBCOIN_NODE_LOCAL : REACT_APP_BOBCOIN_NODE;

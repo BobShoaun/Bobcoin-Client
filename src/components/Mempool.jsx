@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import Transaction from "./Transaction";
 
@@ -8,12 +8,18 @@ const Mempool = () => {
 	const transactions = useSelector(state => state.transactions.txs);
 	const blockchain = useSelector(state => state.blockchain.chain);
 	const params = useSelector(state => state.consensus.params);
-	const [mempool, setMempool] = useState([]);
+	const txFetched = useSelector(state => state.transactions.fetched);
+	const blockchainFetched = useSelector(state => state.blockchain.fetched);
+	const paramsFetched = useSelector(state => state.consensus.fetched);
 
-	useEffect(() => {
-		if (!blockchain.length) return;
-		setMempool(calculateMempool(blockchain, getHighestValidBlock(blockchain), transactions));
-	}, [transactions, blockchain]);
+	const loading = !txFetched || !blockchainFetched || !paramsFetched;
+	if (loading) return null;
+
+	const mempool = calculateMempool(
+		blockchain,
+		getHighestValidBlock(params, blockchain),
+		transactions
+	);
 
 	return (
 		<div>
