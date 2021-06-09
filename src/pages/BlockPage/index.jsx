@@ -1,6 +1,7 @@
 import React from "react";
 import { useParams, Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+
+import { useBlockchain } from "../../hooks/useBlockchain";
 
 import Transactions from "../../components/Transactions";
 import { copyToClipboard } from "../../helpers";
@@ -12,32 +13,26 @@ import {
 	calculateHashTarget,
 	bigIntToHex64,
 	RESULT,
+	findTXO,
 } from "blockcrypto";
 
 const BlockPage = () => {
 	const { hash } = useParams();
-	const blockchain = useSelector(state => state.blockchain.chain);
-	const blockchainFetched = useSelector(state => state.blockchain.fetched);
-	const transactions = useSelector(state => state.transactions.txs);
-	const transactionsFetched = useSelector(state => state.transactions.fetched);
-	const params = useSelector(state => state.consensus.params);
 
-	if (!blockchainFetched || !transactionsFetched) return null;
+	const [loading, params, blockchain, transactions] = useBlockchain();
+
+	if (loading) return null;
+
 	const block = blockchain.find(block => block.hash === hash);
 
 	const validation = isBlockValidInBlockchain(params, blockchain, block);
 	const isValid = validation.code === RESULT.VALID;
 
-	const findTxo = input => {
-		const tx = transactions.find(tx => tx.hash === input.txHash);
-		const output = tx.outputs[input.outIndex];
-		return output;
-	};
-
 	const totalInputAmount = block.transactions
 		.slice(1)
 		.reduce(
-			(total, tx) => total + tx.inputs.reduce((inT, input) => inT + findTxo(input).amount, 0),
+			(total, tx) =>
+				total + tx.inputs.reduce((inT, input) => inT + findTXO(input, transactions).amount, 0),
 			0
 		);
 	const totalOutputAmount = block.transactions
@@ -50,7 +45,11 @@ const BlockPage = () => {
 			<div className="is-flex is-align-items-center mb-5">
 				<h1 className="title is-2 mb-0">Block #{block.height}</h1>
 				<div className="has-text-right ml-auto">
-					<button className="button is-link mr-3">Previous Block</button>
+					{block.previousHash && (
+						<Link className="button is-link mr-3" to={`/block/${block.previousHash}`}>
+							Previous Block
+						</Link>
+					)}
 					<button className="button is-link">Next Block</button>
 				</div>
 			</div>

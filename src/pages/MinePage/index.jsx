@@ -162,7 +162,7 @@ const MinePage = () => {
 							</pre>
 						))}
 						<div className="is-flex is-align-items-center">
-							<span className="mr-2">&gt;</span>
+							<span className="mr-2 has-text-weight-bold">&gt;</span>
 							<form onSubmit={submitCommand} className="is-block" style={{ width: "100%" }}>
 								<input
 									className="terminal-input"

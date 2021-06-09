@@ -55,10 +55,11 @@ const MineMempool = ({ headBlock, updateSelectedTransactions }) => {
 					</div>
 				))
 			) : (
-				<div className="py-6">
+				<div className="card mb-6 is-flex is-justify-content-center" style={{ padding: "2.5em" }}>
+					<span className="material-icons-outlined mr-3 md-18">pending_actions</span>
 					<p className="subtitle is-6 has-text-centered">
-						There are currently no pending transactions, looks like {params.name} ain't going to the
-						moon.
+						There are currently no pending transactions, looks like {params.name} ain't going to
+						Mars.
 					</p>
 				</div>
 			)}

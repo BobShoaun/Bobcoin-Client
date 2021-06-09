@@ -165,7 +165,7 @@ const AddressPage = () => {
 							</div>
 						))
 				) : (
-					<div className="py-4">
+					<div className="card py-4">
 						<p className="subtitle is-6 has-text-centered">
 							No one has sent {params.name}s to this address.
 						</p>
@@ -190,7 +190,7 @@ const AddressPage = () => {
 						</div>
 					))
 			) : (
-				<div className="py-4">
+				<div className="card py-4">
 					<p className="subtitle is-6 has-text-centered">
 						This address has not sent any {params.name}s.
 					</p>

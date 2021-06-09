@@ -1,5 +1,4 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import { useParams, Link, useLocation } from "react-router-dom";
 
 import { useBlockchain } from "../../hooks/useBlockchain";
