@@ -36,6 +36,7 @@ const AddressPage = () => {
 	const headBlock =
 		blockchain.find(block => block.hash === headBlockHash) ??
 		getHighestValidBlock(params, blockchain);
+
 	const balance = (calculateBalance(blockchain, headBlock, address) / params.coin).toFixed(8);
 
 	const findTxo = input => {

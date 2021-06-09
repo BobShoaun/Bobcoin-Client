@@ -2,8 +2,21 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 
-import { newTransaction } from "../store/transactionsSlice";
-import { getKeys, createAndSignTransaction, getHighestValidBlock, findUTXOs } from "blockcrypto";
+import { newTransaction } from "../../store/transactionsSlice";
+import {
+	getKeys,
+	getHighestValidBlock,
+	calculateMempoolUTXOSet,
+	createInput,
+	createOutput,
+	createTransaction,
+	signTransaction,
+	calculateTransactionHash,
+	isTransactionValid,
+	RESULT,
+} from "blockcrypto";
+import TransactionFailureModal from "./TransactionFailureModal";
+import TransactionSuccessModal from "./TransactionSuccessModal";
 
 const NewTransactionPage = () => {
 	const dispatch = useDispatch();
@@ -22,6 +35,7 @@ const NewTransactionPage = () => {
 
 	const [confirmModal, setConfirmModal] = useState(false);
 	const [errorModal, setErrorModal] = useState(false);
+	const [error, setError] = useState({});
 
 	useEffect(() => {
 		try {
@@ -64,27 +78,51 @@ const NewTransactionPage = () => {
 		setFee(isNaN(amt) ? "" : amt);
 	};
 
-	const createTransaction = () => {
+	const createAndSignTransaction = () => {
 		const _amount = Math.trunc(amount * params.coin);
 		const _fee = Math.trunc(fee * params.coin);
 
 		const headBlock = getHighestValidBlock(params, blockchain);
-		const utxos = findUTXOs(blockchain, headBlock, transactions, senderAdd, _amount + _fee);
-		if (!utxos.length) {
+
+		// get utxos from mempool
+		const utxoSet = calculateMempoolUTXOSet(blockchain, headBlock, transactions);
+
+		// pick utxos from front to back.
+		let inputAmount = 0;
+		const inputs = [];
+		for (const utxo of utxoSet) {
+			if (inputAmount >= _amount) break;
+			if (utxo.address !== senderAdd) continue;
+			inputAmount += utxo.amount;
+			const input = createInput(utxo.txHash, utxo.outIndex, senderPK);
+			inputs.push(input);
+		}
+
+		const outputs = [];
+		const payment = createOutput(recipientAdd, _amount);
+		outputs.push(payment);
+
+		const changeAmount = inputAmount - _amount - _fee;
+		if (changeAmount > 0) {
+			const change = createOutput(senderAdd, changeAmount);
+			outputs.push(change);
+		}
+
+		const transaction = createTransaction(params, inputs, outputs);
+		const signature = signTransaction(transaction, senderSK);
+		transaction.inputs.forEach(input => (input.signature = signature));
+
+		transaction.hash = calculateTransactionHash(transaction);
+
+		const validation = isTransactionValid(params, transactions, transaction);
+		if (validation.code !== RESULT.VALID) {
+			setError(validation);
 			setErrorModal(true);
+			console.error(validation);
 			return;
 		}
-		const tx = createAndSignTransaction(
-			params,
-			utxos,
-			senderSK,
-			senderPK,
-			senderAdd,
-			recipientAdd,
-			_amount,
-			_fee
-		);
-		dispatch(newTransaction(tx));
+
+		dispatch(newTransaction(transaction));
 		setConfirmModal(true);
 	};
 
@@ -198,84 +236,22 @@ const NewTransactionPage = () => {
 				<button onClick={history.goBack} className="button">
 					Cancel
 				</button>
-				<button className="button is-info has-text-weight-semibold" onClick={createTransaction}>
+				<button
+					className="button is-info has-text-weight-semibold"
+					onClick={createAndSignTransaction}
+				>
 					<span className="material-icons-outlined mr-2">payments</span>
 					Create & Sign
 				</button>
 			</div>
 			<div className="is-clearfix"></div>
 
-			<div className={`modal ${confirmModal && "is-active"}`}>
-				<div className="modal-background"></div>
-				<div className="modal-card">
-					<section className="modal-card-body p-6" style={{ borderRadius: "1em" }}>
-						<div className="mb-3 is-flex is-align-items-center is-justify-content-center">
-							<i className="material-icons-outlined md-36 mr-3 has-text-success">
-								check_circle_outline
-							</i>
-							<h3 className="title is-3">Transaction Complete!</h3>
-						</div>
-						<img
-							style={{ width: "80%", display: "block" }}
-							className="mx-auto"
-							src="images/transaction.jpg"
-							alt="transaction"
-						/>
-						<p className="subtitle is-5 has-text-centered">
-							Your transaction has been signed and broadcasted to the network. Theres no turning
-							back!
-						</p>
-						<div className="has-text-centered">
-							<button
-								onClick={() => setConfirmModal(false)}
-								className="button is-dark has-text-weight-semibold"
-							>
-								Okay
-							</button>
-						</div>
-					</section>
-				</div>
-				<button
-					onClick={() => setConfirmModal(false)}
-					className="modal-close is-large"
-					aria-label="close"
-				></button>
-			</div>
-
-			<div className={`modal ${errorModal && "is-active"}`}>
-				<div className="modal-background"></div>
-				<div className="modal-card">
-					<section className="modal-card-body p-6" style={{ borderRadius: "1em" }}>
-						<div className="mb-5 is-flex is-align-items-center is-justify-content-center">
-							<i className="material-icons-outlined md-36 mr-3 has-text-danger">dangerous</i>
-							<h3 className="title is-3">Invalid Transaction!</h3>
-						</div>
-						{/* <img
-							style={{ width: "80%", display: "block" }}
-							className="mx-auto"
-							src="images/transaction.jpg"
-							alt="transaction"
-						/> */}
-						<p className="subtitle is-5 has-text-centered mb-6">
-							You are attempting to spend coins that do not exist for this address. Your transaction
-							will be rejected by the network.
-						</p>
-						<div className="has-text-centered">
-							<button
-								onClick={() => setErrorModal(false)}
-								className="button is-dark has-text-weight-semibold"
-							>
-								Okay
-							</button>
-						</div>
-					</section>
-				</div>
-				<button
-					onClick={() => setErrorModal(false)}
-					className="modal-close is-large"
-					aria-label="close"
-				></button>
-			</div>
+			<TransactionSuccessModal isOpen={confirmModal} close={() => setConfirmModal(false)} />
+			<TransactionFailureModal
+				isOpen={errorModal}
+				close={() => setErrorModal(false)}
+				error={error}
+			/>
 		</section>
 	);
 };

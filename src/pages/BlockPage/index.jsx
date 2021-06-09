@@ -17,12 +17,13 @@ import {
 const BlockPage = () => {
 	const { hash } = useParams();
 	const blockchain = useSelector(state => state.blockchain.chain);
+	const blockchainFetched = useSelector(state => state.blockchain.fetched);
 	const transactions = useSelector(state => state.transactions.txs);
 	const transactionsFetched = useSelector(state => state.transactions.fetched);
 	const params = useSelector(state => state.consensus.params);
 
+	if (!blockchainFetched || !transactionsFetched) return null;
 	const block = blockchain.find(block => block.hash === hash);
-	if (!block || !transactionsFetched) return null;
 
 	const validation = isBlockValidInBlockchain(params, blockchain, block);
 	const isValid = validation.code === RESULT.VALID;
@@ -121,6 +122,10 @@ const BlockPage = () => {
 					<tr>
 						<td>Number of Transactions</td>
 						<td>{block.transactions.length}</td>
+					</tr>
+					<tr>
+						<td>Merkle Root</td>
+						<td>{block.merkleRoot}</td>
 					</tr>
 					<tr>
 						<td>Total transaction volume</td>

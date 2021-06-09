@@ -1,14 +1,10 @@
-import { mineNewBlock } from "blockcrypto";
+import { mineBlock } from "blockcrypto";
 
-onmessage = mineBlock;
+onmessage = mine;
 
-function mineBlock({ data }) {
-	const { params, blockchain, headBlock, txToMine } = data;
-	let block = {};
-
-	for (block of mineNewBlock(params, blockchain, headBlock, txToMine, target =>
-		postMessage({ message: "target", target })
-	)) {
+function mine({ data }) {
+	let { block, target } = data;
+	for (block of mineBlock(block, target)) {
 		if (block.nonce % 20000 === 0 && block.nonce > 0) postMessage({ message: "nonce", block });
 	}
 	postMessage({ message: "success", block });

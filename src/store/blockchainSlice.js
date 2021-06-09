@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { addBlockToBlockchain, createBlockchain } from "blockcrypto";
+import { addBlock as addBlockToBlockchain, createBlockchain } from "blockcrypto";
 
 import socket from "../socket";
 

@@ -10,11 +10,17 @@ import { newBlock } from "../../store/blockchainSlice";
 import { newTransaction } from "../../store/transactionsSlice";
 import {
 	getHighestValidBlock,
-	createCoinbaseTransaction,
 	calculateBlockReward,
-	addBlockToBlockchain,
+	addBlock as addBlockToBlockchain,
 	isBlockchainValid,
 	RESULT,
+	bigIntToHex64,
+	getTransactionFees,
+	createOutput,
+	createTransaction,
+	calculateTransactionHash,
+	createBlock,
+	calculateHashTarget,
 } from "blockcrypto";
 
 import Miner from "./miner.worker";
@@ -48,29 +54,28 @@ const MinePage = () => {
 			return;
 		}
 
-		const txToMine = transactions.filter(tx => selectedTxMap[tx.hash]);
+		const txsToMine = transactions.filter(tx => selectedTxMap[tx.hash]);
 
-		const coinbase = createCoinbaseTransaction(params, blockchain, headBlock, txToMine, miner);
-		dispatch(newTransaction(coinbase));
+		const fees = txsToMine.reduce((total, tx) => total + getTransactionFees(transactions, tx), 0);
+		const output = createOutput(miner, calculateBlockReward(params, headBlock.height + 1) + fees);
+		const coinbase = createTransaction(params, [], [output]);
+		coinbase.hash = calculateTransactionHash(coinbase);
+
+		const block = createBlock(params, blockchain, headBlock, [coinbase, ...txsToMine]);
+		const target = calculateHashTarget(params, block);
+		setTerminalLog(log => [
+			...log,
+			`\nMining started...\nprevious block: ${headBlock.hash}\ntarget hash: ${bigIntToHex64(
+				target
+			)}\n `,
+		]);
 
 		const worker = new Miner();
-		worker.postMessage({
-			params,
-			blockchain,
-			headBlock,
-			txToMine: [coinbase, ...txToMine],
-		});
-
+		worker.postMessage({ block, target });
 		setActiveWorker(worker);
 
 		worker.addEventListener("message", ({ data }) => {
 			switch (data.message) {
-				case "target":
-					setTerminalLog(log => [
-						...log,
-						`\nMining started...\nprevious block: ${headBlock.hash}\ntarget hash: ${data.target}\n `,
-					]);
-					break;
 				case "nonce":
 					setTerminalLog(log => [...log, `nonce reached: ${data.block.nonce}`]);
 					break;
@@ -94,7 +99,8 @@ const MinePage = () => {
 						break;
 					}
 
-					dispatch(newBlock(data.block));
+					dispatch(newTransaction(coinbase));
+					dispatch(newBlock(block));
 					setSuccessModal(true);
 					break;
 				default:

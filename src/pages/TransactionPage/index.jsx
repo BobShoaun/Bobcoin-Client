@@ -21,12 +21,14 @@ const TransactionPage = () => {
 	const blockHash = new URLSearchParams(location.search).get("block");
 
 	const transactions = useSelector(state => state.transactions.txs);
+	const transactionsFetched = useSelector(state => state.transactions.fetched);
 	const params = useSelector(state => state.consensus.params);
 	const blockchain = useSelector(state => state.blockchain.chain);
+	const blockchainFetched = useSelector(state => state.blockchain.fetched);
+
+	if (!transactionsFetched || !blockchainFetched) return null;
+
 	const transaction = transactions.find(tx => tx.hash === hash);
-
-	if (!transaction) return null;
-
 	const findTxo = input => {
 		const tx = transactions.find(tx => tx.hash === input.txHash);
 		const output = tx.outputs[input.outIndex];
@@ -50,7 +52,7 @@ const TransactionPage = () => {
 
 	const validation = isCoinbase
 		? isCoinbaseTxValid(params, transaction)
-		: isTransactionValid(params, transaction);
+		: isTransactionValid(params, transactions, transaction);
 
 	const isValid = validation.code === RESULT.VALID;
 

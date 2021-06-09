@@ -37,8 +37,10 @@ const Transaction = ({ transaction, block, headBlock }) => {
 	const fee = totalInputAmount - totalOutputAmount;
 
 	const isValid =
-		(isCoinbase ? isCoinbaseTxValid(params, transaction) : isTransactionValid(params, transaction))
-			.code === RESULT.VALID;
+		(isCoinbase
+			? isCoinbaseTxValid(params, transaction)
+			: isTransactionValid(params, transactions, transaction)
+		).code === RESULT.VALID;
 
 	const inMempool = !block;
 	const confirmations = block ? getBlockConfirmations(blockchain, block) : 0;
