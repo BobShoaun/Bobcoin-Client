@@ -1,8 +1,8 @@
 import React from "react";
-
 import { useSelector } from "react-redux";
-
 import { useParams, Link, useLocation } from "react-router-dom";
+
+import { useBlockchain } from "../../hooks/useBlockchain";
 
 import Transaction from "../../components/Transaction";
 import {
@@ -11,6 +11,7 @@ import {
 	isCoinbaseTxValid,
 	isTransactionValid,
 	RESULT,
+	findTXO,
 } from "blockcrypto";
 
 import { copyToClipboard } from "../../helpers";
@@ -18,25 +19,16 @@ import { copyToClipboard } from "../../helpers";
 const TransactionPage = () => {
 	const { hash } = useParams();
 	const location = useLocation();
+
+	const [loading, params, blockchain, transactions] = useBlockchain();
+
+	if (loading) return null;
+
 	const blockHash = new URLSearchParams(location.search).get("block");
-
-	const transactions = useSelector(state => state.transactions.txs);
-	const transactionsFetched = useSelector(state => state.transactions.fetched);
-	const params = useSelector(state => state.consensus.params);
-	const blockchain = useSelector(state => state.blockchain.chain);
-	const blockchainFetched = useSelector(state => state.blockchain.fetched);
-
-	if (!transactionsFetched || !blockchainFetched) return null;
-
 	const transaction = transactions.find(tx => tx.hash === hash);
-	const findTxo = input => {
-		const tx = transactions.find(tx => tx.hash === input.txHash);
-		const output = tx.outputs[input.outIndex];
-		return output;
-	};
 
 	const totalInputAmount = transaction.inputs.reduce(
-		(total, input) => total + findTxo(input).amount,
+		(total, input) => total + findTXO(input, transactions).amount,
 		0
 	);
 	const totalOutputAmount = transaction.outputs.reduce((total, output) => total + output.amount, 0);
@@ -110,12 +102,6 @@ const TransactionPage = () => {
 						<td>Fee</td>
 						<td>{isCoinbase ? "-" : (fee / params.coin).toFixed(8) + " " + params.symbol}</td>
 					</tr>
-					{/* <tr>
-						<td>Signature</td>
-						<td style={{ wordWrap: "break-word", whiteSpace: "pre-wrap", maxWidth: "50em" }}>
-							{transaction.inputs?.[0]?.signature ?? "-"}
-						</td>
-					</tr> */}
 					<tr>
 						<td>Valid?</td>
 						<td>
@@ -136,8 +122,12 @@ const TransactionPage = () => {
 
 			<h1 className="title is-4">Inputs</h1>
 
-			<div className="mb-6">
+			<div className="mb-5">
 				<table className="-table mb-5" style={{ width: "100%", borderSpacing: "10px" }}>
+					<colgroup>
+						<col span="1" style={{ width: "20%" }} />
+						<col span="1" style={{ width: "80%" }} />
+					</colgroup>
 					<tbody>
 						{transaction.inputs.map((input, index) => (
 							<React.Fragment key={index}>
@@ -161,10 +151,8 @@ const TransactionPage = () => {
 									<td
 										className="pb-5"
 										style={{
-											display: "block",
-											whiteSpace: "wrap",
-											maxWidth: "60em",
 											wordWrap: "break-word",
+											wordBreak: "break-word",
 										}}
 									>
 										{input.signature}
@@ -180,6 +168,10 @@ const TransactionPage = () => {
 
 			<div className="mb-6">
 				<table className="mb-5" style={{ width: "100%", borderSpacing: "10px" }}>
+					<colgroup>
+						<col span="1" style={{ width: "20%" }} />
+						<col span="1" style={{ width: "80%" }} />
+					</colgroup>
 					<tbody>
 						{transaction.outputs.map((output, index) => (
 							<React.Fragment key={index}>

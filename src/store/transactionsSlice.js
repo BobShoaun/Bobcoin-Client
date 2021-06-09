@@ -14,7 +14,6 @@ const transactionsSlice = createSlice({
 			socket.emit("transaction", transaction);
 		},
 		addTransaction(state, { payload: transaction }) {
-			console.log("received transaction:", transaction);
 			state.txs.push(transaction);
 		},
 		setTransactions(state, { payload: transactions }) {

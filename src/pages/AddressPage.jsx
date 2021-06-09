@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { useParams, useHistory, useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
+
+import { useBlockchain } from "../hooks/useBlockchain";
 
 import {
 	calculateBalance,
@@ -8,7 +9,7 @@ import {
 	isAddressValid,
 	getAddressTxs,
 	getTxBlock,
-	calculateTransactionSet,
+	findTXO,
 } from "blockcrypto";
 import QRCode from "qrcode";
 import { copyToClipboard } from "../helpers";
@@ -16,34 +17,23 @@ import { copyToClipboard } from "../helpers";
 import Transaction from "../components/Transaction";
 
 const AddressPage = () => {
+	const { address } = useParams();
 	const history = useHistory();
 	const location = useLocation();
-	const headBlockHash = new URLSearchParams(location.search).get("head");
-
-	const blockchain = useSelector(state => state.blockchain.chain);
-	const blockchainFetched = useSelector(state => state.blockchain.fetched);
-	const params = useSelector(state => state.consensus.params);
-	const paramsFetched = useSelector(state => state.consensus.fetched);
-	const transactions = useSelector(state => state.transactions.txs);
-	const transactionsFetched = useSelector(state => state.transactions.fetched);
-
-	const { address } = useParams();
-	const [addressQR, setAddressQR] = useState("");
 	const searchInput = useRef();
+	const [addressQR, setAddressQR] = useState("");
 
-	if (!blockchainFetched || !paramsFetched || !transactionsFetched) return null;
+	const [loading, params, blockchain, transactions] = useBlockchain();
+
+	if (loading) return null;
+
+	const headBlockHash = new URLSearchParams(location.search).get("head");
 
 	const headBlock =
 		blockchain.find(block => block.hash === headBlockHash) ??
 		getHighestValidBlock(params, blockchain);
 
 	const balance = (calculateBalance(blockchain, headBlock, address) / params.coin).toFixed(8);
-
-	const findTxo = input => {
-		const tx = transactions.find(tx => tx.hash === input.txHash);
-		const output = tx.outputs[input.outIndex];
-		return output;
-	};
 
 	const [receivedTxs, sentTxs] = getAddressTxs(blockchain, headBlock, address);
 	const totalReceived = receivedTxs.reduce(
@@ -59,7 +49,7 @@ const AddressPage = () => {
 		(total, curr) =>
 			total +
 			curr.inputs.reduce((inT, inC) => {
-				const txo = findTxo(inC);
+				const txo = findTXO(inC, transactions);
 				return inT + (txo.address === address ? txo.amount : 0);
 			}, 0),
 		0
@@ -161,17 +151,19 @@ const AddressPage = () => {
 			<hr />
 			<div className="mb-6">
 				{receivedTxs.length ? (
-					receivedTxs.map(tx => (
-						<div key={tx.hash} className="card mb-2">
-							<div className="card-content">
-								<Transaction
-									transaction={tx}
-									block={getTxBlock(blockchain, headBlock.hash, tx)}
-									headBlock={headBlock}
-								/>
+					receivedTxs
+						.sort((a, b) => b.timestamp - a.timestamp)
+						.map(tx => (
+							<div key={tx.hash} className="card mb-2">
+								<div className="card-content">
+									<Transaction
+										transaction={tx}
+										block={getTxBlock(blockchain, headBlock.hash, tx)}
+										headBlock={headBlock}
+									/>
+								</div>
 							</div>
-						</div>
-					))
+						))
 				) : (
 					<div className="py-4">
 						<p className="subtitle is-6 has-text-centered">
@@ -184,17 +176,19 @@ const AddressPage = () => {
 			<h1 className="title is-3">Outbound Transactions</h1>
 			<hr />
 			{sentTxs.length ? (
-				sentTxs.map(tx => (
-					<div key={tx.hash} className="card mb-2">
-						<div className="card-content">
-							<Transaction
-								transaction={tx}
-								block={getTxBlock(blockchain, headBlock.hash, tx)}
-								headBlock={headBlock}
-							/>
+				sentTxs
+					.sort((a, b) => b.timestamp - a.timestamp)
+					.map(tx => (
+						<div key={tx.hash} className="card mb-2">
+							<div className="card-content">
+								<Transaction
+									transaction={tx}
+									block={getTxBlock(blockchain, headBlock.hash, tx)}
+									headBlock={headBlock}
+								/>
+							</div>
 						</div>
-					</div>
-				))
+					))
 			) : (
 				<div className="py-4">
 					<p className="subtitle is-6 has-text-centered">

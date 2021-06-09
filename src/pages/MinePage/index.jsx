@@ -7,7 +7,7 @@ import MineSuccessModal from "./MineSuccessModal";
 import MineFailureModal from "./MineFailureModal";
 
 import { newBlock } from "../../store/blockchainSlice";
-import { newTransaction } from "../../store/transactionsSlice";
+import { addTransaction } from "../../store/transactionsSlice";
 import {
 	getHighestValidBlock,
 	calculateBlockReward,
@@ -99,7 +99,7 @@ const MinePage = () => {
 						break;
 					}
 
-					dispatch(newTransaction(coinbase));
+					dispatch(addTransaction(coinbase));
 					dispatch(newBlock(block));
 					setSuccessModal(true);
 					break;
