@@ -1,0 +1,9 @@
+.indicator {
+	width: 0.8rem;
+	height: 0.8rem;
+	position: absolute;
+	margin-left: 1.22rem;
+	margin-top: 1.22rem;
+	border-radius: 50%;
+	border: 2px solid black;
+}
