@@ -77,15 +77,23 @@ const MinePage = () => {
 		const target = calculateHashTarget(params, block);
 
 		// validate b4 starting to mine
-		const blockchainCopy = [...blockchain];
-		addBlockToBlockchain(blockchainCopy, block);
-		const validation = isBlockValidInBlockchain(params, blockchainCopy, block, true);
-		if (validation.code !== RESULT.VALID) {
-			console.error("Block is invalid, not broadcasting...: ", block);
-			setError(validation);
-			setErrorModal(true);
-			return;
-		}
+		// const blockchainCopy = [...blockchain];
+		// addBlockToBlockchain(blockchainCopy, block);
+		// let validation = false;
+		// try {
+		// 	validation = isBlockValidInBlockchain(params, blockchainCopy, block, true);
+		// } catch (e) {
+		// 	console.log(e);
+		// 	setErrorModal(true);
+
+		// 	return;
+		// }
+		// if (validation.code !== RESULT.VALID) {
+		// 	console.error("Block is invalid, not broadcasting...: ", block);
+		// 	setError(validation);
+		// 	setErrorModal(true);
+		// 	return;
+		// }
 
 		setTerminalLog(log => [
 			...log,
