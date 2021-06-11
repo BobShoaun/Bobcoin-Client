@@ -42,8 +42,6 @@ const NewTransactionPage = () => {
 
 	const [loading, params, blockchain, transactions] = useBlockchain();
 
-	if (loading) return null;
-
 	useEffect(() => {
 		try {
 			const { pk, address } = getKeys(params, senderSK);
@@ -56,6 +54,7 @@ const NewTransactionPage = () => {
 		}
 	}, [senderSK]);
 
+	if (loading) return null;
 	const handleSenderKeyChange = senderSK => {
 		try {
 			const { sk, pk, address } = getKeys(params, senderSK);
