@@ -1,19 +1,13 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import Transaction from "./Transaction";
+
+import { useBlockchain } from "../hooks/useBlockchain";
 
 import { calculateMempool, getHighestValidBlock } from "blockcrypto";
 
 const Mempool = () => {
-	const transactions = useSelector(state => state.transactions.txs);
-	const blockchain = useSelector(state => state.blockchain.chain);
-	const params = useSelector(state => state.consensus.params);
-	const txFetched = useSelector(state => state.transactions.fetched);
-	const blockchainFetched = useSelector(state => state.blockchain.fetched);
-	const paramsFetched = useSelector(state => state.consensus.fetched);
-
-	const loading = !txFetched || !blockchainFetched || !paramsFetched;
-	if (loading) return null;
+	const [loading, params, blockchain, transactions] = useBlockchain();
+	if (loading || !blockchain.length || !transactions.length) return null;
 
 	const mempool = calculateMempool(
 		blockchain,

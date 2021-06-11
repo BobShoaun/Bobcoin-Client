@@ -3,7 +3,6 @@ import { setParams } from "../store/consensusSlice";
 import { addTransaction, setTransactions } from "../store/transactionsSlice";
 
 import store from "../store";
-// import socket from "./index";
 
 export const initializeSocket = socket => {
 	socket.on("block", block => {
@@ -16,13 +15,16 @@ export const initializeSocket = socket => {
 
 	socket.on("blockchain", blockchain => {
 		store.dispatch(setBlockchain(blockchain));
+		console.log("blockchain: ", blockchain);
 	});
 
 	socket.on("params", params => {
 		store.dispatch(setParams(params));
+		console.log("params: ", params);
 	});
 
 	socket.on("transactions", transactions => {
 		store.dispatch(setTransactions(transactions));
+		console.log("transactions: ", transactions);
 	});
 };

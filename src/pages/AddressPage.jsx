@@ -25,7 +25,7 @@ const AddressPage = () => {
 
 	const [loading, params, blockchain, transactions] = useBlockchain();
 
-	if (loading) return null;
+	if (loading || !blockchain.length) return null;
 
 	const headBlockHash = new URLSearchParams(location.search).get("head");
 

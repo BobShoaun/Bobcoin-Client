@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import MineBlockchain from "./MineBlockchain";
 import MineMempool from "./MineMempool";
 import MineSuccessModal from "./MineSuccessModal";
 import MineFailureModal from "./MineFailureModal";
 
-import { newBlock } from "../../store/blockchainSlice";
+import { useBlockchain } from "../../hooks/useBlockchain";
+
+import { addBlock } from "../../store/blockchainSlice";
 import { addTransaction } from "../../store/transactionsSlice";
 import {
 	getHighestValidBlock,
@@ -21,6 +23,7 @@ import {
 	calculateTransactionHash,
 	createBlock,
 	calculateHashTarget,
+	isBlockValidInBlockchain,
 } from "blockcrypto";
 
 import Miner from "./miner.worker";
@@ -30,23 +33,28 @@ import "./mine.css";
 
 const MinePage = () => {
 	const dispatch = useDispatch();
-	const blockchain = useSelector(state => state.blockchain.chain);
-	const params = useSelector(state => state.consensus.params);
-	const transactions = useSelector(state => state.transactions.txs);
+
 	const [miner, setMiner] = useState(localStorage.getItem("add"));
 	const [headBlock, setHeadBlock] = useState(null);
-	const [selectedTxMap, setSelectedTxMap] = useState({});
 	const [terminalLog, setTerminalLog] = useState([]);
 	const [activeWorker, setActiveWorker] = useState(null);
 	const [successModal, setSuccessModal] = useState(false);
 	const [errorModal, setErrorModal] = useState(false);
 	const [error, setError] = useState({});
+	const [selectedTxs, setSelectedTxs] = useState([]);
 
+	const [loading, params, blockchain, transactions] = useBlockchain();
 	const { socket } = useContext(SocketContext);
 
 	useEffect(() => {
 		if (blockchain.length) setHeadBlock(getHighestValidBlock(params, blockchain));
 	}, [blockchain]);
+
+	useEffect(() => {
+		console.log(selectedTxs);
+	}, [selectedTxs]);
+
+	if (loading) return null;
 
 	const startMining = () => {
 		if (activeWorker) {
@@ -57,7 +65,8 @@ const MinePage = () => {
 			return;
 		}
 
-		const txsToMine = transactions.filter(tx => selectedTxMap[tx.hash]);
+		// const txsToMine = transactions.filter(tx => selectedTxMap[tx.hash]);
+		const txsToMine = selectedTxs;
 
 		const fees = txsToMine.reduce((total, tx) => total + getTransactionFees(transactions, tx), 0);
 		const output = createOutput(miner, calculateBlockReward(params, headBlock.height + 1) + fees);
@@ -66,6 +75,18 @@ const MinePage = () => {
 
 		const block = createBlock(params, blockchain, headBlock, [coinbase, ...txsToMine]);
 		const target = calculateHashTarget(params, block);
+
+		// validate b4 starting to mine
+		const blockchainCopy = [...blockchain];
+		addBlockToBlockchain(blockchainCopy, block);
+		const validation = isBlockValidInBlockchain(params, blockchainCopy, block, true);
+		if (validation.code !== RESULT.VALID) {
+			console.error("Block is invalid, not broadcasting...: ", block);
+			setError(validation);
+			setErrorModal(true);
+			return;
+		}
+
 		setTerminalLog(log => [
 			...log,
 			`\nMining started...\nprevious block: ${headBlock.hash}\ntarget hash: ${bigIntToHex64(
@@ -103,7 +124,8 @@ const MinePage = () => {
 					}
 
 					dispatch(addTransaction(coinbase));
-					dispatch(newBlock({ block, socket }));
+					dispatch(addBlock(block));
+					socket.emit("block", block);
 					setSuccessModal(true);
 					break;
 				default:
@@ -215,7 +237,8 @@ const MinePage = () => {
 			<hr />
 			<MineMempool
 				headBlock={headBlock}
-				updateSelectedTransactions={txs => setSelectedTxMap(txs)}
+				addTransaction={tx => setSelectedTxs(txs => [...txs, tx])}
+				removeTransaction={tx => setSelectedTxs(txs => txs.filter(tx2 => tx2.hash !== tx.hash))}
 			></MineMempool>
 
 			<MineSuccessModal

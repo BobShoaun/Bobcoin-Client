@@ -2,7 +2,9 @@ import React, { useState, useEffect, useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 
-import { newTransaction } from "../../store/transactionsSlice";
+import { useBlockchain } from "../../hooks/useBlockchain";
+
+import { addTransaction } from "../../store/transactionsSlice";
 import {
 	getKeys,
 	getHighestValidBlock,
@@ -23,9 +25,6 @@ import SocketContext from "../../contexts/SocketContext";
 const NewTransactionPage = () => {
 	const dispatch = useDispatch();
 	const history = useHistory();
-	const blockchain = useSelector(state => state.blockchain.chain);
-	const transactions = useSelector(state => state.transactions.txs);
-	const params = useSelector(state => state.consensus.params);
 
 	const [showSK, setShowSK] = useState(false);
 	const [amount, setAmount] = useState("");
@@ -40,6 +39,10 @@ const NewTransactionPage = () => {
 	const [error, setError] = useState({});
 
 	const { socket } = useContext(SocketContext);
+
+	const [loading, params, blockchain, transactions] = useBlockchain();
+
+	if (loading) return null;
 
 	useEffect(() => {
 		try {
@@ -126,7 +129,8 @@ const NewTransactionPage = () => {
 			return;
 		}
 
-		dispatch(newTransaction({ transaction, socket }));
+		dispatch(addTransaction(transaction));
+		socket.emit("transaction", transaction);
 		setConfirmModal(true);
 	};
 

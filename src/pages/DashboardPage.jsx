@@ -1,13 +1,15 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+
+import { useBlockchain } from "../hooks/useBlockchain";
 
 import Blockchain from "../components/Blockchain";
 import Mempool from "../components/Mempool";
 
 const DashboardPage = () => {
-	const transactions = useSelector(state => state.transactions.txs);
-	const params = useSelector(state => state.consensus.params);
+	const [loading, params] = useBlockchain();
+	if (loading) return null;
+
 	return (
 		<section className="section">
 			<div className="columns mb-4">
@@ -56,7 +58,7 @@ const DashboardPage = () => {
 			<p className="subtitle is-5">All pending transactions that are unconfirmed.</p>
 			{/* <div className="is-clearfix"></div> */}
 			<hr />
-			<Mempool mempool={transactions}></Mempool>
+			<Mempool></Mempool>
 		</section>
 	);
 };

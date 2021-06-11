@@ -1,17 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// import { setNetwork } from "./socketSlice";
-// import socket from "../socket";
-
-// export const newTransaction = createAsyncThunk(
-// 	"transactions/newTransaction",
-// 	async (payload, { dispatch, getState }) => {
-// 		console.log(payload, getState());
-// 		dispatch(setNetwork({ network: "mainnet" }));
-// 		// return "hello";
-// 	}
-// );
-
 const transactionsSlice = createSlice({
 	name: "transactions",
 	initialState: {
@@ -19,10 +7,6 @@ const transactionsSlice = createSlice({
 		fetched: false,
 	},
 	reducers: {
-		newTransaction(state, { payload: { transaction, socket } }) {
-			state.txs.push(transaction);
-			socket.emit("transaction", transaction);
-		},
 		addTransaction(state, { payload: transaction }) {
 			state.txs.push(transaction);
 		},
@@ -33,5 +17,5 @@ const transactionsSlice = createSlice({
 	},
 });
 
-export const { addTransaction, setTransactions, newTransaction } = transactionsSlice.actions;
+export const { addTransaction, setTransactions } = transactionsSlice.actions;
 export default transactionsSlice.reducer;

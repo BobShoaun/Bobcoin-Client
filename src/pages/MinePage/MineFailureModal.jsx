@@ -9,7 +9,7 @@ const MineFailureModal = ({ isOpen, close, error }) => {
 				<section className="modal-card-body p-6" style={{ borderRadius: "1em" }}>
 					<div className="mb-5 is-flex is-align-items-center is-justify-content-center">
 						<i className="material-icons-outlined md-36 mr-3 has-text-danger">gpp_maybe</i>
-						<h3 className="title is-3">You mined an invalid block!</h3>
+						<h3 className="title is-3">You have an invalid block!</h3>
 					</div>
 					{/* <img
 						style={{ width: "80%", display: "block" }}

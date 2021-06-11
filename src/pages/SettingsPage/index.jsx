@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import { setNetwork as setNet } from "../../store/blockchainSlice";
 
 const SettingsPage = () => {
 	const dispatch = useDispatch();
+	const history = useHistory();
 	const net = useSelector(state => state.blockchain.network);
 	const [network, setNetwork] = useState(net);
 
@@ -15,6 +17,7 @@ const SettingsPage = () => {
 	const confirmSettings = () => {
 		localStorage.setItem("mining-popup", miningPopup);
 		dispatch(setNet(network));
+		history.goBack();
 	};
 
 	return (
@@ -30,8 +33,8 @@ const SettingsPage = () => {
 						<option value="testnet">Testnet</option>
 					</select>
 				</div>
-				<div className="icon is-small is-left">
-					<span className="material-icons-two-tone has-text-dark">
+				<div className="icon is-left ">
+					<span className="material-icons-two-tone has-text-dark md-28">
 						{network === "mainnet" ? "language" : "bug_report"}
 					</span>
 				</div>

@@ -37,3 +37,8 @@
 	background: white;
 	color: black;
 }
+
+.tx[type="checkbox"] {
+	transform: scale(1.5);
+	transform-origin: top left;
+}

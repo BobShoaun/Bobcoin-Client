@@ -5,8 +5,12 @@ const {
 	REACT_APP_BOBCOIN_NODE_LOCAL,
 } = process.env;
 
-export const bobcoinMainnet =
-	NODE_ENV === "development" ? REACT_APP_BOBCOIN_NODE_LOCAL : REACT_APP_BOBCOIN_NODE_MAIN;
+const development = NODE_ENV !== "development";
 
-export const bobcoinTestnet =
-	NODE_ENV === "development" ? REACT_APP_BOBCOIN_NODE_LOCAL : REACT_APP_BOBCOIN_NODE_TEST;
+export const bobcoinMainnet = development
+	? REACT_APP_BOBCOIN_NODE_LOCAL
+	: REACT_APP_BOBCOIN_NODE_MAIN;
+
+export const bobcoinTestnet = development
+	? REACT_APP_BOBCOIN_NODE_LOCAL
+	: REACT_APP_BOBCOIN_NODE_TEST;

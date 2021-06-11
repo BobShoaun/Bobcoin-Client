@@ -36,12 +36,10 @@ const App = () => {
 	const [socket, setSocket] = useState(null);
 
 	useEffect(() => {
-		console.log(network);
-
 		resetTransactionSets();
 		resetUtxoSets();
 
-		socket?.disconnect();
+		socket?.disconnect(SVGComponentTransferFunctionElement);
 		const soc = io(network === "mainnet" ? bobcoinMainnet : bobcoinTestnet);
 		initializeSocket(soc);
 		setSocket(soc);

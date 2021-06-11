@@ -1,49 +1,35 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useBlockchain } from "../../hooks/useBlockchain";
 
 import { calculateMempool } from "blockcrypto";
 import Transaction from "../../components/Transaction";
 
-const MineMempool = ({ headBlock, updateSelectedTransactions }) => {
-	const transactions = useSelector(state => state.transactions.txs);
-	const blockchain = useSelector(state => state.blockchain.chain);
-	const params = useSelector(state => state.consensus.params);
-	const [selectedTxMap, setSelectedTxMap] = useState({});
+const MineMempool = ({ headBlock, addTransaction, removeTransaction }) => {
 	const [mempool, setMempool] = useState([]);
+
+	const [loading, params, blockchain, transactions] = useBlockchain();
 
 	useEffect(() => {
 		if (headBlock) setMempool(calculateMempool(blockchain, headBlock, transactions));
 	}, [blockchain, headBlock, transactions]);
 
-	const handleChecked = tx => {
-		if (tx.hash in selectedTxMap)
-			setSelectedTxMap(txMap => {
-				txMap[tx.hash] = !txMap[tx.hash];
-				return txMap;
-			});
-		else
-			setSelectedTxMap(txMap => {
-				txMap[tx.hash] = true;
-				return txMap;
-			});
-		console.log(selectedTxMap);
-		updateSelectedTransactions(selectedTxMap);
+	if (loading) return null;
+
+	const toggleSelected = (value, tx) => {
+		if (value) addTransaction(tx);
+		else removeTransaction(tx);
 	};
 
 	return (
 		<div>
 			{mempool.length ? (
 				mempool.map(transaction => (
-					<div
-						// onClick={() => handleChecked(transaction)}
-						key={transaction.hash}
-						className="card is-clickable mb-2"
-					>
+					<div key={transaction.hash} className="card mb-2">
 						<div className="card-content is-flex">
-							<div className="mr-4">
+							<div className="mr-5">
 								<input
-									// checked={selectedTxMap[transaction.hash]}
-									onChange={() => handleChecked(transaction)}
+									className="tx is-clickable"
+									onChange={({ target }) => toggleSelected(target.checked, transaction)}
 									type="checkbox"
 								></input>
 							</div>
