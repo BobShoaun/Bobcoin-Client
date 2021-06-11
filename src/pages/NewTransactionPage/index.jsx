@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 
@@ -18,6 +18,8 @@ import {
 import TransactionFailureModal from "./TransactionFailureModal";
 import TransactionSuccessModal from "./TransactionSuccessModal";
 
+import SocketContext from "../../contexts/SocketContext";
+
 const NewTransactionPage = () => {
 	const dispatch = useDispatch();
 	const history = useHistory();
@@ -36,6 +38,8 @@ const NewTransactionPage = () => {
 	const [confirmModal, setConfirmModal] = useState(false);
 	const [errorModal, setErrorModal] = useState(false);
 	const [error, setError] = useState({});
+
+	const { socket } = useContext(SocketContext);
 
 	useEffect(() => {
 		try {
@@ -122,7 +126,7 @@ const NewTransactionPage = () => {
 			return;
 		}
 
-		dispatch(newTransaction(transaction));
+		dispatch(newTransaction({ transaction, socket }));
 		setConfirmModal(true);
 	};
 

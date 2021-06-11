@@ -3,9 +3,9 @@ import { setParams } from "../store/consensusSlice";
 import { addTransaction, setTransactions } from "../store/transactionsSlice";
 
 import store from "../store";
-import socket from "./index";
+// import socket from "./index";
 
-export const initializeSocket = () => {
+export const initializeSocket = socket => {
 	socket.on("block", block => {
 		store.dispatch(addBlock(block));
 	});

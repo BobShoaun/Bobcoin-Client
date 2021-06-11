@@ -1,6 +1,6 @@
-import io from "socket.io-client";
-import { bobcoinNode } from "../config";
+// import io from "socket.io-client";
+// import { bobcoinMainnet, bobcoinTestnet } from "../config";
 
-const socket = io(bobcoinNode);
+// const socket = io(bobcoinTestnet);
 
-export default socket;
+// export default socket;

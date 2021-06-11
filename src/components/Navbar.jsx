@@ -1,11 +1,13 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 import "./navbar.css";
 
 const Navbar = () => {
+	const network = useSelector(state => state.blockchain.network);
+
 	const [dropdown, setDropdown] = useState(false);
-	const testNet = false;
 
 	return (
 		<nav className="navbar is-dark" role="navigation" aria-label="main navigation">
@@ -63,8 +65,8 @@ const Navbar = () => {
 								<span>My Wallet</span>
 							</Link>
 
-							<div class={`dropdown is-hoverable is-right ${dropdown ? "is-active" : ""}`}>
-								<div class="dropdown-trigger">
+							<div className={`dropdown is-hoverable is-right ${dropdown ? "is-active" : ""}`}>
+								<div className="dropdown-trigger">
 									<button
 										aria-haspopup="true"
 										aria-controls="dropdown-menu6"
@@ -72,25 +74,23 @@ const Navbar = () => {
 										className="button is-dark px-2"
 									>
 										<span className="material-icons md-28">
-											{testNet ? "bug_report" : "language"}
+											{network === "mainnet" ? "language" : "bug_report"}
 										</span>
 										<div className="indicator has-background-success"></div>
 									</button>
 								</div>
-								<div class="dropdown-menu" id="dropdown-menu6" role="menu">
-									<div class="dropdown-content fhas-text-right">
-										<div class="dropdown-item">
+								<div className="dropdown-menu" id="dropdown-menu6" role="menu">
+									<div className="dropdown-content fhas-text-right">
+										<div className="dropdown-item">
 											<p>
-												Currently connected to the <strong>MainNet</strong>
+												Currently connected to the{" "}
+												<strong>{network === "mainnet" ? "MainNet" : "TestNet"}</strong>
 											</p>
 										</div>
-										<hr class="dropdown-divider"></hr>
-										<Link to="/settings" class="dropdown-item">
+										<hr className="dropdown-divider"></hr>
+										<Link to="/settings" className="dropdown-item">
 											Settings
 										</Link>
-										<a href="#" class="dropdown-item">
-											Wallets
-										</a>
 									</div>
 								</div>
 							</div>

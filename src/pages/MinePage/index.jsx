@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import MineBlockchain from "./MineBlockchain";
@@ -24,6 +24,7 @@ import {
 } from "blockcrypto";
 
 import Miner from "./miner.worker";
+import SocketContext from "../../contexts/SocketContext";
 
 import "./mine.css";
 
@@ -40,6 +41,8 @@ const MinePage = () => {
 	const [successModal, setSuccessModal] = useState(false);
 	const [errorModal, setErrorModal] = useState(false);
 	const [error, setError] = useState({});
+
+	const { socket } = useContext(SocketContext);
 
 	useEffect(() => {
 		if (blockchain.length) setHeadBlock(getHighestValidBlock(params, blockchain));
@@ -100,7 +103,7 @@ const MinePage = () => {
 					}
 
 					dispatch(addTransaction(coinbase));
-					dispatch(newBlock(block));
+					dispatch(newBlock({ block, socket }));
 					setSuccessModal(true);
 					break;
 				default:
