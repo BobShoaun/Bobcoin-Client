@@ -5,7 +5,7 @@ const {
 	REACT_APP_BOBCOIN_NODE_LOCAL,
 } = process.env;
 
-const development = NODE_ENV !== "development";
+const development = NODE_ENV === "development";
 
 export const bobcoinMainnet = development
 	? REACT_APP_BOBCOIN_NODE_LOCAL
