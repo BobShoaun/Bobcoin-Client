@@ -31,7 +31,13 @@ const LandingPage = () => {
 			</div>
 			<img
 				className="is-block"
-				style={{ width: "70em", height: "24em", objectFit: "cover", margin: "4em auto" }}
+				style={{
+					width: "70em",
+					height: "24em",
+					objectFit: "cover",
+					margin: "4em auto",
+					borderRadius: ".3rem",
+				}}
 				src="images/rocket.jpg"
 				alt="rocket"
 			/>
