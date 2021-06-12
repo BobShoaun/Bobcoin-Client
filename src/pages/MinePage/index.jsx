@@ -57,6 +57,7 @@ const MinePage = () => {
 	}, []);
 
 	useEffect(() => {
+		console.log("setting head block");
 		if (blockchain.length) setHeadBlock(getHighestValidBlock(params, blockchain));
 	}, [blockchain]);
 
@@ -146,7 +147,7 @@ const MinePage = () => {
 						await Notification.requestPermission();
 
 					if (Notification.permission === "granted") {
-						const notification = new Notification("Block mined!", {
+						const notification = new Notification("Bobcoins mined!", {
 							body: "You have successfully mined a block",
 							// icon:
 						});
@@ -200,7 +201,7 @@ const MinePage = () => {
 			<hr />
 
 			<div className="mb-6">
-				<MineBlockchain selectBlock={setHeadBlock}></MineBlockchain>
+				<MineBlockchain selectedBlock={headBlock} setSelectBlock={setHeadBlock}></MineBlockchain>
 			</div>
 
 			<section className="is-flex mb-6">
@@ -228,13 +229,25 @@ const MinePage = () => {
 				<section style={{ width: "40%" }}>
 					<div className="field mb-4">
 						<label className="label">Miner's Address</label>
-						<input
-							onChange={({ target }) => setMiner(target.value)}
-							value={miner}
-							className="input"
-							type="text"
-							placeholder="Input miner's key"
-						></input>
+						<div className="field has-addons mb-0">
+							<div className="control is-expanded">
+								<input
+									onChange={({ target }) => setMiner(target.value)}
+									value={miner}
+									className="input"
+									type="text"
+									placeholder="Input miner's key"
+								/>
+							</div>
+							<p className="control">
+								<button
+									onClick={async () => setMiner(await navigator.clipboard.readText())}
+									className="button"
+								>
+									<i className="material-icons md-18">content_paste</i>
+								</button>
+							</p>
+						</div>
 						<p className="help">The address of the miner, where to send block reward and fees.</p>
 					</div>
 

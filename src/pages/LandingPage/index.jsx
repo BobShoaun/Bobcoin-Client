@@ -1,13 +1,17 @@
+import { assertTypeParameterInstantiation } from "@babel/types";
 import React from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 import "./index.css";
 
 const LandingPage = () => {
+	const params = useSelector(state => state.consensus.params);
+
 	return (
 		<section className="section">
 			<div className="has-text-centered" style={{ margin: "6em 0" }}>
-				<h1 className="title is-1 is-spaced mb-4">Welcome to Bobcoin</h1>
+				<h1 className="title is-1 is-spaced mb-4">Welcome to {params.name ?? "Bobcoin"}</h1>
 				<p className="subtitle is-4 is-spaced mb-6 mx-auto" style={{ maxWidth: "35em" }}>
 					an open source, decentralized, peer to peer, blockchain, proof of work, digital currency
 					that will take us to Mars.
@@ -53,14 +57,18 @@ const LandingPage = () => {
 					<div className="-has-background-info has-text-white" style={{ flex: "1 0 1" }}>
 						<span className="material-icons-two-tone md-48 has-text-info">terrain</span>
 						<h2 className="title is-4 is-spaced mb-2">High Market Cap</h2>
-						<p className="subtitle is-6">Up to 819,200,000 XBC available</p>
+						<p className="subtitle is-6">
+							Up to {(params.hardCap / params.coin).toLocaleString()} {params.symbol} available
+						</p>
 					</div>
 				</div>
 				<div className="is-flex is-justify-content-space-evenly mb-6">
 					<div className="-has-background-info has-text-white" style={{ flex: "1 0 1" }}>
 						<span className="material-icons-two-tone md-48 has-text-info">trending_up</span>
 						<h2 className="title is-4 is-spaced mb-2">Big Rewards</h2>
-						<p className="subtitle is-6">Get 4096 XBC for each block mined</p>
+						<p className="subtitle is-6">
+							Get {params.initBlkReward / params.coin} {params.symbol} for each block mined
+						</p>
 					</div>
 
 					<div className="-has-background-info has-text-white" style={{ flex: "1 0 1" }}>

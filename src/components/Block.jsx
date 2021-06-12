@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 
 import { isBlockValidInBlockchain, RESULT } from "blockcrypto";
 
-const Block = ({ block }) => {
+const Block = ({ block, selected }) => {
 	const params = useSelector(state => state.consensus.params);
 	const blockchain = useSelector(state => state.blockchain.chain);
 
@@ -14,8 +14,13 @@ const Block = ({ block }) => {
 	);
 
 	return (
-		<div className="card is-flex is-flex-direction-column h-100">
-			<div className="card-header">
+		<div
+			className={`card is-flex is-flex-direction-column h-100 block ${
+				selected ? "block-selected" : ""
+			}`}
+			style={{}}
+		>
+			<div className="card-header" style={{ borderRadius: 0 }}>
 				<div className="card-header-title">
 					<h1 className="title is-6 mb-0 has-text-dark">
 						Block #{block.height}

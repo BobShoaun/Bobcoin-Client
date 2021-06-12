@@ -3,9 +3,10 @@ import { useSelector } from "react-redux";
 
 import Block from "../../components/Block";
 
-const MineBlockchain = ({ selectBlock }) => {
+const MineBlockchain = ({ selectedBlock, setSelectedBlock }) => {
 	const blockchain = useSelector(state => state.blockchain.chain);
 	const [page, setPage] = useState(0);
+	// const [selectedBlock, setSelectedBlock] = useState(block);
 	const blocksPerPage = 4;
 
 	const reversedBlockchain = useMemo(() => [...blockchain].reverse(), [blockchain]);
@@ -20,8 +21,12 @@ const MineBlockchain = ({ selectBlock }) => {
 				<i className="material-icons md-48">arrow_left</i>
 			</button>
 			{reversedBlockchain.slice(page, page + blocksPerPage).map(block => (
-				<div onClick={() => selectBlock(block)} key={block.hash} className="my-3 mx-2 is-clickable">
-					<Block block={block} />
+				<div
+					onClick={() => setSelectedBlock?.(block)}
+					key={block.hash}
+					className="my-3 mx-2 is-clickable"
+				>
+					<Block block={block} selected={selectedBlock === block} />
 				</div>
 			))}
 			<button
