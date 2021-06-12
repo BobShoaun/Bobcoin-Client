@@ -1,6 +1,7 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+
+import { useBlockchain } from "../hooks/useBlockchain";
 
 import ReactTooltip from "react-tooltip";
 
@@ -14,13 +15,9 @@ import {
 } from "blockcrypto";
 
 const Transaction = ({ transaction, block, headBlock }) => {
-	const params = useSelector(state => state.consensus.params);
-	const blockchain = useSelector(state => state.blockchain.chain);
-	const blockchainFetched = useSelector(state => state.blockchain.fetched);
-	const transactions = useSelector(state => state.transactions.txs);
-	const txsFetched = useSelector(state => state.transactions.fetched);
+	const [loading, params, blockchain, transactions] = useBlockchain();
 
-	if (!txsFetched || !blockchainFetched) return null;
+	if (loading) return null;
 
 	const findTxo = input => {
 		const tx = transactions.find(tx => tx.hash === input.txHash);
@@ -47,6 +44,11 @@ const Transaction = ({ transaction, block, headBlock }) => {
 	const head = headBlock ?? getHighestValidBlock(params, blockchain);
 
 	const utxos = calculateUTXOSet(blockchain, head);
+
+	const getConfirmationColor = confirmations => {
+		if (confirmations > params.blkMaturity) return "confirmations-8";
+		return `confirmations-${confirmations}`;
+	};
 
 	return (
 		<div className="">
@@ -158,11 +160,9 @@ const Transaction = ({ transaction, block, headBlock }) => {
 			<section className="is-flex">
 				<div className="mt-auto">
 					<span
-						className={`subtitle is-6 is-inline-block mb-1 py-1 px-3  has-text-white ${
-							confirmations < params.blkMaturity
-								? "has-background-warning"
-								: "has-background-success"
-						}`}
+						className={`subtitle is-6 is-inline-block mb-1 py-1 px-3 has-text-white ${getConfirmationColor(
+							confirmations
+						)}`}
 						style={{ borderRadius: "0.3em" }}
 					>
 						{confirmations > 0 ? `${confirmations} Confirmations` : "Unconfirmed (Mempool)"}

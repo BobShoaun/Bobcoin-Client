@@ -27,14 +27,14 @@ import {
 } from "blockcrypto";
 
 import Miner from "./miner.worker";
-import SocketContext from "../../contexts/SocketContext";
+import SocketContext from "../../socket/SocketContext";
 
 import "./mine.css";
 
 const MinePage = () => {
 	const dispatch = useDispatch();
 
-	const [miner, setMiner] = useState(localStorage.getItem("add"));
+	const [miner, setMiner] = useState("");
 	const [headBlock, setHeadBlock] = useState(null);
 	const [terminalLog, setTerminalLog] = useState([]);
 	const [activeWorker, setActiveWorker] = useState(null);
@@ -47,12 +47,18 @@ const MinePage = () => {
 	const { socket } = useContext(SocketContext);
 
 	useEffect(() => {
-		if (blockchain.length) setHeadBlock(getHighestValidBlock(params, blockchain));
-	}, [blockchain]);
+		setMiner(localStorage.getItem("add"));
+		return () => {
+			// terminate worker when leaving page / component
+			activeWorker?.terminate();
+			setActiveWorker(null);
+			console.log("mining worker terminated");
+		};
+	}, []);
 
 	useEffect(() => {
-		console.log(selectedTxs);
-	}, [selectedTxs]);
+		if (blockchain.length) setHeadBlock(getHighestValidBlock(params, blockchain));
+	}, [blockchain]);
 
 	if (loading) return null;
 
@@ -66,14 +72,13 @@ const MinePage = () => {
 		}
 
 		// const txsToMine = transactions.filter(tx => selectedTxMap[tx.hash]);
-		const txsToMine = selectedTxs;
 
-		const fees = txsToMine.reduce((total, tx) => total + getTransactionFees(transactions, tx), 0);
+		const fees = selectedTxs.reduce((total, tx) => total + getTransactionFees(transactions, tx), 0);
 		const output = createOutput(miner, calculateBlockReward(params, headBlock.height + 1) + fees);
 		const coinbase = createTransaction(params, [], [output]);
 		coinbase.hash = calculateTransactionHash(coinbase);
 
-		const block = createBlock(params, blockchain, headBlock, [coinbase, ...txsToMine]);
+		const block = createBlock(params, blockchain, headBlock, [coinbase, ...selectedTxs]);
 		const target = calculateHashTarget(params, block);
 
 		// validate b4 starting to mine
@@ -106,7 +111,7 @@ const MinePage = () => {
 		worker.postMessage({ block, target });
 		setActiveWorker(worker);
 
-		worker.addEventListener("message", ({ data }) => {
+		worker.addEventListener("message", async ({ data }) => {
 			switch (data.message) {
 				case "nonce":
 					setTerminalLog(log => [...log, `nonce reached: ${data.block.nonce}`]);
@@ -135,6 +140,18 @@ const MinePage = () => {
 					dispatch(addBlock(block));
 					socket.emit("block", block);
 					setSuccessModal(true);
+
+					if (Notification.permission !== "denied")
+						// ask user for permission
+						await Notification.requestPermission();
+
+					if (Notification.permission === "granted") {
+						const notification = new Notification("Block mined!", {
+							body: "You have successfully mined a block",
+							// icon:
+						});
+						notification.onclick = () => window.focus();
+					}
 					break;
 				default:
 					console.error("invalid worker case");
@@ -247,7 +264,7 @@ const MinePage = () => {
 				headBlock={headBlock}
 				addTransaction={tx => setSelectedTxs(txs => [...txs, tx])}
 				removeTransaction={tx => setSelectedTxs(txs => txs.filter(tx2 => tx2.hash !== tx.hash))}
-			></MineMempool>
+			/>
 
 			<MineSuccessModal
 				isOpen={successModal}

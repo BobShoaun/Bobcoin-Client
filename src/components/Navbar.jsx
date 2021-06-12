@@ -65,12 +65,12 @@ const Navbar = () => {
 								<span>My Wallet</span>
 							</Link>
 
-							<div className={`dropdown is-hoverable is-right ${dropdown ? "is-active" : ""}`}>
+							<div className={`dropdown -is-hoverable is-right ${dropdown ? "is-active" : ""}`}>
 								<div className="dropdown-trigger">
 									<button
 										aria-haspopup="true"
 										aria-controls="dropdown-menu6"
-										// onClick={() => setDropdown(d => !d)}
+										onClick={() => setDropdown(d => !d)}
 										className="button is-dark px-2"
 									>
 										<span className="material-icons md-28">
@@ -88,7 +88,11 @@ const Navbar = () => {
 											</p>
 										</div>
 										<hr className="dropdown-divider"></hr>
-										<Link to="/settings" className="dropdown-item">
+										<Link
+											to="/settings"
+											onClick={() => setDropdown(false)}
+											className="dropdown-item"
+										>
 											Settings
 										</Link>
 									</div>

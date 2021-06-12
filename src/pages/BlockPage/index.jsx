@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 
 import { useBlockchain } from "../../hooks/useBlockchain";
@@ -21,23 +21,39 @@ const BlockPage = () => {
 
 	const [loading, params, blockchain, transactions] = useBlockchain();
 
+	const block = useMemo(() => blockchain.find(block => block.hash === hash), [blockchain]);
+
+	const validation = useMemo(
+		() => isBlockValidInBlockchain(params, blockchain, block),
+		[params, blockchain, block]
+	);
+
+	const totalInputAmount = useMemo(
+		() =>
+			block.transactions
+				.slice(1)
+				.reduce(
+					(total, tx) =>
+						total + tx.inputs.reduce((inT, input) => inT + findTXO(input, transactions).amount, 0),
+					0
+				),
+		[block, transactions]
+	);
+
+	const totalOutputAmount = useMemo(
+		() =>
+			block.transactions
+				.slice(1)
+				.reduce(
+					(total, tx) => total + tx.outputs.reduce((outT, output) => outT + output.amount, 0),
+					0
+				),
+		[block]
+	);
+
 	if (loading) return null;
-
-	const block = blockchain.find(block => block.hash === hash);
-
-	const validation = isBlockValidInBlockchain(params, blockchain, block);
 	const isValid = validation.code === RESULT.VALID;
 
-	const totalInputAmount = block.transactions
-		.slice(1)
-		.reduce(
-			(total, tx) =>
-				total + tx.inputs.reduce((inT, input) => inT + findTXO(input, transactions).amount, 0),
-			0
-		);
-	const totalOutputAmount = block.transactions
-		.slice(1)
-		.reduce((total, tx) => total + tx.outputs.reduce((outT, output) => outT + output.amount, 0), 0);
 	const fee = totalInputAmount - totalOutputAmount;
 
 	return (

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -8,19 +8,22 @@ const Block = ({ block }) => {
 	const params = useSelector(state => state.consensus.params);
 	const blockchain = useSelector(state => state.blockchain.chain);
 
-	const isValid = isBlockValidInBlockchain(params, blockchain, block).code === RESULT.VALID;
+	const isValid = useMemo(
+		() => isBlockValidInBlockchain(params, blockchain, block).code === RESULT.VALID,
+		[params, blockchain]
+	);
 
 	return (
 		<div className="card is-flex is-flex-direction-column h-100">
 			<div className="card-header">
 				<div className="card-header-title">
-					<h1 className="title is-6 mb-0">
+					<h1 className="title is-6 mb-0 has-text-dark">
 						Block #{block.height}
 						{block.height === 0 && <span className="subtitle is-6"> (Genesis)</span>}
 					</h1>
 					{isValid ? (
-						<div className="icon has-text-success ml-auto">
-							<i className="material-icons">check_circle_outline</i>
+						<div className="icon has-text-info ml-auto">
+							<i className="material-icons-two-tone">check_circle_outline</i>
 						</div>
 					) : (
 						<div className="icon has-text-danger ml-auto">

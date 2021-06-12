@@ -7,7 +7,7 @@ const blockchainSlice = createSlice({
 	initialState: {
 		chain: createBlockchain([]),
 		fetched: false,
-		network: "mainnet",
+		network: localStorage.getItem("network") ?? "mainnet",
 	},
 	reducers: {
 		addBlock: (state, { payload: block }) => {
@@ -19,6 +19,7 @@ const blockchainSlice = createSlice({
 		},
 		setNetwork(state, { payload: network }) {
 			state.network = network;
+			localStorage.setItem("network", network);
 		},
 	},
 });

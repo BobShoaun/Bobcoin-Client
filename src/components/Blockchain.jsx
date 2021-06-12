@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useSelector } from "react-redux";
 
 import Block from "./Block";
@@ -8,7 +8,7 @@ const Blockchain = () => {
 	const [page, setPage] = useState(0);
 	const blocksPerPage = 4;
 
-	const reversedBlockchain = [...blockchain].reverse();
+	const reversedBlockchain = useMemo(() => [...blockchain].reverse(), [blockchain]);
 
 	return (
 		<div className="is-flex is-justify-content-space-between h-100">

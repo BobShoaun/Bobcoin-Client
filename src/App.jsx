@@ -18,7 +18,7 @@ import Footer from "./components/Footer";
 import io from "socket.io-client";
 import { bobcoinMainnet, bobcoinTestnet } from "./config";
 
-import SocketContext from "./contexts/SocketContext";
+import SocketContext from "./socket/SocketContext";
 import { initializeSocket } from "./socket/socket";
 import { resetTransactionSets, resetUtxoSets } from "blockcrypto";
 

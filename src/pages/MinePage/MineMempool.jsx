@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useMemo } from "react";
 import { useBlockchain } from "../../hooks/useBlockchain";
 
 import { calculateMempool } from "blockcrypto";
 import Transaction from "../../components/Transaction";
 
 const MineMempool = ({ headBlock, addTransaction, removeTransaction }) => {
-	const [mempool, setMempool] = useState([]);
-
 	const [loading, params, blockchain, transactions] = useBlockchain();
 
-	useEffect(() => {
-		if (headBlock) setMempool(calculateMempool(blockchain, headBlock, transactions));
-	}, [blockchain, headBlock, transactions]);
+	const mempool = useMemo(
+		() => (headBlock ? calculateMempool(blockchain, headBlock, transactions) : []),
+		[blockchain, transactions, headBlock]
+	);
 
 	if (loading) return null;
 

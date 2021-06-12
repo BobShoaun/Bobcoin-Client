@@ -20,7 +20,7 @@ import {
 import TransactionFailureModal from "./TransactionFailureModal";
 import TransactionSuccessModal from "./TransactionSuccessModal";
 
-import SocketContext from "../../contexts/SocketContext";
+import SocketContext from "../../socket/SocketContext";
 
 const NewTransactionPage = () => {
 	const dispatch = useDispatch();

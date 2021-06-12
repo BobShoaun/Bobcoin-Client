@@ -1,15 +1,14 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 import { formatDistanceToNow } from "date-fns";
 
-import Block from "../../components/Block";
 import "./blockchain.css";
 
 const BlockchainPage = () => {
 	const blockchain = useSelector(state => state.blockchain.chain);
-	const reversed = [...blockchain].reverse();
+	const reversed = useMemo(() => [...blockchain].reverse(), [blockchain]);
 
 	return (
 		<section className="section">

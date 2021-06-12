@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useMemo, useEffect } from "react";
 import { useParams, useHistory, useLocation } from "react-router-dom";
 
 import { useBlockchain } from "../hooks/useBlockchain";
@@ -10,6 +10,7 @@ import {
 	getAddressTxs,
 	getTxBlock,
 	findTXO,
+	calculateUTXOSet,
 } from "blockcrypto";
 import QRCode from "qrcode";
 import { copyToClipboard } from "../helpers";
@@ -25,39 +26,64 @@ const AddressPage = () => {
 
 	const [loading, params, blockchain, transactions] = useBlockchain();
 
-	if (loading || !blockchain.length) return null;
+	const headBlockHash = useMemo(() => new URLSearchParams(location.search).get("head"), [location]);
 
-	const headBlockHash = new URLSearchParams(location.search).get("head");
-
-	const headBlock =
-		blockchain.find(block => block.hash === headBlockHash) ??
-		getHighestValidBlock(params, blockchain);
-
-	const balance = (calculateBalance(blockchain, headBlock, address) / params.coin).toFixed(8);
-
-	const [receivedTxs, sentTxs] = getAddressTxs(blockchain, headBlock, address);
-	const totalReceived = receivedTxs.reduce(
-		(total, curr) =>
-			total +
-			curr.outputs
-				.filter(out => out.address === address)
-				.reduce((outT, outC) => outT + outC.amount, 0),
-		0
+	const headBlock = useMemo(
+		() =>
+			blockchain.find(block => block.hash === headBlockHash) ??
+			getHighestValidBlock(params, blockchain),
+		[blockchain, params, headBlockHash]
 	);
 
-	const totalSent = sentTxs.reduce(
-		(total, curr) =>
-			total +
-			curr.inputs.reduce((inT, inC) => {
-				const txo = findTXO(inC, transactions);
-				return inT + (txo.address === address ? txo.amount : 0);
-			}, 0),
-		0
+	const utxos = useMemo(
+		() => calculateUTXOSet(blockchain, headBlock).filter(utxo => utxo.address === address),
+		[blockchain, headBlock, address]
+	);
+
+	const balance = useMemo(
+		() => (utxos.reduce((prev, curr) => prev + curr.amount, 0) / params.coin).toFixed(8),
+		[utxos, params]
+	);
+
+	const [receivedTxs, sentTxs] = useMemo(
+		() => getAddressTxs(blockchain, headBlock, address),
+		[blockchain, headBlock, address]
+	);
+
+	const totalReceived = useMemo(
+		() =>
+			receivedTxs.reduce(
+				(total, curr) =>
+					total +
+					curr.outputs
+						.filter(out => out.address === address)
+						.reduce((outT, outC) => outT + outC.amount, 0),
+				0
+			),
+		[receivedTxs]
+	);
+
+	const totalSent = useMemo(
+		() =>
+			sentTxs.reduce(
+				(total, curr) =>
+					total +
+					curr.inputs.reduce((inT, inC) => {
+						const txo = findTXO(inC, transactions);
+						return inT + (txo.address === address ? txo.amount : 0);
+					}, 0),
+				0
+			),
+		[sentTxs, transactions]
 	);
 
 	const isValid = isAddressValid(params, address);
 
-	QRCode.toString(address).then(setAddressQR);
+	useEffect(() => {
+		QRCode.toString(address).then(setAddressQR);
+	}, [address]);
+
+	if (loading || !blockchain.length) return null;
 
 	const handleSearch = event => {
 		event.preventDefault();
@@ -124,6 +150,10 @@ const AddressPage = () => {
 						<tr>
 							<td>Transaction count</td>
 							<td>{receivedTxs.length + sentTxs.length}</td>
+						</tr>
+						<tr>
+							<td>UTXO count</td>
+							<td>{utxos.length}</td>
 						</tr>
 						<tr>
 							<td>Total Received</td>

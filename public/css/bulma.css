@@ -2209,7 +2209,7 @@ a.tag:hover {
       color: rgba(122, 122, 122, 0.3); }
 
 .input, .textarea {
-  box-shadow: none;
+  box-shadow: inset 0 0.0625em 0.125em rgba(10, 10, 10, 0.05);
   max-width: 100%;
   width: 100%; }
   .input[readonly], .textarea[readonly] {
@@ -3033,7 +3033,7 @@ a.tag:hover {
   border-bottom-right-radius: 0.25rem; }
 
 .card-header {
-  background-color: transparent;
+  background-color: #d0d1cd;
   align-items: stretch;
   box-shadow: 0 0.125em 0.25em rgba(10, 10, 10, 0.1);
   display: flex; }

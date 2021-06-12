@@ -76,3 +76,39 @@ code {
 .h-100 {
 	height: 100%;
 }
+
+.confirmations-0 {
+	background-color: #d84846;
+}
+
+.confirmations-1 {
+	background-color: #d16b45;
+}
+
+.confirmations-2 {
+	background-color: #cb8a45;
+}
+
+.confirmations-3 {
+	background-color: #c4a644;
+}
+
+.confirmations-4 {
+	background-color: #c1b344;
+}
+
+.confirmations-5 {
+	background-color: #bbbd43;
+}
+
+.confirmations-6 {
+	background-color: #97b742;
+}
+
+.confirmations-7 {
+	background-color: #86b342;
+}
+
+.confirmations-8 {
+	background-color: #76b041;
+}
