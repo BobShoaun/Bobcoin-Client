@@ -21,7 +21,7 @@ const BlockPage = () => {
 
 	const [loading, params, blockchain, transactions] = useBlockchain();
 
-	const block = useMemo(() => blockchain.find(block => block.hash === hash), [blockchain]);
+	const block = useMemo(() => blockchain.find(block => block.hash === hash), [blockchain, hash]);
 
 	const validation = useMemo(
 		() => isBlockValidInBlockchain(params, blockchain, block),

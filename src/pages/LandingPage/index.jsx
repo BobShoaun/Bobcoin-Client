@@ -62,7 +62,7 @@ const LandingPage = () => {
 					</div>
 					<div className="-has-background-info has-text-white" style={{ flex: "1 0 1" }}>
 						<span className="material-icons-two-tone md-48 has-text-info">terrain</span>
-						<h2 className="title is-4 is-spaced mb-2">High Market Cap</h2>
+						<h2 className="title is-4 is-spaced mb-2">High Supply Cap</h2>
 						<p className="subtitle is-6">
 							Up to {(params.hardCap / params.coin).toLocaleString()} {params.symbol} available
 						</p>
