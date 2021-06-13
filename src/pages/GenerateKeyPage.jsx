@@ -58,10 +58,16 @@ const GenerateKeyPage = () => {
 			<div className="is-flex" style={{ marginBottom: "6em" }}>
 				<section className=" mr-6" style={{ width: "50%" }}>
 					<div className="box mx-auto mb-6" style={{ width: "300px", height: "300px" }}>
-						<div
-							dangerouslySetInnerHTML={{ __html: skQR }}
-							style={{ width: "100%", height: "100%", background: "lightgray" }}
-						></div>
+						{skQR ? (
+							<div dangerouslySetInnerHTML={{ __html: addQR }}></div>
+						) : (
+							<div
+								className="is-flex has-text-centered"
+								style={{ width: "100%", height: "100%", background: "lightgray" }}
+							>
+								<p className="m-auto px-4">Click on "Generate Random Key" below</p>
+							</div>
+						)}
 					</div>
 
 					<div className="field">
@@ -90,10 +96,16 @@ const GenerateKeyPage = () => {
 
 				<section className="" style={{ width: "50%" }}>
 					<div className="box mx-auto mb-6" style={{ width: "300px", height: "300px" }}>
-						<div
-							dangerouslySetInnerHTML={{ __html: addQR }}
-							style={{ width: "100%", height: "100%", background: "lightgray" }}
-						></div>
+						{addQR ? (
+							<div dangerouslySetInnerHTML={{ __html: addQR }}></div>
+						) : (
+							<div
+								className="is-flex has-text-centered"
+								style={{ width: "100%", height: "100%", background: "lightgray" }}
+							>
+								<p className="m-auto px-4">Click on "Generate Random Key" below</p>
+							</div>
+						)}
 					</div>
 					<div className="field">
 						<label className="label">{params.name} Address</label>

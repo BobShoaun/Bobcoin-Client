@@ -121,3 +121,13 @@ code {
 .block-selected {
 	border-color: #5d737e;
 }
+
+.spinner {
+	animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+	100% {
+		transform: rotate(-360deg);
+	}
+}

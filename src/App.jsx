@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import NewTransactionAction from "./components/NewTransactionAction";
+import Loading from "./components/Loading";
 
 import io from "socket.io-client";
 import { bobcoinMainnet, bobcoinTestnet } from "./config";
@@ -41,34 +42,30 @@ const App = () => {
 	return (
 		<SocketContext.Provider value={{ socket, setSocket }}>
 			<Router>
-				<Suspense
-					fallback={
-						<div className="is-flex h-100">
-							<h1 className="subtitle m-auto">Just a moment...</h1>
+				<main className="is-flex is-flex-direction-column" style={{ minHeight: "100vh" }}>
+					<Navbar />
+					<Suspense fallback={<Loading />}>
+						<div className="container" style={{ width: "100%" }}>
+							<Switch>
+								<Route path="/generate-key" component={GenerateKeyPage} />
+								<Route path="/new-transaction" component={NewTransactionPage} />
+								<Route path="/mine" component={MinePage} />
+								<Route path="/blockchain" component={BlockchainPage} />
+
+								<Route path="/block/:hash" component={BlockPage}></Route>
+								<Route path="/transaction/:hash" component={TransactionPage}></Route>
+
+								<Route path="/address/:address" component={AddressPage}></Route>
+								<Route path="/address" component={AddressPage}></Route>
+								<Route path="/settings" component={SettingsPage} />
+								<Route path="/overview" component={OverviewPage} />
+								<Route path="/" component={LandingPage} />
+							</Switch>
 						</div>
-					}
-				>
-					<Navbar></Navbar>
-					<div className="container">
-						<Switch>
-							<Route path="/generate-key" component={GenerateKeyPage} />
-							<Route path="/new-transaction" component={NewTransactionPage} />
-							<Route path="/mine" component={MinePage} />
-							<Route path="/blockchain" component={BlockchainPage} />
-
-							<Route path="/block/:hash" component={BlockPage}></Route>
-							<Route path="/transaction/:hash" component={TransactionPage}></Route>
-
-							<Route path="/address/:address" component={AddressPage}></Route>
-							<Route path="/address" component={AddressPage}></Route>
-							<Route path="/settings" component={SettingsPage} />
-							<Route path="/overview" component={OverviewPage} />
-							<Route path="/" component={LandingPage} />
-						</Switch>
-					</div>
-					<NewTransactionAction />
-					<Footer></Footer>
-				</Suspense>
+						<NewTransactionAction />
+					</Suspense>
+					<Footer />
+				</main>
 			</Router>
 		</SocketContext.Provider>
 	);
