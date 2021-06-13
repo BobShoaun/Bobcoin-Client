@@ -55,7 +55,7 @@ const App = () => {
 				<main className="is-flex is-flex-direction-column" style={{ minHeight: "100vh" }}>
 					<Navbar />
 					<Suspense fallback={<Loading />}>
-						<div className="container" style={{ width: "100%" }}>
+						<div className="container" style={{ width: "100%", height: "100%" }}>
 							<Switch>
 								<Route path="/generate-key" component={GenerateKeyPage} />
 								<Route path="/new-transaction" component={NewTransactionPage} />

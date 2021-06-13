@@ -6,7 +6,6 @@ import Block from "../../components/Block";
 const MineBlockchain = ({ selectedBlock, setSelectedBlock }) => {
 	const blockchain = useSelector(state => state.blockchain.chain);
 	const [page, setPage] = useState(0);
-	// const [selectedBlock, setSelectedBlock] = useState(block);
 	const blocksPerPage = 4;
 
 	const reversedBlockchain = useMemo(() => [...blockchain].reverse(), [blockchain]);
@@ -22,7 +21,10 @@ const MineBlockchain = ({ selectedBlock, setSelectedBlock }) => {
 			</button>
 			{reversedBlockchain.slice(page, page + blocksPerPage).map(block => (
 				<div
-					onClick={() => setSelectedBlock?.(block)}
+					onClick={() => {
+						setSelectedBlock(block);
+						console.log("set", block);
+					}}
 					key={block.hash}
 					className="my-3 mx-2 is-clickable"
 				>

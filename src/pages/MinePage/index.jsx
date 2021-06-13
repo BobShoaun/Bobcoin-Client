@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { useDispatch } from "react-redux";
 
 import MineBlockchain from "./MineBlockchain";
@@ -29,6 +29,8 @@ import {
 import Miner from "./miner.worker";
 import SocketContext from "../../socket/SocketContext";
 
+import Loading from "../../components/Loading";
+
 import "./mine.css";
 
 const MinePage = () => {
@@ -37,11 +39,11 @@ const MinePage = () => {
 	const [miner, setMiner] = useState("");
 	const [headBlock, setHeadBlock] = useState(null);
 	const [terminalLog, setTerminalLog] = useState([]);
-	const [activeWorker, setActiveWorker] = useState(null);
 	const [successModal, setSuccessModal] = useState(false);
 	const [errorModal, setErrorModal] = useState(false);
 	const [error, setError] = useState({});
 	const [selectedTxs, setSelectedTxs] = useState([]);
+	const activeWorker = useRef(null);
 
 	const [loading, params, blockchain, transactions] = useBlockchain();
 	const { socket } = useContext(SocketContext);
@@ -50,9 +52,8 @@ const MinePage = () => {
 		setMiner(localStorage.getItem("add") ?? "");
 		return () => {
 			// terminate worker when leaving page / component
-			console.log("terminating worker", activeWorker);
-			activeWorker?.terminate();
-			setActiveWorker(null);
+			console.log("terminating worker", activeWorker.current);
+			activeWorker.current?.terminate();
 		};
 	}, []);
 
@@ -60,18 +61,21 @@ const MinePage = () => {
 		if (blockchain.length) setHeadBlock(getHighestValidBlock(params, blockchain));
 	}, [blockchain]);
 
-	if (loading) return null;
+	if (loading)
+		return (
+			<div style={{ height: "70vh" }}>
+				<Loading />
+			</div>
+		);
 
 	const startMining = () => {
-		if (activeWorker) {
+		if (activeWorker.current) {
 			setTerminalLog(log => [
 				...log,
 				`\nAnother mining process is currently running, to terminate it type 'mine stop'.`,
 			]);
 			return;
 		}
-
-		// const txsToMine = transactions.filter(tx => selectedTxMap[tx.hash]);
 
 		const fees = selectedTxs.reduce((total, tx) => total + getTransactionFees(transactions, tx), 0);
 		const output = createOutput(miner, calculateBlockReward(params, headBlock.height + 1) + fees);
@@ -82,23 +86,22 @@ const MinePage = () => {
 		const target = calculateHashTarget(params, block);
 
 		// validate b4 starting to mine
-		// const blockchainCopy = [...blockchain];
-		// addBlockToBlockchain(blockchainCopy, block);
-		// let validation = false;
-		// try {
-		// 	validation = isBlockValidInBlockchain(params, blockchainCopy, block, true);
-		// } catch (e) {
-		// 	console.log(e);
-		// 	setErrorModal(true);
-
-		// 	return;
-		// }
-		// if (validation.code !== RESULT.VALID) {
-		// 	console.error("Block is invalid, not broadcasting...: ", block);
-		// 	setError(validation);
-		// 	setErrorModal(true);
-		// 	return;
-		// }
+		const blockchainCopy = [...blockchain];
+		addBlockToBlockchain(blockchainCopy, block);
+		let validation = null;
+		try {
+			validation = isBlockValidInBlockchain(params, blockchainCopy, block, true);
+		} catch (e) {
+			console.log(e);
+			setErrorModal(true);
+			return;
+		}
+		if (validation.code !== RESULT.VALID) {
+			console.error("Block is invalid, not broadcasting...: ", block);
+			setError(validation);
+			setErrorModal(true);
+			return;
+		}
 
 		setTerminalLog(log => [
 			...log,
@@ -109,7 +112,7 @@ const MinePage = () => {
 
 		const worker = new Miner();
 		worker.postMessage({ block, target });
-		setActiveWorker(worker);
+		activeWorker.current = worker;
 
 		worker.addEventListener("message", async ({ data }) => {
 			switch (data.message) {
@@ -122,7 +125,7 @@ const MinePage = () => {
 						...log,
 						`\nMining successful! New block mined with...\nhash: ${data.block.hash}\nnonce: ${data.block.nonce}`,
 					]);
-					setActiveWorker(null);
+					activeWorker.current = null;
 
 					const blockchainCopy = [...blockchain];
 					const block = data.block;
@@ -160,10 +163,10 @@ const MinePage = () => {
 	};
 
 	const stopMining = () => {
-		if (activeWorker) {
-			activeWorker.terminate();
+		if (activeWorker.current) {
+			activeWorker.current.terminate();
+			activeWorker.current = null;
 			setTerminalLog(log => [...log, `\nMining operation stopped.`]);
-			setActiveWorker(null);
 			return;
 		}
 		setTerminalLog(log => [...log, `\nNo mining processes running.`]);
@@ -200,7 +203,7 @@ const MinePage = () => {
 			<hr />
 
 			<div className="mb-6">
-				<MineBlockchain selectedBlock={headBlock} setSelectBlock={setHeadBlock}></MineBlockchain>
+				<MineBlockchain selectedBlock={headBlock} setSelectedBlock={setHeadBlock}></MineBlockchain>
 			</div>
 
 			<section className="is-flex mb-6">
@@ -262,9 +265,9 @@ const MinePage = () => {
 						<p className="help">Which block to mine from.</p>
 					</div>
 
-					<button onClick={activeWorker ? stopMining : startMining} className="button mb-0">
+					<button onClick={activeWorker.current ? stopMining : startMining} className="button mb-0">
 						<i className="material-icons mr-2">engineering</i>
-						{activeWorker ? "Stop mining" : "Start mining"}
+						{activeWorker.current ? "Stop mining" : "Start mining"}
 					</button>
 				</section>
 			</section>

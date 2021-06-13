@@ -5,10 +5,16 @@ import { useBlockchain } from "../hooks/useBlockchain";
 
 import Blockchain from "../components/Blockchain";
 import Mempool from "../components/Mempool";
+import Loading from "../components/Loading";
 
 const DashboardPage = () => {
 	const [loading, params] = useBlockchain();
-	if (loading) return null;
+	if (loading)
+		return (
+			<div style={{ height: "70vh" }}>
+				<Loading />
+			</div>
+		);
 
 	return (
 		<section className="section">

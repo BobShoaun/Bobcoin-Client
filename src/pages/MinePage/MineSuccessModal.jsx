@@ -19,11 +19,10 @@ const MineSuccessModal = ({ isOpen, close, params, blockReward }) => {
 
 					<p className="subtitle is-5 has-text-centered">
 						You have found a hash that fits the network difficulty and have been rewarded{" "}
-						{blockReward} {params.symbol}. Hopefully other miners verify and build on top of your
-						block!
+						{blockReward} {params.symbol}. Your block has been broadcasted to the network.
 					</p>
 					<p className="help has-text-centered mb-4">
-						*You block is not mature until after at least {params.blkMaturity} confirmations.
+						*The block is not mature until after at least {params.blkMaturity} confirmations.
 					</p>
 					<div className="has-text-centered">
 						<button onClick={close} className="button is-dark has-text-weight-semibold">

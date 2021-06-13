@@ -16,6 +16,7 @@ import QRCode from "qrcode";
 import { copyToClipboard } from "../helpers";
 
 import Transaction from "../components/Transaction";
+import Loading from "../components/Loading";
 
 const AddressPage = () => {
 	const { address = "null" } = useParams();
@@ -89,7 +90,12 @@ const AddressPage = () => {
 		QRCode.toString(address).then(setAddressQR);
 	}, [address]);
 
-	if (loading || !blockchain.length) return null;
+	if (loading || !blockchain.length)
+		return (
+			<div style={{ height: "70vh" }}>
+				<Loading />
+			</div>
+		);
 
 	const handleSearch = event => {
 		event.preventDefault();
