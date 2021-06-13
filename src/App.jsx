@@ -1,5 +1,5 @@
 import { useState, useEffect, Suspense, lazy } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
@@ -14,6 +14,10 @@ import SocketContext from "./socket/SocketContext";
 import { initializeSocket } from "./socket/socket";
 import { resetTransactionSets, resetUtxoSets } from "blockcrypto";
 
+import { resetBlockchain } from "./store/blockchainSlice";
+import { resetParams } from "./store/consensusSlice";
+import { resetTransactions } from "./store/transactionsSlice";
+
 const OverviewPage = lazy(() => import("./pages/DashboardPage"));
 const GenerateKeyPage = lazy(() => import("./pages/GenerateKeyPage"));
 const MinePage = lazy(() => import("./pages/MinePage"));
@@ -26,6 +30,7 @@ const SettingsPage = lazy(() => import("./pages/SettingsPage"));
 const LandingPage = lazy(() => import("./pages/LandingPage"));
 
 const App = () => {
+	const dispatch = useDispatch();
 	const network = useSelector(state => state.blockchain.network);
 	const [socket, setSocket] = useState(null);
 
@@ -35,6 +40,11 @@ const App = () => {
 
 		socket?.disconnect();
 		const soc = io(network === "mainnet" ? bobcoinMainnet : bobcoinTestnet);
+
+		dispatch(resetBlockchain());
+		dispatch(resetTransactions());
+		dispatch(resetParams());
+
 		initializeSocket(soc);
 		setSocket(soc);
 	}, [network]);

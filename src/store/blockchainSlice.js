@@ -5,7 +5,7 @@ import { addBlock as addBlockToBlockchain, createBlockchain } from "blockcrypto"
 const blockchainSlice = createSlice({
 	name: "blockchain",
 	initialState: {
-		chain: createBlockchain([]),
+		chain: [],
 		fetched: false,
 		network: localStorage.getItem("network") ?? "mainnet",
 	},
@@ -21,8 +21,12 @@ const blockchainSlice = createSlice({
 			state.network = network;
 			localStorage.setItem("network", network);
 		},
+		resetBlockchain: state => {
+			state.chain = [];
+			state.fetched = false;
+		},
 	},
 });
 
-export const { addBlock, setBlockchain, setNetwork } = blockchainSlice.actions;
+export const { addBlock, setBlockchain, setNetwork, resetBlockchain } = blockchainSlice.actions;
 export default blockchainSlice.reducer;

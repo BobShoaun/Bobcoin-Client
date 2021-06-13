@@ -14,8 +14,12 @@ const transactionsSlice = createSlice({
 			state.txs = transactions;
 			state.fetched = true;
 		},
+		resetTransactions: state => {
+			state.txs = [];
+			state.fetched = false;
+		},
 	},
 });
 
-export const { addTransaction, setTransactions } = transactionsSlice.actions;
+export const { addTransaction, setTransactions, resetTransactions } = transactionsSlice.actions;
 export default transactionsSlice.reducer;

@@ -11,8 +11,12 @@ const consensusSlice = createSlice({
 			state.params = params;
 			state.fetched = true;
 		},
+		resetParams: state => {
+			state.params = {};
+			state.fetched = false;
+		},
 	},
 });
 
-export const { setParams } = consensusSlice.actions;
+export const { setParams, resetParams } = consensusSlice.actions;
 export default consensusSlice.reducer;

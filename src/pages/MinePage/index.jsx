@@ -50,14 +50,13 @@ const MinePage = () => {
 		setMiner(localStorage.getItem("add") ?? "");
 		return () => {
 			// terminate worker when leaving page / component
+			console.log("terminating worker", activeWorker);
 			activeWorker?.terminate();
 			setActiveWorker(null);
-			console.log("mining worker terminated");
 		};
 	}, []);
 
 	useEffect(() => {
-		console.log("setting head block");
 		if (blockchain.length) setHeadBlock(getHighestValidBlock(params, blockchain));
 	}, [blockchain]);
 
