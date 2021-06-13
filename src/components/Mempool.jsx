@@ -26,7 +26,10 @@ const Mempool = () => {
 					</div>
 				))
 			) : (
-				<div className="card mb-6 is-flex is-justify-content-center" style={{ padding: "2.5em" }}>
+				<div
+					className="has-background-white mb-6 is-flex is-justify-content-center"
+					style={{ padding: "2.5em" }}
+				>
 					<span className="material-icons-outlined mr-3 md-18">pending_actions</span>
 					<p className="subtitle is-6 has-text-centered">There are no pending transactions...</p>
 				</div>

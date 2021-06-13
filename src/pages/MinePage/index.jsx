@@ -47,7 +47,7 @@ const MinePage = () => {
 	const { socket } = useContext(SocketContext);
 
 	useEffect(() => {
-		setMiner(localStorage.getItem("add"));
+		setMiner(localStorage.getItem("add") ?? "");
 		return () => {
 			// terminate worker when leaving page / component
 			activeWorker?.terminate();

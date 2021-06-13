@@ -18,7 +18,7 @@ import { copyToClipboard } from "../helpers";
 import Transaction from "../components/Transaction";
 
 const AddressPage = () => {
-	const { address } = useParams();
+	const { address = "null" } = useParams();
 	const history = useHistory();
 	const location = useLocation();
 	const searchInput = useRef();
@@ -36,7 +36,10 @@ const AddressPage = () => {
 	);
 
 	const utxos = useMemo(
-		() => calculateUTXOSet(blockchain, headBlock).filter(utxo => utxo.address === address),
+		() =>
+			loading
+				? []
+				: calculateUTXOSet(blockchain, headBlock).filter(utxo => utxo.address === address),
 		[blockchain, headBlock, address]
 	);
 
@@ -46,7 +49,7 @@ const AddressPage = () => {
 	);
 
 	const [receivedTxs, sentTxs] = useMemo(
-		() => getAddressTxs(blockchain, headBlock, address),
+		() => (headBlock ? getAddressTxs(blockchain, headBlock, address) : [[], []]),
 		[blockchain, headBlock, address]
 	);
 
@@ -77,7 +80,10 @@ const AddressPage = () => {
 		[sentTxs, transactions]
 	);
 
-	const isValid = isAddressValid(params, address);
+	let isValid = false;
+	try {
+		isValid = isAddressValid(params, address);
+	} catch {}
 
 	useEffect(() => {
 		QRCode.toString(address).then(setAddressQR);
@@ -195,7 +201,7 @@ const AddressPage = () => {
 							</div>
 						))
 				) : (
-					<div className="card py-4">
+					<div className="has-background-white py-4">
 						<p className="subtitle is-6 has-text-centered">
 							No one has sent {params.name}s to this address.
 						</p>
@@ -220,7 +226,7 @@ const AddressPage = () => {
 						</div>
 					))
 			) : (
-				<div className="card py-4">
+				<div className="has-background-white py-4">
 					<p className="subtitle is-6 has-text-centered">
 						This address has not sent any {params.name}s.
 					</p>
