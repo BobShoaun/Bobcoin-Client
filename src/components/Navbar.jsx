@@ -7,8 +7,6 @@ import "./navbar.css";
 const Navbar = () => {
 	const network = useSelector(state => state.blockchain.network);
 
-	const [dropdown, setDropdown] = useState(false);
-
 	return (
 		<nav className="navbar is-dark" role="navigation" aria-label="main navigation">
 			<div className="navbar-brand">
@@ -65,21 +63,18 @@ const Navbar = () => {
 								<span>My Wallet</span>
 							</Link>
 
-							<div className={`dropdown -is-hoverable is-right ${dropdown ? "is-active" : ""}`}>
-								<div className="dropdown-trigger">
-									<button
-										aria-haspopup="true"
-										aria-controls="dropdown-menu6"
-										onClick={() => setDropdown(d => !d)}
-										className="button is-dark px-2"
-									>
-										<span className="material-icons md-28">
-											{network === "mainnet" ? "language" : "bug_report"}
-										</span>
-										<div className="indicator has-background-success"></div>
-									</button>
-								</div>
-								<div className="dropdown-menu" id="dropdown-menu6" role="menu">
+							<div className="dropdown is-right network-button">
+								<button
+									aria-haspopup="true"
+									aria-controls="dropdown-menu6"
+									className="dropdown-trigger button is-dark px-2 mx-0"
+								>
+									<span className="material-icons md-28">
+										{network === "mainnet" ? "language" : "bug_report"}
+									</span>
+									<div className="indicator has-background-success"></div>
+								</button>
+								<div className="dropdown-menu network-dropdown" id="dropdown-menu6" role="menu">
 									<div className="dropdown-content fhas-text-right">
 										<div className="dropdown-item">
 											<p>
@@ -88,11 +83,7 @@ const Navbar = () => {
 											</p>
 										</div>
 										<hr className="dropdown-divider"></hr>
-										<Link
-											to="/settings"
-											onClick={() => setDropdown(false)}
-											className="dropdown-item"
-										>
+										<Link to="/settings" className="dropdown-item">
 											Settings
 										</Link>
 									</div>
