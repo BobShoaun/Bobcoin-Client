@@ -11,3 +11,16 @@
 .network-button:focus-within > .network-dropdown {
 	display: block;
 }
+
+@media screen and (min-width: 1024px) {
+	.nav-menu {
+		display: none !important;
+	}
+}
+
+.nav-mobile {
+}
+
+.nav-mobile:focus-within {
+	color: red !important;
+}

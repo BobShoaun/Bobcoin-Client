@@ -52,7 +52,7 @@ const Transaction = ({ transaction, block, headBlock }) => {
 
 	return (
 		<div className="">
-			<div className="is-flex is-align-items-center mb-1">
+			<div className="is-flex-tablet is-align-items-center mb-1">
 				{isValid ? (
 					<div className="icon mr-2">
 						<i className="material-icons md-18">check_circle</i>
@@ -86,7 +86,7 @@ const Transaction = ({ transaction, block, headBlock }) => {
 				</div>
 			)} */}
 
-			<div className="is-flex mb-2">
+			<div className="is-flex-tablet mb-2">
 				{isCoinbase ? (
 					<p>COINBASE (Newly Minted Coins)</p>
 				) : (
@@ -124,7 +124,10 @@ const Transaction = ({ transaction, block, headBlock }) => {
 				</div>
 				<div className="ml-auto" style={{ width: "" }}>
 					{transaction.outputs.map((output, index) => (
-						<div key={index} className="is-flex is-align-items-center is-justify-content-flex-end">
+						<div
+							key={index}
+							className="is-flex-tablet is-align-items-center is-justify-content-flex-end"
+						>
 							<p className="has-text-weight-medium has-text-right">
 								{(output.amount / params.coin).toFixed(8)} {params.symbol}
 							</p>
@@ -157,7 +160,7 @@ const Transaction = ({ transaction, block, headBlock }) => {
 					))}
 				</div>
 			</div>
-			<section className="is-flex">
+			<section className="is-flex-tablet">
 				<div className="mt-auto">
 					<span
 						className={`subtitle is-6 is-inline-block mb-1 py-1 px-3 has-text-white ${getConfirmationColor(

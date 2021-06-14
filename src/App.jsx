@@ -72,7 +72,9 @@ const App = () => {
 								<Route path="/" component={LandingPage} />
 							</Switch>
 						</div>
-						<NewTransactionAction />
+						<div style={{ display: "none" }} className="is-block-desktop">
+							<NewTransactionAction />
+						</div>
 					</Suspense>
 					<Footer />
 				</main>

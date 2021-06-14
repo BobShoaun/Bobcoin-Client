@@ -9,24 +9,67 @@ const Navbar = () => {
 
 	return (
 		<nav className="navbar is-dark" role="navigation" aria-label="main navigation">
+			<section
+				className="has-background-dark has-text-centered is-flex is-justify-content-space-evenly is-hidden-desktop"
+				style={{ position: "fixed", zIndex: 100, bottom: 0, width: "100vw" }}
+			>
+				<Link to="/overview" className="has-text-white nav-mobile p-2" style={{ flexBasis: "20%" }}>
+					<span className="material-icons-outlined md-28 mb-0" style={{ color: "white" }}>
+						explore
+					</span>
+					<p className="is-size-7">Explore</p>
+				</Link>
+				<Link
+					to="/blockchain"
+					className="has-text-white nav-mobile p-2"
+					style={{ flexBasis: "20%" }}
+				>
+					<span className="material-icons-outlined is-white md-28 mb-0" style={{ color: "white" }}>
+						view_in_ar
+					</span>
+					<p className="is-size-7">Blockchain</p>
+				</Link>
+
+				<Link
+					to={`/address/${localStorage.getItem("add")}`}
+					className="has-text-white nav-mobile p-2"
+					style={{ flexBasis: "20%" }}
+				>
+					<span className="material-icons-outlined is-white md-28 mb-0" style={{ color: "white" }}>
+						account_balance_wallet
+					</span>
+					<p className="is-size-7">Wallet</p>
+				</Link>
+
+				<Link
+					to="/new-transaction"
+					className="has-text-white nav-mobile p-2"
+					style={{ flexBasis: "20%" }}
+				>
+					<span className="material-icons-outlined is-white md-28 mb-0" style={{ color: "white" }}>
+						payments
+					</span>
+					<p className="is-size-7">Payment</p>
+				</Link>
+
+				<Link
+					to="/generate-key"
+					className="has-text-white nav-mobile p-2"
+					style={{ flexBasis: "20%" }}
+				>
+					<span className="material-icons-outlined is-white md-28 mb-0" style={{ color: "white" }}>
+						vpn_key
+					</span>
+					<p className="is-size-7">Generate</p>
+				</Link>
+			</section>
+			{/* </div> */}
+
 			<div className="navbar-brand">
 				<Link className="navbar-item mr-2" to="/">
 					<span className="material-icons-outlined mr-2">monetization_on</span>
 					<h1 className="has-text-weight-semibold">BobCoin (XBC)</h1>
 					{/* <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28" alt="logo" /> */}
-				</Link>
-
-				<Link
-					to="/"
-					role="button"
-					className="navbar-burger"
-					aria-label="menu"
-					aria-expanded="false"
-					data-target="navbarBasicExample"
-				>
-					<span aria-hidden="true"></span>
-					<span aria-hidden="true"></span>
-					<span aria-hidden="true"></span>
 				</Link>
 			</div>
 
@@ -40,10 +83,10 @@ const Navbar = () => {
 						Blockchain
 					</Link>
 					<Link to="/new-transaction" className="navbar-item mr-2">
-						Create Transaction
+						New Transaction
 					</Link>
 					<Link to="/mine" className="navbar-item mr-2">
-						Mine
+						Mining
 					</Link>
 				</div>
 

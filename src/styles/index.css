@@ -8,6 +8,7 @@ body {
 	/* -moz-osx-font-smoothing: grayscale; */
 	/* position: relative; */
 	height: 100%;
+	/* font-size: clamp(0.1rem, 1rem, 2rem); */
 }
 
 code {

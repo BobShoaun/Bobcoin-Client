@@ -104,7 +104,7 @@ const AddressPage = () => {
 
 	return (
 		<section className="section">
-			<div className="is-flex is-align-items-end" style={{ marginBottom: "3.3em" }}>
+			<div className="is-flex-tablet is-align-items-end" style={{ marginBottom: "3.3em" }}>
 				<div className="">
 					<h1 className="title is-2">Address</h1>
 					<p className="subtitle is-4">See this address's balance and details.</p>
@@ -123,17 +123,17 @@ const AddressPage = () => {
 					</p>
 				</form>
 			</div>
-			<div className="is-flex is-align-items-center mb-6">
+			<div className="is-flex-tablet is-align-items-center mb-6">
 				<p
 					dangerouslySetInnerHTML={{ __html: addressQR }}
-					className="mr-6 box"
-					style={{ width: "400px" }}
+					className="mr-6 box mb-0"
+					style={{ width: "300px" }}
 				></p>
 				<table className="table is-fullwidth">
 					<tbody>
 						<tr>
 							<td>Address</td>
-							<td className="is-flex">
+							<td className="is-flex" style={{ wordBreak: "break-all" }}>
 								{address}
 
 								<span

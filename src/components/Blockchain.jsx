@@ -11,7 +11,7 @@ const Blockchain = () => {
 	const reversedBlockchain = useMemo(() => [...blockchain].reverse(), [blockchain]);
 
 	return (
-		<div className="is-flex is-justify-content-space-between h-100">
+		<div className="is-flex-tablet is-justify-content-space-between h-100">
 			<button
 				className="button py-6 px-1 mr-4 my-auto"
 				disabled={page === 0}

@@ -51,13 +51,13 @@ const GenerateKeyPage = () => {
 	return (
 		<section className="section">
 			<h1 className="title is-2">Generate Key</h1>
-			<p className="subtitle is-4" style={{ marginBottom: "3em" }}>
+			<p className="subtitle is-4 mb-6">
 				A private key and address pair for you to store, send and receive {params.name}.
 			</p>
 
-			<div className="is-flex" style={{ marginBottom: "6em" }}>
-				<section className=" mr-6" style={{ width: "50%" }}>
-					<div className="box mx-auto mb-6" style={{ width: "300px", height: "300px" }}>
+			<div className="is-flex-tablet mb-6">
+				<section className="p-6" style={{ flexBasis: "50%" }}>
+					<div className="box mx-auto mb-6" style={{ width: "250px", height: "250px" }}>
 						{skQR ? (
 							<div dangerouslySetInnerHTML={{ __html: addQR }}></div>
 						) : (
@@ -94,8 +94,8 @@ const GenerateKeyPage = () => {
 					</div>
 				</section>
 
-				<section className="" style={{ width: "50%" }}>
-					<div className="box mx-auto mb-6" style={{ width: "300px", height: "300px" }}>
+				<section className="p-6" style={{ flexBasis: "50%" }}>
+					<div className="box mx-auto mb-6" style={{ width: "250px", height: "250px" }}>
 						{addQR ? (
 							<div dangerouslySetInnerHTML={{ __html: addQR }}></div>
 						) : (
@@ -124,17 +124,16 @@ const GenerateKeyPage = () => {
 				</section>
 			</div>
 
-			<div className="buttons is-pulled-right">
-				<button onClick={generateRandom} className="button is-dark has-text-weight-medium">
+			<div className="has-text-right">
+				<button onClick={generateRandom} className="button is-dark has-text-weight-medium mb-3">
 					<span className="material-icons-outlined mr-2">casino</span>
 					Generate random key
 				</button>
-				<button onClick={saveKeys} className="button is-info has-text-weight-medium">
+				<button onClick={saveKeys} className="button is-info has-text-weight-medium ml-3 mb-3">
 					<span className="material-icons-outlined mr-2">save</span>
 					Save & Use key
 				</button>
 			</div>
-			<div className="is-clearfix"></div>
 
 			<div className={`modal ${modalOpen && "is-active"}`}>
 				<div className="modal-background"></div>
