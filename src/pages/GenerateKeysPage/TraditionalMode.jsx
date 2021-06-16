@@ -129,7 +129,7 @@ const TraditionalMode = () => {
 					<span className="material-icons-outlined mr-2">shuffle</span>
 					Generate random key
 				</button>
-				<button onClick={saveKeys} className="button is-success has-text-weight-medium ml-3 mb-3">
+				<button onClick={saveKeys} className="button is-link has-text-weight-medium ml-3 mb-3">
 					<span className="material-icons-outlined mr-2">save</span>
 					Save & Use key
 				</button>

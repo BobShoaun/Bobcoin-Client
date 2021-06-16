@@ -246,7 +246,7 @@ const NewTransactionPage = () => {
 					Cancel
 				</button>
 				<button
-					className="button is-info has-text-weight-semibold"
+					className="button is-link has-text-weight-semibold"
 					onClick={createAndSignTransaction}
 				>
 					<span className="material-icons-outlined mr-2">payments</span>

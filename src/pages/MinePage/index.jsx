@@ -207,7 +207,7 @@ const MinePage = () => {
 			<div className="mb-6">
 				<MineBlockchain
 					selectedBlock={headBlock}
-					setSelectedBlock={block => activeWorker || setHeadBlock(block)}
+					setSelectedBlock={block => activeWorker.current || setHeadBlock(block)}
 				></MineBlockchain>
 			</div>
 
