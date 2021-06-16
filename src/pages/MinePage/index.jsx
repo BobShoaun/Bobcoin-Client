@@ -205,7 +205,10 @@ const MinePage = () => {
 			<hr />
 
 			<div className="mb-6">
-				<MineBlockchain selectedBlock={headBlock} setSelectedBlock={setHeadBlock}></MineBlockchain>
+				<MineBlockchain
+					selectedBlock={headBlock}
+					setSelectedBlock={block => activeWorker || setHeadBlock(block)}
+				></MineBlockchain>
 			</div>
 
 			<section className="is-flex mb-6">
