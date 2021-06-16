@@ -68,7 +68,7 @@ const MinePage = () => {
 			</div>
 		);
 
-	const isLatest = getHighestValidBlock(params, blockchain).hash === headBlock.hash;
+	const isLatest = getHighestValidBlock(params, blockchain).hash === headBlock?.hash;
 
 	const startMining = () => {
 		if (activeWorker.current) {

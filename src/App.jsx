@@ -19,7 +19,7 @@ import { resetParams } from "./store/consensusSlice";
 import { resetTransactions } from "./store/transactionsSlice";
 
 const OverviewPage = lazy(() => import("./pages/DashboardPage"));
-const GenerateKeyPage = lazy(() => import("./pages/GenerateKeyPage"));
+const GenerateKeysPage = lazy(() => import("./pages/GenerateKeysPage"));
 const MinePage = lazy(() => import("./pages/MinePage"));
 const AddressPage = lazy(() => import("./pages/AddressPage"));
 const NewTransactionPage = lazy(() => import("./pages/NewTransactionPage"));
@@ -57,7 +57,7 @@ const App = () => {
 					<Suspense fallback={<Loading />}>
 						<div className="container" style={{ width: "100%", height: "100%" }}>
 							<Switch>
-								<Route path="/generate-key" component={GenerateKeyPage} />
+								<Route path="/generate-key" component={GenerateKeysPage} />
 								<Route path="/new-transaction" component={NewTransactionPage} />
 								<Route path="/mine" component={MinePage} />
 								<Route path="/blockchain" component={BlockchainPage} />

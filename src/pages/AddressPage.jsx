@@ -107,7 +107,9 @@ const AddressPage = () => {
 			<div className="is-flex-tablet is-align-items-end" style={{ marginBottom: "3.3em" }}>
 				<div className="">
 					<h1 className="title is-2">Address</h1>
-					<p className="subtitle is-4">See this address's balance and details.</p>
+					<p className="subtitle is-5">
+						See this address's balance, transaction history, and more.
+					</p>
 				</div>
 				<form onSubmit={handleSearch} className="ml-auto" style={{ minWidth: "20em" }}>
 					<p className="control has-icons-left">

@@ -101,7 +101,7 @@ const LandingPage = () => {
 					</Link>
 				</li>
 				<li className="mb-5">
-					Obtain XBC by mining, or ASK the creator himself for some coins.
+					Obtain XBC by mining, or ask the creator himself for some coins.
 					<Link
 						to="mine"
 						className="button is-small is-info is-pulled-right has-text-weight-semibold px-4"
@@ -127,7 +127,10 @@ const LandingPage = () => {
 						<span className="material-icons-outlined md-28">arrow_right_alt</span>
 					</Link>
 				</li>
-				<li className="mb-5">Rinse and repeat, and become a valuable peer in the network.</li>
+				<li className="mb-5">
+					Host your own node with a copy of the blockchain, and become a valuable peer in the
+					network. (coming soon)
+				</li>
 			</ol>
 		</section>
 	);

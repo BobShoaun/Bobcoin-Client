@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { generateKeys, getKeys } from "blockcrypto";
 import QRCode from "qrcode";
-import { copyToClipboard } from "../helpers";
 
-import { setKeys as setWalletKeys } from "../store/walletSlice";
+import { copyToClipboard } from "../../helpers";
+import { setKeys as setWalletKeys } from "../../store/walletSlice";
 
-const GenerateKeyPage = () => {
+const TraditionalMode = () => {
 	const dispatch = useDispatch();
 	const params = useSelector(state => state.consensus.params);
 
@@ -51,14 +51,8 @@ const GenerateKeyPage = () => {
 			console.error(e);
 		}
 	};
-
 	return (
-		<section className="section">
-			<h1 className="title is-2">Generate Key</h1>
-			<p className="subtitle is-4 mb-6">
-				A private key and address pair for you to store, send and receive {params.name}.
-			</p>
-
+		<main>
 			<div className="is-flex-tablet mb-6">
 				<section className="p-6" style={{ flexBasis: "50%" }}>
 					<div className="box mx-auto mb-6" style={{ width: "250px", height: "250px" }}>
@@ -127,13 +121,15 @@ const GenerateKeyPage = () => {
 					</div>
 				</section>
 			</div>
-
 			<div className="has-text-right">
-				<button onClick={generateRandom} className="button is-dark has-text-weight-medium mb-3">
-					<span className="material-icons-outlined mr-2">casino</span>
+				<button
+					onClick={generateRandom}
+					className="button is-dark has-text-weight-medium mb-3 ml-auto"
+				>
+					<span className="material-icons-outlined mr-2">shuffle</span>
 					Generate random key
 				</button>
-				<button onClick={saveKeys} className="button is-info has-text-weight-medium ml-3 mb-3">
+				<button onClick={saveKeys} className="button is-success has-text-weight-medium ml-3 mb-3">
 					<span className="material-icons-outlined mr-2">save</span>
 					Save & Use key
 				</button>
@@ -196,8 +192,8 @@ const GenerateKeyPage = () => {
 					aria-label="close"
 				></button>
 			</div>
-		</section>
+		</main>
 	);
 };
 
-export default GenerateKeyPage;
+export default TraditionalMode;

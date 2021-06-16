@@ -26,7 +26,7 @@ const SettingsPage = () => {
 	return (
 		<section className="section">
 			<h1 className="title is-2">Settings</h1>
-			<p className="subtitle is-4">Change your network settings here.</p>
+			<p className="subtitle is-5">Change your network and client settings.</p>
 			<hr />
 			<h2 className="title is-5 is-spaced mb-2">Network</h2>
 			<div className="control has-icons-left mb-5">
