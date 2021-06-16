@@ -5,6 +5,7 @@ import { useBlockchain } from "../../hooks/useBlockchain";
 
 import Transactions from "../../components/Transactions";
 import { copyToClipboard } from "../../helpers";
+import Loading from "../../components/Loading";
 
 import {
 	calculateBlockReward,
@@ -21,37 +22,29 @@ const BlockPage = () => {
 
 	const [loading, params, blockchain, transactions] = useBlockchain();
 
-	const block = useMemo(() => blockchain.find(block => block.hash === hash), [blockchain, hash]);
+	if (loading)
+		return (
+			<div style={{ height: "70vh" }}>
+				<Loading />
+			</div>
+		);
 
-	const validation = useMemo(
-		() => isBlockValidInBlockchain(params, blockchain, block),
-		[params, blockchain, block]
-	);
+	const block = blockchain.find(block => block.hash === hash);
 
-	const totalInputAmount = useMemo(
-		() =>
-			block.transactions
-				.slice(1)
-				.reduce(
-					(total, tx) =>
-						total + tx.inputs.reduce((inT, input) => inT + findTXO(input, transactions).amount, 0),
-					0
-				),
-		[block, transactions]
-	);
+	const validation = isBlockValidInBlockchain(params, blockchain, block);
 
-	const totalOutputAmount = useMemo(
-		() =>
-			block.transactions
-				.slice(1)
-				.reduce(
-					(total, tx) => total + tx.outputs.reduce((outT, output) => outT + output.amount, 0),
-					0
-				),
-		[block]
-	);
+	const totalInputAmount = block.transactions
+		.slice(1)
+		.reduce(
+			(total, tx) =>
+				total + tx.inputs.reduce((inT, input) => inT + findTXO(input, transactions).amount, 0),
+			0
+		);
 
-	if (loading) return null;
+	const totalOutputAmount = block.transactions
+		.slice(1)
+		.reduce((total, tx) => total + tx.outputs.reduce((outT, output) => outT + output.amount, 0), 0);
+
 	const isValid = validation.code === RESULT.VALID;
 
 	const fee = totalInputAmount - totalOutputAmount;
@@ -88,7 +81,7 @@ const BlockPage = () => {
 					</tr>
 					<tr>
 						<td>Confirmations</td>
-						<td>{getBlockConfirmations(blockchain, block)}</td>
+						<td>{getBlockConfirmations(params, blockchain, block)}</td>
 					</tr>
 					<tr>
 						<td>Miner</td>

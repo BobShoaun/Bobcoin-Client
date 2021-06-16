@@ -37,7 +37,7 @@ const TransactionPage = () => {
 
 	const block =
 		blockchain.find(block => block.hash === blockHash) ?? getHighestValidBlock(params, blockchain);
-	const confirmations = getBlockConfirmations(blockchain, block);
+	const confirmations = getBlockConfirmations(params, blockchain, block);
 	const status =
 		confirmations === 0 ? "Unconfirmed (in Mempool)" : `${confirmations} confirmations`;
 

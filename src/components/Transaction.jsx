@@ -40,7 +40,7 @@ const Transaction = ({ transaction, block, headBlock }) => {
 		).code === RESULT.VALID;
 
 	const inMempool = !block;
-	const confirmations = block ? getBlockConfirmations(blockchain, block) : 0;
+	const confirmations = block ? getBlockConfirmations(params, blockchain, block) : 0;
 	const head = headBlock ?? getHighestValidBlock(params, blockchain);
 
 	const utxos = calculateUTXOSet(blockchain, head);

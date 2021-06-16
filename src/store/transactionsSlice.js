@@ -8,6 +8,7 @@ const transactionsSlice = createSlice({
 	},
 	reducers: {
 		addTransaction(state, { payload: transaction }) {
+			console.log("added new tx", transaction);
 			state.txs.push(transaction);
 		},
 		setTransactions(state, { payload: transactions }) {
