@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useContext, useRef, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import MineBlockchain from "./MineBlockchain";
@@ -67,6 +67,8 @@ const MinePage = () => {
 				<Loading />
 			</div>
 		);
+
+	const isLatest = getHighestValidBlock(params, blockchain).hash === headBlock.hash;
 
 	const startMining = () => {
 		if (activeWorker.current) {
@@ -262,7 +264,13 @@ const MinePage = () => {
 							placeholder="Enter block hash"
 							readOnly
 						></input>
-						<p className="help">Which block to mine from.</p>
+						<p className="help">Previous block to mine from.</p>
+						{!isLatest && (
+							<p className="help is-danger is-flex">
+								<span className="material-icons-outlined md-18 mr-2">warning</span>You are not
+								mining from the latest block.
+							</p>
+						)}
 					</div>
 
 					<button onClick={activeWorker.current ? stopMining : startMining} className="button mb-0">

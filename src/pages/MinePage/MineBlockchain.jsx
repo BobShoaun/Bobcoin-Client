@@ -23,7 +23,7 @@ const MineBlockchain = ({ selectedBlock, setSelectedBlock }) => {
 				<div
 					onClick={() => {
 						setSelectedBlock(block);
-						console.log("set", block);
+						console.log("set head block", block);
 					}}
 					key={block.hash}
 					className="my-3 mx-2 is-clickable"

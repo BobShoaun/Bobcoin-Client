@@ -50,7 +50,7 @@ const TransactionPage = () => {
 	return (
 		<section className="section">
 			<h1 className="title is-2">Transaction</h1>
-			<p className="subtitle is-4">A transaction in the mempool or blockchain.</p>
+			<p className="subtitle is-5">A transaction in the mempool or blockchain.</p>
 			<hr />
 
 			<h1 className="title is-4">Summary</h1>

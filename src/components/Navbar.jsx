@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
@@ -7,11 +7,6 @@ import "./navbar.css";
 const Navbar = () => {
 	const network = useSelector(state => state.blockchain.network);
 	const keys = useSelector(state => state.wallet.keys);
-
-	useEffect(() => {
-		console.log(keys, keys);
-	}, [keys]);
-
 	return (
 		<nav className="navbar is-dark" role="navigation" aria-label="main navigation">
 			<section
