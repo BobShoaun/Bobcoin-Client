@@ -19,7 +19,7 @@ import Transaction from "../components/Transaction";
 import Loading from "../components/Loading";
 
 const AddressPage = () => {
-	const { address = "null" } = useParams();
+	const { address } = useParams();
 	const history = useHistory();
 	const location = useLocation();
 	const searchInput = useRef();

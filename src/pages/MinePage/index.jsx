@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import MineBlockchain from "./MineBlockchain";
 import MineMempool from "./MineMempool";
@@ -35,8 +35,9 @@ import "./mine.css";
 
 const MinePage = () => {
 	const dispatch = useDispatch();
+	const keys = useSelector(state => state.wallet.keys);
 
-	const [miner, setMiner] = useState("");
+	const [miner, setMiner] = useState(keys.address);
 	const [headBlock, setHeadBlock] = useState(null);
 	const [terminalLog, setTerminalLog] = useState([]);
 	const [successModal, setSuccessModal] = useState(false);
@@ -49,7 +50,6 @@ const MinePage = () => {
 	const { socket } = useContext(SocketContext);
 
 	useEffect(() => {
-		setMiner(localStorage.getItem("add") ?? "");
 		return () => {
 			// terminate worker when leaving page / component
 			console.log("terminating worker", activeWorker.current);

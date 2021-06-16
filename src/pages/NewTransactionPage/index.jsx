@@ -24,12 +24,14 @@ import SocketContext from "../../socket/SocketContext";
 
 const NewTransactionPage = () => {
 	const dispatch = useDispatch();
+	const keys = useSelector(state => state.wallet.keys);
+
 	const history = useHistory();
 
 	const [showSK, setShowSK] = useState(false);
 	const [amount, setAmount] = useState("");
 	const [fee, setFee] = useState("");
-	const [senderSK, setSenderSK] = useState(localStorage.getItem("sk"));
+	const [senderSK, setSenderSK] = useState(keys.sk);
 	const [senderPK, setSenderPK] = useState("");
 	const [senderAdd, setSenderAdd] = useState("");
 	const [recipientAdd, setRecipientAdd] = useState("");

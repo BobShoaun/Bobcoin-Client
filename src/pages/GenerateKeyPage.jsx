@@ -1,48 +1,52 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import { generateKeys, getKeys } from "blockcrypto";
 import QRCode from "qrcode";
 import { copyToClipboard } from "../helpers";
 
+import { setKeys as setWalletKeys } from "../store/walletSlice";
+
 const GenerateKeyPage = () => {
+	const dispatch = useDispatch();
 	const params = useSelector(state => state.consensus.params);
-	const [secretKey, setSecretKey] = useState("");
-	const [address, setAddress] = useState("");
+
+	const [keys, setKeys] = useState({ sk: "", address: "" });
 	const [skQR, setSKQR] = useState("");
 	const [addQR, setAddQR] = useState("");
 
 	const [modalOpen, setModalOpen] = useState(false);
 
 	const generateRandom = () => {
-		const { sk, _, address } = generateKeys(params);
-		setSecretKey(sk);
-		setAddress(address);
-		generateQRCode(sk, address);
+		const keys = generateKeys(params);
+		setKeys(keys);
+		generateQRCode(keys);
 	};
 
 	const handleChangePrivateKey = privateKey => {
+		if (privateKey === "") {
+			setKeys({ sk: "", address: "" });
+			setSKQR(null);
+			setAddQR(null);
+			return;
+		}
 		try {
-			const { sk, _, address } = getKeys(params, privateKey);
-			setSecretKey(sk);
-			setAddress(address);
-			generateQRCode(sk, address);
+			const keys = getKeys(params, privateKey);
+			setKeys(keys);
+			generateQRCode(keys);
 		} catch {
-			setSecretKey("");
-			setAddress("");
+			console.log("possibly invalid base58 character");
 		}
 	};
 
 	const saveKeys = () => {
-		localStorage.setItem("sk", secretKey);
-		localStorage.setItem("add", address);
+		dispatch(setWalletKeys(keys));
 		setModalOpen(true);
 	};
 
-	const generateQRCode = async (sk, add) => {
+	const generateQRCode = async keys => {
 		try {
-			setSKQR(await QRCode.toString(sk));
-			setAddQR(await QRCode.toString(add));
+			setSKQR(await QRCode.toString(keys.sk));
+			setAddQR(await QRCode.toString(keys.address));
 		} catch (e) {
 			console.error(e);
 		}
@@ -59,7 +63,7 @@ const GenerateKeyPage = () => {
 				<section className="p-6" style={{ flexBasis: "50%" }}>
 					<div className="box mx-auto mb-6" style={{ width: "250px", height: "250px" }}>
 						{skQR ? (
-							<div dangerouslySetInnerHTML={{ __html: addQR }}></div>
+							<div dangerouslySetInnerHTML={{ __html: skQR }}></div>
 						) : (
 							<div
 								className="is-flex has-text-centered"
@@ -78,12 +82,12 @@ const GenerateKeyPage = () => {
 									className="input"
 									type="text"
 									placeholder="Enter or auto-generate private key"
-									value={secretKey}
+									value={keys.sk}
 									onChange={({ target }) => handleChangePrivateKey(target.value)}
 								></input>
 							</div>
 							<p className="control">
-								<button className="button" onClick={() => copyToClipboard(secretKey)}>
+								<button className="button" onClick={() => copyToClipboard(keys.sk)}>
 									<i className="material-icons md-18">content_copy</i>
 								</button>
 							</p>
@@ -111,10 +115,10 @@ const GenerateKeyPage = () => {
 						<label className="label">{params.name} Address</label>
 						<div className="field has-addons mb-0">
 							<div className="control is-expanded">
-								<input className="input" type="text" value={address} readOnly />
+								<input className="input" type="text" value={keys.address} readOnly />
 							</div>
 							<p className="control">
-								<button className="button" onClick={() => copyToClipboard(address)}>
+								<button className="button" onClick={() => copyToClipboard(keys.address)}>
 									<i className="material-icons md-18">content_copy</i>
 								</button>
 							</p>
@@ -143,15 +147,23 @@ const GenerateKeyPage = () => {
 							<i className="material-icons-outlined md-36 mr-3 has-text-black">vpn_key</i>
 							<h3 className="title is-3">Your keys are saved!</h3>
 						</div>
-						<div className="is-flex is-justify-items-center mb-0">
-							<div className="has-text-right mr-3">
-								<p className="subtitle is-6 mb-3">Private key:</p>
-								<p className="subtitle is-6">Address:</p>
-							</div>
-							<div className="has-text-weight-semibold">
-								<p className="-subtitle is-6 mb-2">{secretKey}</p>
-								<p className="-subtitle is-6">{address}</p>
-							</div>
+						<div
+							className="mx-5"
+							style={{
+								display: "grid",
+								gridTemplateColumns: "1fr auto",
+								columnGap: "1em",
+								rowGap: ".5em",
+							}}
+						>
+							<p className="subtitle is-6 mb-0 has-text-right" style={{ whiteSpace: "nowrap" }}>
+								Private key:
+							</p>
+							<p className="has-text-weight-semibold is-6 mb-0" style={{ wordBreak: "break-all" }}>
+								{keys.sk}
+							</p>
+							<p className="subtitle is-6 has-text-right mb-0">Address:</p>
+							<p className="has-text-weight-semibold is-6 mb-0">{keys.address}</p>
 						</div>
 						<img
 							style={{ width: "80%", display: "block" }}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
@@ -6,6 +6,11 @@ import "./navbar.css";
 
 const Navbar = () => {
 	const network = useSelector(state => state.blockchain.network);
+	const keys = useSelector(state => state.wallet.keys);
+
+	useEffect(() => {
+		console.log(keys, keys);
+	}, [keys]);
 
 	return (
 		<nav className="navbar is-dark" role="navigation" aria-label="main navigation">
@@ -31,7 +36,7 @@ const Navbar = () => {
 				</Link>
 
 				<Link
-					to={`/address/${localStorage.getItem("add")}`}
+					to={`/address/${keys.address}`}
 					className="has-text-white nav-mobile p-2"
 					style={{ flexBasis: "20%" }}
 				>
@@ -98,10 +103,7 @@ const Navbar = () => {
 								<p className="has-text-weight-bold has-text-dark">Generate Key</p>
 							</Link>
 
-							<Link
-								to={`/address/${localStorage.getItem("add")}`}
-								className="button has-text-weight-bold mr-3"
-							>
+							<Link to={`/address/${keys.address}`} className="button has-text-weight-bold mr-3">
 								<span className="material-icons-two-tone mr-2">account_balance_wallet</span>
 								<span>My Wallet</span>
 							</Link>
