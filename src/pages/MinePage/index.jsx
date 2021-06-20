@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useRef, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import MineBlockchain from "./MineBlockchain";
+import Blockchain from "../../components/Blockchain";
 import MineMempool from "./MineMempool";
 import MineSuccessModal from "./MineSuccessModal";
 import MineFailureModal from "./MineFailureModal";
@@ -202,17 +202,16 @@ const MinePage = () => {
 			<p className="subtitle is-5">
 				From the comfort of your browser! No need for unnessasary mining clients.
 			</p>
-			<hr />
 
 			<div className="mb-6">
-				<MineBlockchain
+				<Blockchain
 					selectedBlock={headBlock}
 					setSelectedBlock={block => activeWorker.current || setHeadBlock(block)}
-				></MineBlockchain>
+				/>
 			</div>
 
-			<section className="is-flex mb-6">
-				<section className="terminal mr-6" style={{ width: "60%" }}>
+			<section className="is-flex-tablet mb-5" style={{ gap: "3em" }}>
+				<section className="terminal mb-5" style={{ flex: "1 0 10em" }}>
 					<div className="mt-auto content" style={{ width: "100%" }}>
 						{terminalLog.map((log, index) => (
 							<pre className="terminal-output" key={index}>
@@ -233,7 +232,7 @@ const MinePage = () => {
 						</div>
 					</div>
 				</section>
-				<section style={{ width: "40%" }}>
+				<section className="mb-6" fstyle={{ flexBasis: "40%" }}>
 					<div className="field mb-4">
 						<label className="label">Miner's Address</label>
 						<div className="field has-addons mb-0">
@@ -284,8 +283,7 @@ const MinePage = () => {
 			</section>
 
 			<h3 className="title is-4">Mempool</h3>
-			<p className="subtitle">Select transactions to include from the mempool.</p>
-			<hr />
+			<p className="subtitle is-6 mb-4">Select transactions to include from the mempool.</p>
 			<MineMempool
 				headBlock={headBlock}
 				addTransaction={tx => setSelectedTxs(txs => [...txs, tx])}

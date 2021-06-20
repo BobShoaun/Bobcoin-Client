@@ -37,6 +37,9 @@
 	.p-6-tablet {
 		padding: 3em !important;
 	}
+	.px-5-tablet {
+		padding-inline: 1.5rem !important;
+	}
 }
 
 /* @media screen and (min-width: 769px) and (max-width: 1023px) {

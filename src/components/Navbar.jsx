@@ -53,17 +53,47 @@ const Navbar = () => {
 				</Link>
 
 				<Link
-					to="/generate-key"
-					className="has-text-white nav-mobile p-2"
-					style={{ flexBasis: "20%" }}
+					className="has-text-white nav-mobile p-2 more-button"
+					style={{ flexBasis: "20%", position: "relative" }}
 				>
 					<span className="material-icons-outlined is-white md-28 mb-0" style={{ color: "white" }}>
-						vpn_key
+						more_horiz
 					</span>
-					<p className="is-size-7">Generate</p>
+					<p className="is-size-7">More</p>
+					<div className="more-dropdown has-background-dark" role="menu">
+						<p className="subtitle is-7 mb-3 has-text-white">
+							Currently connected to the{" "}
+							<strong className="has-text-success">
+								{network === "mainnet" ? "MainNet" : "TestNet"}
+							</strong>
+						</p>
+						<div className="is-flex is-flex-wrap-wrap">
+							<Link
+								to="/settings"
+								className="has-text-white nav-mobile p-2"
+								style={{ flexGrow: 1 }}
+							>
+								<span className="material-icons-outlined is-white md-28 mb-0">settings</span>
+								<p className="is-size-7">Settings</p>
+							</Link>
+
+							<Link to="/mine" className="has-text-white nav-mobile p-2" style={{ flexGrow: 1 }}>
+								<span className="material-icons-outlined is-white md-28 mb-0">engineering</span>
+								<p className="is-size-7">Mine</p>
+							</Link>
+
+							<Link
+								to="/generate-key"
+								className="has-text-white nav-mobile p-2"
+								style={{ flexGrow: 1 }}
+							>
+								<span className="material-icons-outlined is-white md-28 mb-0">vpn_key</span>
+								<p className="is-size-7">Generate Key</p>
+							</Link>
+						</div>
+					</div>
 				</Link>
 			</section>
-			{/* </div> */}
 
 			<div className="navbar-brand">
 				<Link className="navbar-item mr-2" to="/">
@@ -86,7 +116,7 @@ const Navbar = () => {
 						New Transaction
 					</Link>
 					<Link to="/mine" className="navbar-item mr-2">
-						Mining
+						Mine
 					</Link>
 				</div>
 
@@ -123,8 +153,9 @@ const Navbar = () => {
 											</p>
 										</div>
 										<hr className="dropdown-divider"></hr>
-										<Link to="/settings" className="dropdown-item">
-											Settings
+										<Link to="/settings" className="dropdown-item is-flex is-align-items-center">
+											<span className="material-icons-outlined mr-2 md-18">settings</span>
+											<p className="">Settings</p>
 										</Link>
 									</div>
 								</div>

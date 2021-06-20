@@ -71,20 +71,23 @@ const BlockchainPage = () => {
 			<h1 className="title is-2">Blockchain</h1>
 			<p className="subtitle is-5 mb-5">Explore the entire chain up to the genesis block.</p>
 
-			<div className="card blockchain-list px-5" style={{ padding: "2em" }}>
-				<p className="title mb-0" style={{ fontSize: ".87rem" }}>
+			<div
+				className="card blockchain-list px-3 px-5-tablet"
+				style={{ paddingBlock: "2em", overflow: "auto" }}
+			>
+				<p className="title mb-0" style={{ fontSize: ".87rem", minWidth: "3.5em" }}>
 					Height
 				</p>
-				<p className="title mb-0" style={{ fontSize: ".87rem" }}>
+				<p className="title mb-0" style={{ fontSize: ".87rem", minWidth: "10em" }}>
 					Hash
 				</p>
-				<p className="title mb-0" style={{ fontSize: ".87rem" }}>
+				<p className="title mb-0" style={{ fontSize: ".87rem", minWidth: "6em" }}>
 					Timestamp
 				</p>
-				<p className="title mb-0" style={{ fontSize: ".87rem" }}>
+				<p className="title mb-0" style={{ fontSize: ".87rem", minWidth: "8em" }}>
 					Miner
 				</p>
-				<p className="title mb-0" style={{ fontSize: ".87rem" }}>
+				<p className="title mb-0" style={{ fontSize: ".87rem", minWidth: "7em" }}>
 					Status
 				</p>
 

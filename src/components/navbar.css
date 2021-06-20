@@ -18,9 +18,15 @@
 	}
 }
 
-.nav-mobile {
+.more-dropdown {
+	display: none;
+	position: absolute;
+	bottom: 69px;
+	right: 0;
+	padding: 0.5em 0.5em 0 0.5em;
+	width: 10em;
 }
 
-.nav-mobile:focus-within {
-	color: red !important;
+.more-button:focus-within > .more-dropdown {
+	display: block;
 }
