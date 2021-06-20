@@ -2,6 +2,8 @@ import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
+import { format } from "date-fns";
+
 import { isBlockValidInBlockchain, RESULT } from "blockcrypto";
 
 const Block = ({ block, selected }) => {
@@ -18,7 +20,6 @@ const Block = ({ block, selected }) => {
 			className={`card is-flex is-flex-direction-column h-100 block ${
 				selected ? "block-selected" : ""
 			}`}
-			style={{}}
 		>
 			<div className="card-header" style={{ borderRadius: 0 }}>
 				<div className="card-header-title">
@@ -41,28 +42,33 @@ const Block = ({ block, selected }) => {
 				className="card-content is-flex is-flex-direction-column"
 				style={{ flex: "1", fheight: "100%" }}
 			>
-				<div className="mb-4">
-					<h3 className="subtitle is-6 mb-1">Hash</h3>
-					<p className="subtitle is-7">
+				<div className="">
+					<h3 className="title is-7 has-text-grey">Hash</h3>
+					<p className="subtitle is-7 is-spaced mb-4">
 						<Link to={`/block/${block.hash}`}>{block.hash}</Link>
 					</p>
 
-					<h3 className="subtitle is-6 mb-1">Previous Block</h3>
-					<p className="subtitle is-7">
+					<h3 className="title is-7 has-text-grey">Previous Block</h3>
+					<p className="subtitle is-7 is-spaced mb-4">
 						<Link to={`/block/${block.previousHash}`}>{block.previousHash ?? "-"}</Link>
 					</p>
 
-					<h3 className="subtitle is-6 mb-1">Timestamp</h3>
-					<p className="subtitle is-7">{new Date(block.timestamp).toString()}</p>
+					<h3 className="title is-7 has-text-grey">Timestamp</h3>
+					<p className="subtitle is-7 is-spaced mb-4">
+						{format(block.timestamp, "eee, d MMM yyyy, HH:mm:ss")}
+					</p>
 
-					<h3 className="subtitle is-6 mb-1">Miner</h3>
-					<p className="subtitle is-7">
+					<h3 className="title is-7 has-text-grey">Miner</h3>
+					<p className="subtitle is-7 is-spaced mb-4">
 						<Link to={`/address/${block.transactions[0].outputs[0].address}`}>
 							{block.transactions[0].outputs[0].address ?? "-"}
 						</Link>
 					</p>
 				</div>
-				<Link to={`/block/${block.hash}`} className="button is-block mt-auto is-info">
+				<Link
+					to={`/block/${block.hash}`}
+					className="button is-block is-small mt-auto is-info has-text-weight-semibold"
+				>
 					View
 				</Link>
 			</div>
