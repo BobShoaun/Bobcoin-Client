@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useBlockchain } from "../hooks/useBlockchain";
 
 import ReactTooltip from "react-tooltip";
+import { format } from "date-fns";
 
 import {
 	isTransactionValid,
@@ -52,7 +53,7 @@ const Transaction = ({ transaction, block, headBlock }) => {
 
 	return (
 		<div className="">
-			<div className="is-flex-tablet is-align-items-center mb-1">
+			<div className="is-flex-tablet is-align-items-center mb-3">
 				{isValid ? (
 					<div className="icon mr-2">
 						<i className="material-icons md-18">check_circle</i>
@@ -62,105 +63,106 @@ const Transaction = ({ transaction, block, headBlock }) => {
 						<i className="material-icons md-18">dangerous</i>
 					</div>
 				)}
-				<h3 className="title is-6 mb-0">Hash: &nbsp;</h3>
+
+				<h3 style={{ flexShrink: 0 }} className="title is-6 mb-0">
+					Hash: &nbsp;
+				</h3>
 				<Link
+					className="is-block truncated"
 					to={
 						block
 							? `/transaction/${transaction.hash}?block=${block.hash}`
 							: `/transaction/${transaction.hash}`
 					}
 				>
-					<p className="subtitle is-6 mb-0"> {transaction.hash ?? "no hash"}</p>
+					{transaction.hash ?? "-"}
 				</Link>
-				<p className="ml-auto subtitle is-6 mb-0">
-					{new Date(transaction.timestamp).toUTCString()}
+				<p style={{ flexShrink: 0 }} className="ml-auto pl-2 subtitle is-6 mb-0 has-text-right">
+					{format(transaction.timestamp, "HH:mm d MMM yyyy")}
 				</p>
 			</div>
 
-			{/* {normalTransaction && (
-				<div className="is-flex is-justify-content-start is-align-items-baseline mb-2">
-					<h3 className="title is-6 mb-0">Signature: &nbsp;</h3>
-					<p style={signatureText} className="subtitle is-6 mb-0">
-						{transaction.signature}
-					</p>
+			<section className="is-flex-tablet mb-3" style={{ gap: "2em" }}>
+				<div className="is-flex truncated" style={{ flex: "1" }}>
+					{isCoinbase ? (
+						<p>COINBASE (Newly Minted Coins)</p>
+					) : (
+						<>
+							<div className="truncated">
+								{transaction.inputs.map((input, index) => {
+									const txo = findTxo(input);
+									return (
+										<Link key={index} className="is-block truncated" to={`/address/${txo.address}`}>
+											{txo.address}
+										</Link>
+									);
+								})}
+							</div>
+							<div className="ml-auto pl-2" style={{ whiteSpace: "nowrap" }}>
+								{transaction.inputs.map((input, index) => (
+									<p key={index} className="has-text-weight-medium has-text-right">
+										{(findTxo(input).amount / params.coin).toFixed(8)} {params.symbol}
+									</p>
+								))}
+							</div>
+						</>
+					)}
 				</div>
-			)} */}
 
-			<div className="is-flex-tablet mb-2">
-				{isCoinbase ? (
-					<p>COINBASE (Newly Minted Coins)</p>
-				) : (
-					<div>
-						{transaction.inputs.map((input, index) => {
-							const txo = findTxo(input);
-							return (
-								<Link key={index} className="is-block" to={`/address/${txo.address}`}>
-									{txo.address}
-								</Link>
-							);
-						})}
-					</div>
-				)}
-				{!isCoinbase && (
-					<div className="ml-auto">
-						{transaction.inputs.map((input, index) => (
-							<p key={index} className="has-text-weight-medium has-text-right">
-								{(findTxo(input).amount / params.coin).toFixed(8)} {params.symbol}
-							</p>
-						))}
-					</div>
-				)}
-				<div className="has-text-centered" style={{ width: "5em" }}>
+				<div>
 					<i className="material-icons md-28" style={{ lineHeight: "24px" }}>
 						arrow_right_alt
 					</i>
 				</div>
-				<div>
-					{transaction.outputs.map((output, index) => (
-						<Link key={index} className="is-block" to={`/address/${output.address}`}>
-							{output.address}
-						</Link>
-					))}
+
+				<div className="is-flex  truncated" style={{ flex: "1" }}>
+					<div className="truncated">
+						{transaction.outputs.map((output, index) => (
+							<Link key={index} className="is-block truncated" to={`/address/${output.address}`}>
+								{output.address}
+							</Link>
+						))}
+					</div>
+					<div className="ml-auto pl-2" style={{ whiteSpace: "nowrap" }}>
+						{transaction.outputs.map((output, index) => (
+							<div
+								key={index}
+								className="is-flex is-align-items-center is-justify-content-flex-end"
+							>
+								<p className="has-text-weight-medium has-text-right">
+									{(output.amount / params.coin).toFixed(8)} {params.symbol}
+								</p>
+								{utxos.some(
+									utxo =>
+										utxo.address === output.address &&
+										utxo.amount === output.amount &&
+										utxo.txHash === transaction.hash &&
+										utxo.outIndex === index
+								) || inMempool ? (
+									<a data-tip data-for="unspent" className="is-block">
+										<span className="has-text-success material-icons-outlined ml-2 md-18 is-block my-auto">
+											credit_card
+										</span>
+										<ReactTooltip id="unspent" type="dark" effect="solid">
+											<span>Unspent output</span>
+										</ReactTooltip>
+									</a>
+								) : (
+									<a data-tip data-for="spent" className="is-block">
+										<span className="has-text-danger material-icons-outlined ml-2 md-18 is-block my-auto">
+											credit_card_off
+										</span>
+										<ReactTooltip id="spent" type="error" effect="solid">
+											<span>Spent output</span>
+										</ReactTooltip>
+									</a>
+								)}
+							</div>
+						))}
+					</div>
 				</div>
-				<div className="ml-auto" style={{ width: "" }}>
-					{transaction.outputs.map((output, index) => (
-						<div
-							key={index}
-							className="is-flex-tablet is-align-items-center is-justify-content-flex-end"
-						>
-							<p className="has-text-weight-medium has-text-right">
-								{(output.amount / params.coin).toFixed(8)} {params.symbol}
-							</p>
-							{utxos.some(
-								utxo =>
-									utxo.address === output.address &&
-									utxo.amount === output.amount &&
-									utxo.txHash === transaction.hash &&
-									utxo.outIndex === index
-							) || inMempool ? (
-								<a data-tip data-for="unspent">
-									<span className="has-text-success material-icons-outlined ml-2 md-18 is-block my-auto">
-										credit_card
-									</span>
-									<ReactTooltip id="unspent" type="dark" effect="solid">
-										<span>Unspent output</span>
-									</ReactTooltip>
-								</a>
-							) : (
-								<a data-tip data-for="spent">
-									<span className="has-text-danger material-icons-outlined ml-2 md-18 is-block my-auto">
-										credit_card_off
-									</span>
-									<ReactTooltip id="spent" type="error" effect="solid">
-										<span>Spent output</span>
-									</ReactTooltip>
-								</a>
-							)}
-						</div>
-					))}
-				</div>
-			</div>
-			<section className="is-flex-tablet">
+			</section>
+			<section className="is-flex is-flex-wrap-wrap">
 				<div className="mt-auto">
 					<span
 						className={`subtitle is-6 is-inline-block mb-1 py-1 px-3 has-text-white ${getConfirmationColor(

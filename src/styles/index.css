@@ -1,3 +1,6 @@
+@import "./margins.css";
+@import "./padding.css";
+
 body {
 	/* margin: 0; */
 	/* font-family: "Poppins", sans-serif; */
@@ -132,4 +135,10 @@ code {
 	100% {
 		transform: rotate(-360deg);
 	}
+}
+
+.truncated {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }

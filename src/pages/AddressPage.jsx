@@ -104,10 +104,10 @@ const AddressPage = () => {
 
 	return (
 		<section className="section">
-			<div className="is-flex-tablet is-align-items-end" style={{ marginBottom: "3.3em" }}>
+			<div className="is-flex-tablet is-align-items-end mb-5">
 				<div className="">
 					<h1 className="title is-2">Address</h1>
-					<p className="subtitle is-5">
+					<p className="subtitle is-5 mb-3">
 						See this address's balance, transaction history, and more.
 					</p>
 				</div>
@@ -128,7 +128,7 @@ const AddressPage = () => {
 			<div className="is-flex-tablet is-align-items-center mb-6">
 				<p
 					dangerouslySetInnerHTML={{ __html: addressQR }}
-					className="mr-6 box mb-0"
+					className="mx-auto mb-6 mr-6-tablet mb-0-tablet box"
 					style={{ width: "300px" }}
 				></p>
 				<table className="table is-fullwidth">

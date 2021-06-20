@@ -1,4 +1,22 @@
 .qualities-grid {
-	display: grid;
-	grid-template-columns: 1fr 1fr 1fr;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4em;
+}
+
+.qualities-grid > * {
+	flex-basis: 20em;
+	flex-grow: 1;
+}
+
+.rocket {
+	display: block;
+	width: 70em;
+	max-height: 24em;
+	object-fit: cover;
+	margin: 4em auto;
+	border-radius: 0.3rem;
+}
+
+@media screen and (min-width: 769px), print {
 }

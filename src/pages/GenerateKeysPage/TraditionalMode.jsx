@@ -54,7 +54,7 @@ const TraditionalMode = () => {
 	return (
 		<main>
 			<div className="is-flex-tablet mb-6">
-				<section className="p-6" style={{ flexBasis: "50%" }}>
+				<section className="px-0 py-6 px-6-tablet" style={{ flexBasis: "50%" }}>
 					<div className="box mx-auto mb-6" style={{ width: "250px", height: "250px" }}>
 						{skQR ? (
 							<div dangerouslySetInnerHTML={{ __html: skQR }}></div>
@@ -92,7 +92,7 @@ const TraditionalMode = () => {
 					</div>
 				</section>
 
-				<section className="p-6" style={{ flexBasis: "50%" }}>
+				<section className="px-0 py-6 px-6-tablet" style={{ flexBasis: "50%" }}>
 					<div className="box mx-auto mb-6" style={{ width: "250px", height: "250px" }}>
 						{addQR ? (
 							<div dangerouslySetInnerHTML={{ __html: addQR }}></div>
@@ -138,13 +138,13 @@ const TraditionalMode = () => {
 			<div className={`modal ${modalOpen && "is-active"}`}>
 				<div className="modal-background"></div>
 				<div className="modal-card">
-					<section className="modal-card-body p-6" style={{ borderRadius: "1em" }}>
+					<section className="modal-card-body p-6-tablet" style={{ borderRadius: "1em" }}>
 						<div className="mb-5 is-flex is-align-items-center is-justify-content-center">
 							<i className="material-icons-outlined md-36 mr-3 has-text-black">vpn_key</i>
 							<h3 className="title is-3">Your keys are saved!</h3>
 						</div>
 						<div
-							className="mx-5"
+							className="mx-5-tablet"
 							style={{
 								display: "grid",
 								gridTemplateColumns: "1fr auto",

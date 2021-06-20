@@ -1,0 +1,80 @@
+.m-0 {
+	margin: 0 !important;
+}
+
+.m-1 {
+	margin: 0.25rem !important;
+}
+
+.m-2 {
+	margin: 0.5rem !important;
+}
+
+.m-3 {
+	margin: 0.75rem !important;
+}
+
+.m-4 {
+	margin: 1rem !important;
+}
+
+.m-5 {
+	margin: 1.5rem !important;
+}
+
+.m-6 {
+	margin: 3rem !important;
+}
+
+.m-7 {
+	margin: 5rem;
+}
+
+@media screen and (min-width: 769px), print {
+	.mb-0-tablet {
+		margin-bottom: 0 !important;
+	}
+	.mx-7-tablet {
+		margin-inline: 5rem !important;
+	}
+	.mr-6-tablet {
+		margin-right: 3rem !important;
+	}
+	.mx-5-table {
+		margin-inline: 1.5rem !important;
+	}
+}
+
+/* @media screen and (min-width: 769px) and (max-width: 1023px) {
+  .has-text-centered-tablet-only {
+    text-align: center !important; } }
+
+@media screen and (max-width: 1023px) {
+  .has-text-centered-touch {
+    text-align: center !important; } } */
+
+@media screen and (min-width: 1024px) {
+	.has-text-centered-desktop {
+		text-align: center !important;
+	}
+}
+
+/* @media screen and (min-width: 1024px) and (max-width: 1215px) {
+  .has-text-centered-desktop-only {
+    text-align: center !important; } } */
+
+@media screen and (min-width: 1216px) {
+	.has-text-centered-widescreen {
+		text-align: center !important;
+	}
+}
+
+/* @media screen and (min-width: 1216px) and (max-width: 1407px) {
+  .has-text-centered-widescreen-only {
+    text-align: center !important; } } */
+
+@media screen and (min-width: 1408px) {
+	.has-text-centered-fullhd {
+		text-align: center !important;
+	}
+}
