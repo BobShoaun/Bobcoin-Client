@@ -11,8 +11,8 @@ const GenerateKeysPage = () => {
 
 	return (
 		<section className="section">
-			<h1 className="title is-2">Generate Key</h1>
-			<p className="subtitle is-5 mb-4">
+			<h1 className="title is-size-4 is-size-2-tablet">Generate Key</h1>
+			<p className="subtitle is-size-6 is-size-5-tablet mb-4">
 				A private key and address pair for you to store, send and receive{" "}
 				<span style={{ textTransform: "lowercase" }}>{params.name}</span>.
 			</p>

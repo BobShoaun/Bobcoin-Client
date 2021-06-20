@@ -68,8 +68,10 @@ const BlockchainPage = () => {
 
 	return (
 		<section className="section">
-			<h1 className="title is-2">Blockchain</h1>
-			<p className="subtitle is-5 mb-5">Explore the entire chain up to the genesis block.</p>
+			<h1 className="title is-size-4 is-size-2-tablet">Blockchain</h1>
+			<p className="subtitle is-size-6 is-size-5-tablet mb-5">
+				Explore the entire chain up to the genesis block.
+			</p>
 
 			<div
 				className="card blockchain-list px-3 px-5-tablet"

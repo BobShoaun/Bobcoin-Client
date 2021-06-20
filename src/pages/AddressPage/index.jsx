@@ -1,7 +1,7 @@
 import React, { useState, useRef, useMemo, useEffect } from "react";
 import { useParams, useHistory, useLocation } from "react-router-dom";
 
-import { useBlockchain } from "../hooks/useBlockchain";
+import { useBlockchain } from "../../hooks/useBlockchain";
 
 import {
 	calculateBalance,
@@ -13,10 +13,10 @@ import {
 	calculateUTXOSet,
 } from "blockcrypto";
 import QRCode from "qrcode";
-import { copyToClipboard } from "../helpers";
+import { copyToClipboard } from "../../helpers";
 
-import Transaction from "../components/Transaction";
-import Loading from "../components/Loading";
+import Transaction from "../../components/Transaction";
+import Loading from "../../components/Loading";
 
 const AddressPage = () => {
 	const { address } = useParams();
@@ -106,8 +106,8 @@ const AddressPage = () => {
 		<section className="section">
 			<div className="is-flex-tablet is-align-items-end mb-5">
 				<div className="">
-					<h1 className="title is-2">Address</h1>
-					<p className="subtitle is-5 mb-3">
+					<h1 className="title is-size-4 is-size-2-tablet">Address</h1>
+					<p className="subtitle is-size-6 is-size-5-tablet mb-3">
 						See this address's balance, transaction history, and more.
 					</p>
 				</div>
@@ -191,8 +191,7 @@ const AddressPage = () => {
 				</table>
 			</div>
 
-			<h1 className="title is-3">Inbound Transactions</h1>
-			<hr />
+			<h1 className="title is-size-5 is-size-4-tablet mb-3">Inbound Transactions</h1>
 			<div className="mb-6">
 				{receivedTxs.length ? (
 					receivedTxs
@@ -217,8 +216,7 @@ const AddressPage = () => {
 				)}
 			</div>
 
-			<h1 className="title is-3">Outbound Transactions</h1>
-			<hr />
+			<h1 className="title is-size-5 is-size-4-tablet mb-3">Outbound Transactions</h1>
 			{sentTxs.length ? (
 				sentTxs
 					.sort((a, b) => b.timestamp - a.timestamp)

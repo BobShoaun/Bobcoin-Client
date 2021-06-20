@@ -52,7 +52,7 @@ const BlockPage = () => {
 	return (
 		<section className="section">
 			<div className="is-flex is-align-items-center mb-5">
-				<h1 className="title is-2 mb-0">Block #{block.height}</h1>
+				<h1 className="title is-size-4 is-size-2-tablet mb-0">Block #{block.height}</h1>
 				<div className="has-text-right ml-auto">
 					{block.previousHash && (
 						<Link className="button is-link mr-3" to={`/block/${block.previousHash}`}>

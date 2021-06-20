@@ -137,8 +137,10 @@ const NewTransactionPage = () => {
 
 	return (
 		<section className="section">
-			<h1 className="title is-2">New Transaction</h1>
-			<p className="subtitle is-5">Create, sign and broadcast a new transaction.</p>
+			<h1 className="title is-size-4 is-size-2-tablet">New Transaction</h1>
+			<p className="subtitle is-size-6 is-size-5-tablet">
+				Create, sign and broadcast a new transaction.
+			</p>
 
 			<div className="field mb-4">
 				<label className="label">Sender's Private key</label>

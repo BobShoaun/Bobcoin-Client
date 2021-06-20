@@ -1,13 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import { useBlockchain } from "../hooks/useBlockchain";
+import { useBlockchain } from "../../hooks/useBlockchain";
 
-import Blockchain from "../components/Blockchain";
-import Mempool from "../components/Mempool";
-import Loading from "../components/Loading";
+import Blockchain from "../../components/Blockchain";
+import Mempool from "../../components/Mempool";
+import Loading from "../../components/Loading";
 
-const DashboardPage = () => {
+import "./index.css";
+
+const OverviewPage = () => {
 	const [loading, params] = useBlockchain();
 	if (loading)
 		return (
@@ -20,10 +22,10 @@ const DashboardPage = () => {
 		<section className="section">
 			<div className="is-flex-tablet">
 				<div className="mb-3">
-					<h1 className="title is-2 mb-1">Overview</h1>
+					<h1 className="title is-size-4 is-size-2-tablet mb-1">Overview</h1>
 					<div className="is-flex">
-						<span className="material-icons mr-2 my-auto">monetization_on</span>
-						<h2 className="subtitle is-4">
+						<span className="material-icons mr-2 my-auto ticker">monetization_on</span>
+						<h2 className="subtitle is-size-5 is-size-4-tablet">
 							{params.name} {params.symbol}
 						</h2>
 					</div>
@@ -41,8 +43,8 @@ const DashboardPage = () => {
 
 			<div className="is-flex is-flex-wrap-wrap mb-3">
 				<div>
-					<h2 className="title is-4">Blockchain</h2>
-					<p className="subtitle is-6">Most recently mined blocks in the blockchain.</p>
+					<h2 className="title is-size-5 is-size-4-tablet">Blockchain</h2>
+					<p className="subtitle is-size-6">Most recently mined blocks in the blockchain.</p>
 				</div>
 				<Link to="./blockchain" className="button is-secondary ml-auto has-text-weight-semibold">
 					<span className="material-icons mr-2">grid_view</span>
@@ -55,8 +57,8 @@ const DashboardPage = () => {
 
 			<div className="is-flex is-flex-wrap-wrap mb-4">
 				<div>
-					<h2 className="title is-4">Mempool - Pending transactions</h2>
-					<p className="subtitle is-6">All pending transactions that are unconfirmed.</p>
+					<h2 className="title is-size-5 is-size-4-tablet">Mempool - Pending transactions</h2>
+					<p className="subtitle is-size-6">All pending transactions that are unconfirmed.</p>
 				</div>
 				<Link
 					to="/new-transaction"
@@ -71,4 +73,4 @@ const DashboardPage = () => {
 	);
 };
 
-export default DashboardPage;
+export default OverviewPage;

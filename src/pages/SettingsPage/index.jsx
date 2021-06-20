@@ -25,8 +25,10 @@ const SettingsPage = () => {
 
 	return (
 		<section className="section">
-			<h1 className="title is-2">Settings</h1>
-			<p className="subtitle is-5">Change your network and client settings.</p>
+			<h1 className="title is-size-4 is-size-2-tablet">Settings</h1>
+			<p className="subtitle is-size-6 is-size-5-tablet">
+				Change your network and client settings.
+			</p>
 			<hr />
 			<h2 className="title is-5 is-spaced mb-2">Network</h2>
 			<div className="control has-icons-left mb-5">

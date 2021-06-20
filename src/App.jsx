@@ -18,10 +18,10 @@ import { resetBlockchain } from "./store/blockchainSlice";
 import { resetParams } from "./store/consensusSlice";
 import { resetTransactions } from "./store/transactionsSlice";
 
-const OverviewPage = lazy(() => import("./pages/DashboardPage"));
+const OverviewPage = lazy(() => import("./pages/OverviewPage"));
 const GenerateKeysPage = lazy(() => import("./pages/GenerateKeysPage"));
 const MinePage = lazy(() => import("./pages/MinePage"));
-const AddressPage = lazy(() => import("./pages/AddressPage"));
+const AddressPage = lazy(() => import("./pages/AddressPage/"));
 const NewTransactionPage = lazy(() => import("./pages/NewTransactionPage"));
 const BlockPage = lazy(() => import("./pages/BlockPage"));
 const TransactionPage = lazy(() => import("./pages/TransactionPage"));
@@ -66,7 +66,7 @@ const App = () => {
 								<Route path="/transaction/:hash" component={TransactionPage}></Route>
 
 								<Route path="/address/:address" component={AddressPage}></Route>
-								<Route path="/address" component={AddressPage}></Route>
+								{/* <Route path="/address" component={AddressPage}></Route> */}
 								<Route path="/settings" component={SettingsPage} />
 								<Route path="/overview" component={OverviewPage} />
 								<Route path="/" component={LandingPage} />
