@@ -25,7 +25,7 @@ const MineMempool = ({ headBlock, addTransaction, removeTransaction }) => {
 				mempool.map(transaction => (
 					<div key={transaction.hash} className="card mb-2">
 						<div className="card-content is-flex">
-							<div className="mr-5">
+							<div style={{ width: "2em" }}>
 								<input
 									className="tx is-clickable"
 									onChange={({ target }) => toggleSelected(target.checked, transaction)}
@@ -33,7 +33,7 @@ const MineMempool = ({ headBlock, addTransaction, removeTransaction }) => {
 								></input>
 							</div>
 
-							<div style={{ flex: "1" }}>
+							<div style={{ width: "calc(100% - 2em)" }}>
 								<Transaction transaction={transaction}></Transaction>
 							</div>
 						</div>
