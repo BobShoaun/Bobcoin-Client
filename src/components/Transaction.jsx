@@ -54,19 +54,18 @@ const Transaction = ({ transaction, block, headBlock }) => {
 	return (
 		<div className="">
 			<div className="is-flex-tablet is-align-items-center mb-3">
-				{isValid ? (
-					<div className="icon mr-2">
-						<i className="material-icons md-18">check_circle</i>
-					</div>
-				) : (
-					<div className="icon has-text-danger mr-2">
-						<i className="material-icons md-18">dangerous</i>
-					</div>
-				)}
-
-				<h3 style={{ flexShrink: 0 }} className="title is-6 mb-0">
-					Hash: &nbsp;
-				</h3>
+				<div className="is-flex is-align-items-center">
+					{isValid ? (
+						<div className="icon mr-1">
+							<i className="material-icons md-18">check_circle</i>
+						</div>
+					) : (
+						<div className="icon has-text-danger mr-1">
+							<i className="material-icons md-18">dangerous</i>
+						</div>
+					)}
+					<h3 className="title is-6 mb-0">Hash: &nbsp;</h3>
+				</div>
 				<Link
 					className="is-block truncated"
 					to={

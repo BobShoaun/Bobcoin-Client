@@ -55,11 +55,11 @@ const BlockPage = () => {
 				<h1 className="title is-size-4 is-size-2-tablet mb-0">Block #{block.height}</h1>
 				<div className="has-text-right ml-auto">
 					{block.previousHash && (
-						<Link className="button is-link mr-3" to={`/block/${block.previousHash}`}>
+						<Link className="button is-link fmr-3" to={`/block/${block.previousHash}`}>
 							Previous Block
 						</Link>
 					)}
-					<button className="button is-link">Next Block</button>
+					{/* <button className="button is-link">Next Block</button> */}
 				</div>
 			</div>
 
@@ -67,7 +67,7 @@ const BlockPage = () => {
 				<tbody>
 					<tr>
 						<td>Hash</td>
-						<td>{block.hash}</td>
+						<td style={{ wordBreak: "break-all" }}>{block.hash}</td>
 					</tr>
 					<tr>
 						<td>Height</td>
@@ -85,7 +85,7 @@ const BlockPage = () => {
 					</tr>
 					<tr>
 						<td>Miner</td>
-						<td>
+						<td style={{ wordBreak: "break-all" }}>
 							{block.transactions[0].outputs[0].address ? (
 								<div className="is-flex">
 									<Link to={`/address/${block.transactions[0].outputs[0].address}`}>
@@ -111,7 +111,9 @@ const BlockPage = () => {
 					</tr>
 					<tr>
 						<td>Target Hash</td>
-						<td>{bigIntToHex64(calculateHashTarget(params, block))}</td>
+						<td style={{ wordBreak: "break-all" }}>
+							{bigIntToHex64(calculateHashTarget(params, block))}
+						</td>
 					</tr>
 					<tr>
 						<td>Nonce</td>
@@ -119,7 +121,7 @@ const BlockPage = () => {
 					</tr>
 					<tr>
 						<td>Previous block</td>
-						<td>
+						<td style={{ wordBreak: "break-all" }}>
 							{block.previousHash ? (
 								<Link to={`/block/${block.previousHash}`}>{block.previousHash}</Link>
 							) : (
@@ -133,7 +135,7 @@ const BlockPage = () => {
 					</tr>
 					<tr>
 						<td>Merkle Root</td>
-						<td>{block.merkleRoot}</td>
+						<td style={{ wordBreak: "break-all" }}>{block.merkleRoot}</td>
 					</tr>
 					<tr>
 						<td>Total transaction volume</td>

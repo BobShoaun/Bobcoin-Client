@@ -68,7 +68,7 @@ const TransactionPage = () => {
 				<tbody>
 					<tr>
 						<td>Hash</td>
-						<td>{transaction.hash}</td>
+						<td style={{ wordBreak: "break-all" }}>{transaction.hash}</td>
 					</tr>
 					<tr>
 						<td>Status</td>
@@ -80,11 +80,13 @@ const TransactionPage = () => {
 					</tr>
 					<tr>
 						<td>Block Hash</td>
-						<td>{block ? <Link to={`../block/${block.hash}`}>{block.hash}</Link> : "-"}</td>
+						<td style={{ wordBreak: "break-all" }}>
+							{block ? <Link to={`../block/${block.hash}`}>{block.hash}</Link> : "-"}
+						</td>
 					</tr>
 					<tr>
 						<td>Timestamp</td>
-						<td>{transaction.timestamp}</td>
+						<td>{new Date(transaction.timestamp).toUTCString()}</td>
 					</tr>
 
 					<tr>
@@ -134,23 +136,25 @@ const TransactionPage = () => {
 							<React.Fragment key={index}>
 								<tr>
 									<td>Transaction Hash</td>
-									<td>
+									<td className="pl-3" style={{ wordBreak: "break-all" }}>
 										<Link to={`./${input.txHash}`}>{input.txHash}</Link>
 									</td>
 								</tr>
 								<tr>
 									<td>Output Index</td>
-									<td>{input.outIndex}</td>
+									<td className="pl-3">{input.outIndex}</td>
 								</tr>
 								<tr>
 									<td>Public Key</td>
-									<td>{input.publicKey}</td>
+									<td className="pl-3" style={{ wordBreak: "break-all" }}>
+										{input.publicKey}
+									</td>
 								</tr>
 								<tr>
 									<td>Signature</td>
 
 									<td
-										className="pb-5"
+										className="pb-5 pl-3"
 										style={{
 											wordWrap: "break-word",
 											wordBreak: "break-word",
@@ -178,11 +182,11 @@ const TransactionPage = () => {
 							<React.Fragment key={index}>
 								<tr>
 									<td>Index</td>
-									<td>{index}</td>
+									<td className="pl-3">{index}</td>
 								</tr>
 								<tr>
 									<td>Address</td>
-									<td className="is-flex">
+									<td className="is-flex pl-3" style={{ wordBreak: "break-all" }}>
 										<Link to={`/address/${output.address}`}>{output.address}</Link>
 										<span
 											onClick={() => copyToClipboard(output.address)}
@@ -194,7 +198,7 @@ const TransactionPage = () => {
 								</tr>
 								<tr>
 									<td>Amount</td>
-									<td className="pb-5 has-text-weight-medium">
+									<td className="pl-3 pb-5 has-text-weight-medium">
 										{(output.amount / params.coin).toFixed(8)} {params.symbol}
 									</td>
 								</tr>
