@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import { useBlockchain } from "../../hooks/useBlockchain";
 
-import Blockchain from "../../components/Blockchain";
+import Blockchain from "../../components/Blockchain/";
 import Mempool from "../../components/Mempool";
 import Loading from "../../components/Loading";
 

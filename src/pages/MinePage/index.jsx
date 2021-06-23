@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useRef, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import Blockchain from "../../components/Blockchain";
+import Blockchain from "../../components/Blockchain/";
 import MineMempool from "./MineMempool";
 import MineSuccessModal from "./MineSuccessModal";
 import MineFailureModal from "./MineFailureModal";

@@ -52,7 +52,8 @@ const Navbar = () => {
 					<p className="is-size-7">Payment</p>
 				</Link>
 
-				<Link
+				<div
+					tabIndex="1"
 					className="has-text-white nav-mobile p-2 more-button"
 					style={{ flexBasis: "20%", position: "relative" }}
 				>
@@ -92,7 +93,7 @@ const Navbar = () => {
 							</Link>
 						</div>
 					</div>
-				</Link>
+				</div>
 			</section>
 
 			<div className="navbar-brand">
