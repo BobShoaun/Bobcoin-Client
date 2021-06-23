@@ -22,7 +22,7 @@ const BlockPage = () => {
 	useEffect(async () => {
 		setBlockInfo(null);
 		const result = await axios.get(
-			`${network === "mainnet" ? bobcoinMainnet : bobcoinTestnet}/blocks/info/${hash}`
+			`${network === "mainnet" ? bobcoinMainnet : bobcoinTestnet}/block/info/${hash}`
 		);
 		setBlockInfo(result.data);
 		console.log(result.data);

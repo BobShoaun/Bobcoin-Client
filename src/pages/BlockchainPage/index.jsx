@@ -1,69 +1,47 @@
-import React, { useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-import { useBlockchain } from "../../hooks/useBlockchain";
 import Loading from "../../components/Loading";
 
 import { formatDistanceToNow } from "date-fns";
-
-import { getHighestValidBlock } from "blockcrypto";
-
 import "./blockchain.css";
 
+import { bobcoinMainnet, bobcoinTestnet } from "../../config";
+import axios from "axios";
+
 const BlockchainPage = () => {
-	const [loading, params, blockchain] = useBlockchain();
+	const network = useSelector(state => state.blockchain.network);
 
-	const reversed = useMemo(() => [...blockchain].reverse(), [blockchain]);
-	const headBlock = useMemo(() => getHighestValidBlock(params, blockchain), [params, blockchain]);
+	const [blockchainInfo, setBlockchainInfo] = useState(null);
 
-	const getBestChainHashes = () => {
-		const hashes = [];
-		let currentBlkHash = headBlock.hash;
-		for (const block of reversed) {
-			if (block.hash !== currentBlkHash) continue;
-			hashes.push(block.hash);
-			currentBlkHash = block.previousHash;
-		}
-		return hashes;
-	};
-	const bestChainHashes = useMemo(() => headBlock && getBestChainHashes(), [headBlock, reversed]);
+	useEffect(async () => {
+		setBlockchainInfo(null);
+		const result = await axios.get(
+			`${network === "mainnet" ? bobcoinMainnet : bobcoinTestnet}/blockchain/info`
+		);
+		setBlockchainInfo(result.data);
+		console.log(result.data);
+	}, [network]);
 
-	if (loading)
+	if (!blockchainInfo)
 		return (
 			<div style={{ height: "70vh" }}>
 				<Loading />
 			</div>
 		);
 
-	const displayBlockStatus = block => {
-		if (headBlock.height - block.height + 1 < params.blkMaturity)
-			return (
-				<span
-					style={{ borderRadius: "0.3em" }}
-					className="title is-7 py-1 px-2 has-background-warning has-text-white"
-				>
-					Unconfirmed
-				</span>
-			);
-
-		if (bestChainHashes.includes(block.hash))
-			return (
-				<span
-					style={{ borderRadius: "0.3em" }}
-					className="title is-7 py-1 px-2 has-background-success has-text-white "
-				>
-					Confirmed
-				</span>
-			);
-		return (
-			<span
-				style={{ borderRadius: "0.3em" }}
-				className="title is-7 py-1 px-2 has-background-danger has-text-white"
-			>
-				Orphaned
-			</span>
-		);
+	const statusColor = status => {
+		switch (status) {
+			case "Confirmed":
+				return "has-background-success";
+			case "Unconfirmed":
+				return "has-background-warning";
+			case "Orphaned":
+				return "has-background-danger";
+			default:
+				return "has-background-primary";
+		}
 	};
 
 	return (
@@ -99,7 +77,7 @@ const BlockchainPage = () => {
 				<hr className="my-0" />
 				<hr className="my-0" />
 
-				{reversed.map(block => (
+				{blockchainInfo.map(({ block, status }) => (
 					<React.Fragment key={block.hash}>
 						<p className="subtitle mb-0 has-text-centered" style={{ fontSize: ".87rem" }}>
 							{block.height}
@@ -116,7 +94,16 @@ const BlockchainPage = () => {
 								{block.transactions[0].outputs[0].address ?? "-"}
 							</Link>
 						</p>
-						<p className="mb-0 has-text-centered">{displayBlockStatus(block)}</p>
+						<p className="mb-0 has-text-centered">
+							<span
+								style={{ borderRadius: "0.3em" }}
+								className={`title is-7 py-1 px-2 has-background-success has-text-white ${statusColor(
+									status
+								)}`}
+							>
+								{status}
+							</span>
+						</p>
 					</React.Fragment>
 					// <Block key={block.hash} block={block} />
 				))}
