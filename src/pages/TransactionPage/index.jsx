@@ -1,51 +1,50 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { useParams, Link, useLocation } from "react-router-dom";
 
 import { useBlockchain } from "../../hooks/useBlockchain";
 
 import Transaction from "../../components/Transaction";
-import {
-	getBlockConfirmations,
-	getHighestValidBlock,
-	isCoinbaseTxValid,
-	isTransactionValid,
-	RESULT,
-	findTXO,
-} from "blockcrypto";
-
 import { copyToClipboard } from "../../helpers";
+import Loading from "../../components/Loading";
+
+import { bobcoinMainnet, bobcoinTestnet } from "../../config";
+import axios from "axios";
 
 const TransactionPage = () => {
 	const { hash } = useParams();
 	const location = useLocation();
+	const network = useSelector(state => state.blockchain.network);
 
-	const [loading, params, blockchain, transactions] = useBlockchain();
-
-	if (loading) return null;
+	const [loading, params] = useBlockchain();
 
 	const blockHash = new URLSearchParams(location.search).get("block");
-	const transaction = transactions.find(tx => tx.hash === hash);
 
-	const totalInputAmount = transaction.inputs.reduce(
-		(total, input) => total + findTXO(input, transactions).amount,
-		0
-	);
-	const totalOutputAmount = transaction.outputs.reduce((total, output) => total + output.amount, 0);
-	const fee = totalInputAmount - totalOutputAmount;
+	const [transactionInfo, setTransactionInfo] = useState(null);
 
-	const isCoinbase = transaction.inputs.length === 0 && transaction.outputs.length === 1;
+	useEffect(async () => {
+		setTransactionInfo(null);
+		const result = await axios.get(
+			`${
+				network === "mainnet" ? bobcoinMainnet : bobcoinTestnet
+			}/transactions/info/${hash}?block=${blockHash}`
+		);
+		setTransactionInfo(result.data);
+		console.log(result.data);
+	}, [network, hash, blockHash]);
 
-	const block =
-		blockchain.find(block => block.hash === blockHash) ?? getHighestValidBlock(params, blockchain);
-	const confirmations = getBlockConfirmations(params, blockchain, block);
+	if (!transactionInfo)
+		return (
+			<div style={{ height: "70vh" }}>
+				<Loading />
+			</div>
+		);
+
+	const { transaction, isValid, block, totalInput, totalOutput, fee, isCoinbase, confirmations } =
+		transactionInfo;
+
 	const status =
 		confirmations === 0 ? "Unconfirmed (in Mempool)" : `${confirmations} confirmations`;
-
-	const validation = isCoinbase
-		? isCoinbaseTxValid(params, transaction)
-		: isTransactionValid(params, transactions, transaction);
-
-	const isValid = validation.code === RESULT.VALID;
 
 	return (
 		<section className="section">
@@ -92,13 +91,13 @@ const TransactionPage = () => {
 					<tr>
 						<td>Total Input Amount</td>
 						<td>
-							{(totalInputAmount / params.coin).toFixed(8)} {params.symbol}
+							{(totalInput / params.coin).toFixed(8)} {params.symbol}
 						</td>
 					</tr>
 					<tr>
 						<td>Total Output Amount</td>
 						<td>
-							{(totalOutputAmount / params.coin).toFixed(8)} {params.symbol}
+							{(totalOutput / params.coin).toFixed(8)} {params.symbol}
 						</td>
 					</tr>
 					<tr>
@@ -115,7 +114,7 @@ const TransactionPage = () => {
 							) : (
 								<div className="is-flex">
 									<i className="material-icons has-text-danger">dangerous</i>
-									<p className="ml-2">{validation.msg}</p>
+									{/* <p className="ml-2">{validation.msg}</p> */}
 								</div>
 							)}
 						</td>

@@ -1,4 +1,5 @@
-import React, { useMemo } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { useParams, Link } from "react-router-dom";
 
 import { useBlockchain } from "../../hooks/useBlockchain";
@@ -7,47 +8,35 @@ import Transactions from "../../components/Transactions";
 import { copyToClipboard } from "../../helpers";
 import Loading from "../../components/Loading";
 
-import {
-	calculateBlockReward,
-	getBlockConfirmations,
-	isBlockValidInBlockchain,
-	calculateHashTarget,
-	bigIntToHex64,
-	RESULT,
-	findTXO,
-} from "blockcrypto";
+import { bobcoinMainnet, bobcoinTestnet } from "../../config";
+import axios from "axios";
 
 const BlockPage = () => {
 	const { hash } = useParams();
+	const network = useSelector(state => state.blockchain.network);
 
-	const [loading, params, blockchain, transactions] = useBlockchain();
+	const [loading, params] = useBlockchain();
 
-	if (loading)
+	const [blockInfo, setBlockInfo] = useState(null);
+
+	useEffect(async () => {
+		setBlockInfo(null);
+		const result = await axios.get(
+			`${network === "mainnet" ? bobcoinMainnet : bobcoinTestnet}/blocks/info/${hash}`
+		);
+		setBlockInfo(result.data);
+		console.log(result.data);
+	}, [network, hash]);
+
+	if (loading || !blockInfo)
 		return (
 			<div style={{ height: "70vh" }}>
 				<Loading />
 			</div>
 		);
 
-	const block = blockchain.find(block => block.hash === hash);
-
-	const validation = isBlockValidInBlockchain(params, blockchain, block);
-
-	const totalInputAmount = block.transactions
-		.slice(1)
-		.reduce(
-			(total, tx) =>
-				total + tx.inputs.reduce((inT, input) => inT + findTXO(input, transactions).amount, 0),
-			0
-		);
-
-	const totalOutputAmount = block.transactions
-		.slice(1)
-		.reduce((total, tx) => total + tx.outputs.reduce((outT, output) => outT + output.amount, 0), 0);
-
-	const isValid = validation.code === RESULT.VALID;
-
-	const fee = totalInputAmount - totalOutputAmount;
+	const { block, isValid, totalInput, totalOutput, fee, confirmations, hashTarget, reward } =
+		blockInfo;
 
 	return (
 		<section className="section">
@@ -81,7 +70,7 @@ const BlockPage = () => {
 					</tr>
 					<tr>
 						<td>Confirmations</td>
-						<td>{getBlockConfirmations(params, blockchain, block)}</td>
+						<td>{confirmations}</td>
 					</tr>
 					<tr>
 						<td>Miner</td>
@@ -111,9 +100,7 @@ const BlockPage = () => {
 					</tr>
 					<tr>
 						<td>Target Hash</td>
-						<td style={{ wordBreak: "break-all" }}>
-							{bigIntToHex64(calculateHashTarget(params, block))}
-						</td>
+						<td style={{ wordBreak: "break-all" }}>{hashTarget}</td>
 					</tr>
 					<tr>
 						<td>Nonce</td>
@@ -140,14 +127,13 @@ const BlockPage = () => {
 					<tr>
 						<td>Total transaction volume</td>
 						<td>
-							{(totalInputAmount / params.coin).toFixed(8)} {params.symbol}
+							{(totalInput / params.coin).toFixed(8)} {params.symbol}
 						</td>
 					</tr>
 					<tr>
 						<td>Block reward</td>
 						<td>
-							{(calculateBlockReward(params, block.height) / params.coin).toFixed(8)}{" "}
-							{params.symbol}
+							{(reward / params.coin).toFixed(8)} {params.symbol}
 						</td>
 					</tr>
 					<tr>
@@ -166,7 +152,7 @@ const BlockPage = () => {
 							) : (
 								<div className="is-flex">
 									<i className="material-icons has-text-danger">dangerous</i>
-									<p className="ml-2">{validation.msg}</p>
+									{/* <p className="ml-2">{validation.msg}</p> */}
 								</div>
 							)}
 						</td>
