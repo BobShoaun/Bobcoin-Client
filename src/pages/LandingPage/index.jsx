@@ -1,11 +1,12 @@
 import React from "react";
-import { useSelector } from "react-redux";
+
 import { Link } from "react-router-dom";
+import { useParams } from "../../hooks/useParams";
 
 import "./index.css";
 
 const LandingPage = () => {
-	const params = useSelector(state => state.consensus.params);
+	const [status, params] = useParams();
 
 	return (
 		<section className="section">

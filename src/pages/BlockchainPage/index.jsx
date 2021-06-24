@@ -18,11 +18,20 @@ const BlockchainPage = () => {
 	useEffect(async () => {
 		setBlockchainInfo(null);
 		const result = await axios.get(
-			`${network === "mainnet" ? bobcoinMainnet : bobcoinTestnet}/blockchain/info`
+			`${network === "mainnet" ? bobcoinMainnet : bobcoinTestnet}/blockchain/info?limit=10`
 		);
 		setBlockchainInfo(result.data);
-		console.log(result.data);
 	}, [network]);
+
+	const loadMore = async () => {
+		const { block } = blockchainInfo[blockchainInfo.length - 1];
+		const result = await axios.get(
+			`${network === "mainnet" ? bobcoinMainnet : bobcoinTestnet}/blockchain/info?limit=10&height=${
+				block.height
+			}&timestamp=${block.timestamp}`
+		);
+		setBlockchainInfo(info => [...info, ...result.data]);
+	};
 
 	if (!blockchainInfo)
 		return (
@@ -52,7 +61,7 @@ const BlockchainPage = () => {
 			</p>
 
 			<div
-				className="card blockchain-list px-3 px-5-tablet"
+				className="card blockchain-list px-3 px-5-tablet mb-5"
 				style={{ paddingBlock: "2em", overflow: "auto" }}
 			>
 				<p className="title mb-0" style={{ fontSize: ".87rem", minWidth: "3.5em" }}>
@@ -107,6 +116,11 @@ const BlockchainPage = () => {
 					</React.Fragment>
 					// <Block key={block.hash} block={block} />
 				))}
+			</div>
+			<div className="has-text-centered">
+				<button onClick={loadMore} className="button">
+					Load more
+				</button>
 			</div>
 		</section>
 	);

@@ -18,10 +18,10 @@ export const initializeSocket = socket => {
 		console.log("blockchain: ", blockchain);
 	});
 
-	socket.on("params", params => {
-		store.dispatch(setParams(params));
-		console.log("params: ", params);
-	});
+	// socket.on("params", params => {
+	// 	store.dispatch(setParams(params));
+	// 	console.log("params: ", params);
+	// });
 
 	socket.on("transactions", transactions => {
 		store.dispatch(setTransactions(transactions));

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import { useBlockchain } from "../../hooks/useBlockchain";
+import { useParams } from "../../hooks/useParams";
 
 import Blockchain from "../../components/Blockchain/";
 import Mempool from "../../components/Mempool";
@@ -10,8 +10,9 @@ import Loading from "../../components/Loading";
 import "./index.css";
 
 const OverviewPage = () => {
-	const [loading, params] = useBlockchain();
-	if (loading)
+	const [status, params] = useParams();
+
+	if (status === "loading")
 		return (
 			<div style={{ height: "70vh" }}>
 				<Loading />

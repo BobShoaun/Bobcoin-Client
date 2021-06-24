@@ -1,20 +1,9 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
 
 import { format } from "date-fns";
 
-import { isBlockValidInBlockchain, RESULT } from "blockcrypto";
-
-const Block = ({ block, selected }) => {
-	const params = useSelector(state => state.consensus.params);
-	const blockchain = useSelector(state => state.blockchain.chain);
-
-	const isValid = useMemo(
-		() => isBlockValidInBlockchain(params, blockchain, block).code === RESULT.VALID,
-		[params, blockchain]
-	);
-
+const Block = ({ block, selected, isValid }) => {
 	return (
 		<div
 			className={`card is-flex is-flex-direction-column h-100 block ${
