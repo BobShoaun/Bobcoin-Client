@@ -7,6 +7,8 @@ import MineSuccessModal from "./MineSuccessModal";
 import MineFailureModal from "./MineFailureModal";
 
 import { useBlockchain } from "../../hooks/useBlockchain";
+import { useParams } from "../../hooks/useParams";
+import { useBlockchainInfo } from "../../hooks/useBlockchainInfo";
 
 import { addBlock } from "../../store/blockchainSlice";
 import { addTransaction } from "../../store/transactionsSlice";
@@ -24,6 +26,7 @@ import {
 	createBlock,
 	calculateHashTarget,
 	isBlockValidInBlockchain,
+	hexToBigInt,
 } from "blockcrypto";
 
 import Miner from "./miner.worker";
@@ -32,13 +35,15 @@ import SocketContext from "../../socket/SocketContext";
 import Loading from "../../components/Loading";
 
 import "./mine.css";
+import axios from "axios";
 
 const MinePage = () => {
 	const dispatch = useDispatch();
 	const keys = useSelector(state => state.wallet.keys);
+	const api = useSelector(state => state.blockchain.api);
 
 	const [miner, setMiner] = useState(keys.address);
-	const [headBlock, setHeadBlock] = useState(null);
+	// const [headBlock, setHeadBlock] = useState(null);
 	const [terminalLog, setTerminalLog] = useState([]);
 	const [successModal, setSuccessModal] = useState(false);
 	const [errorModal, setErrorModal] = useState(false);
@@ -46,8 +51,13 @@ const MinePage = () => {
 	const [selectedTxs, setSelectedTxs] = useState([]);
 	const activeWorker = useRef(null);
 
-	const [loading, params, blockchain, transactions] = useBlockchain();
+	// const [loading, params, blockchain, transactions] = useBlockchain();
+	const [blockchainInfo, loadBlockchain] = useBlockchainInfo();
+	const [status, params] = useParams();
+
 	const { socket } = useContext(SocketContext);
+
+	const transactions = [];
 
 	useEffect(() => {
 		return () => {
@@ -57,20 +67,39 @@ const MinePage = () => {
 		};
 	}, []);
 
-	useEffect(() => {
-		if (blockchain.length) setHeadBlock(getHighestValidBlock(params, blockchain));
-	}, [blockchain]);
+	const [headBlock, setHeadBlock] = useState(null);
 
-	if (loading)
+	// const headBlock = useMemo(
+	// 	() => blockchainInfo.find(({ isHead }) => isHead)?.block,
+	// 	[blockchainInfo]
+	// );
+	const [prevBlock, setPrevBlock] = useState(null);
+
+	// useEffect(() => {
+	// 	if (blockchainInfo.length) setHeadBlock(blockchainInfo.find(({ isHead }) => isHead).block);
+	// }, [blockchainInfo]);
+
+	useEffect(async () => {
+		const block = (await axios.get(`${api}/blockchain/head_block`)).data;
+		setHeadBlock(block);
+	}, [blockchainInfo]);
+
+	if (!blockchainInfo.length)
 		return (
 			<div style={{ height: "70vh" }}>
 				<Loading />
 			</div>
 		);
 
-	const isLatest = getHighestValidBlock(params, blockchain).hash === headBlock?.hash;
+	// const isLatest =
+	// 	getHighestValidBlock(
+	// 		params,
+	// 		blockchainInfo.map(({ block }) => block)
+	// 	).hash === headBlock?.hash;
 
-	const startMining = () => {
+	// const isLatest = false;
+
+	const startMining = async () => {
 		if (activeWorker.current) {
 			setTerminalLog(log => [
 				...log,
@@ -79,25 +108,14 @@ const MinePage = () => {
 			return;
 		}
 
-		const fees = selectedTxs.reduce((total, tx) => total + getTransactionFees(transactions, tx), 0);
-		const output = createOutput(miner, calculateBlockReward(params, headBlock.height + 1) + fees);
-		const coinbase = createTransaction(params, [], [output]);
-		coinbase.hash = calculateTransactionHash(coinbase);
+		const { block, validation, target } = (
+			await axios.post(`${api}/mine/create_candidate_block`, {
+				previousBlock: headBlock,
+				mempoolTxs: [],
+				miner,
+			})
+		).data;
 
-		const block = createBlock(params, blockchain, headBlock, [coinbase, ...selectedTxs]);
-		const target = calculateHashTarget(params, block);
-
-		// validate b4 starting to mine
-		const blockchainCopy = [...blockchain];
-		addBlockToBlockchain(blockchainCopy, block);
-		let validation = null;
-		try {
-			validation = isBlockValidInBlockchain(params, blockchainCopy, block, true);
-		} catch (e) {
-			console.log(e);
-			setErrorModal(true);
-			return;
-		}
 		if (validation.code !== RESULT.VALID) {
 			console.error("Block is invalid, not broadcasting...: ", block);
 			setError(validation);
@@ -107,13 +125,11 @@ const MinePage = () => {
 
 		setTerminalLog(log => [
 			...log,
-			`\nMining started...\nprevious block: ${headBlock.hash}\ntarget hash: ${bigIntToHex64(
-				target
-			)}\n `,
+			`\nMining started...\nprevious block: ${headBlock.hash}\ntarget hash: ${target}\n `,
 		]);
 
 		const worker = new Miner();
-		worker.postMessage({ block, target });
+		worker.postMessage({ block, target: hexToBigInt(target) });
 		activeWorker.current = worker;
 
 		worker.addEventListener("message", async ({ data }) => {
@@ -129,21 +145,16 @@ const MinePage = () => {
 					]);
 					activeWorker.current = null;
 
-					const blockchainCopy = [...blockchain];
-					const block = data.block;
-					addBlockToBlockchain(blockchainCopy, block);
+					const { block, validation } = (await axios.post(`${api}/block`, { block: data.block }))
+						.data;
 
-					const validation = isBlockchainValid(params, blockchainCopy, block);
 					if (validation.code !== RESULT.VALID) {
-						console.error("Block is invalid, not broadcasting...: ", block);
+						console.error("Block is invalid", block);
 						setError(validation);
 						setErrorModal(true);
 						break;
 					}
 
-					dispatch(addTransaction(coinbase));
-					dispatch(addBlock(block));
-					socket.emit("block", block);
 					setSuccessModal(true);
 
 					if (Notification.permission !== "denied")
@@ -205,8 +216,8 @@ const MinePage = () => {
 
 			<div className="mb-6">
 				<Blockchain
-					selectedBlock={headBlock}
-					setSelectedBlock={block => activeWorker.current || setHeadBlock(block)}
+					selectedBlockHash={headBlock?.hash}
+					// setSelectedBlock={block => activeWorker.current || setHeadBlock(block)}
 				/>
 			</div>
 
@@ -232,7 +243,7 @@ const MinePage = () => {
 						</div>
 					</div>
 				</section>
-				<section className="mb-6" fstyle={{ flexBasis: "40%" }}>
+				<section className="mb-6">
 					<div className="field mb-4">
 						<label className="label">Miner's Address</label>
 						<div className="field has-addons mb-0">
@@ -267,9 +278,9 @@ const MinePage = () => {
 							readOnly
 						></input>
 						<p className="help">Previous block to mine from.</p>
-						{!isLatest && (
+						{prevBlock?.hash !== headBlock?.hash && (
 							<p className="help is-danger is-flex">
-								<span className="material-icons-outlined md-18 mr-2">warning</span>You are not
+								<span className="material-icons-outlined md-18 mr-2">warning</span>You are no longer
 								mining from the latest block.
 							</p>
 						)}
@@ -284,11 +295,11 @@ const MinePage = () => {
 
 			<h3 className="title is-4">Mempool</h3>
 			<p className="subtitle is-6 mb-4">Select transactions to include from the mempool.</p>
-			<MineMempool
+			{/* <MineMempool
 				headBlock={headBlock}
 				addTransaction={tx => setSelectedTxs(txs => [...txs, tx])}
 				removeTransaction={tx => setSelectedTxs(txs => txs.filter(tx2 => tx2.hash !== tx.hash))}
-			/>
+			/> */}
 
 			<MineSuccessModal
 				isOpen={successModal}

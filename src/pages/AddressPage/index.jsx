@@ -53,7 +53,7 @@ const AddressPage = () => {
 		history.push(`./${searchInput.current.value}`);
 	};
 
-	if (!addressInfo || loading || !blockchain.length)
+	if (!addressInfo || !blockchain.length)
 		return (
 			<div style={{ height: "70vh" }}>
 				<Loading />

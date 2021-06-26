@@ -6,6 +6,7 @@ import store from "../store";
 
 export const initializeSocket = socket => {
 	socket.on("block", block => {
+		console.log("incoming");
 		store.dispatch(addBlock(block));
 	});
 
@@ -14,8 +15,8 @@ export const initializeSocket = socket => {
 	});
 
 	socket.on("blockchain", blockchain => {
-		store.dispatch(setBlockchain(blockchain));
-		console.log("blockchain: ", blockchain);
+		// store.dispatch(setBlockchain(blockchain));
+		// console.log("blockchain: ", blockchain);
 	});
 
 	// socket.on("params", params => {

@@ -1,39 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import React from "react";
 import { Link } from "react-router-dom";
 
 import Loading from "../../components/Loading";
+import { useBlockchainInfo } from "../../hooks/useBlockchainInfo";
 
 import { formatDistanceToNow } from "date-fns";
 import "./blockchain.css";
 
-import { bobcoinMainnet, bobcoinTestnet } from "../../config";
-import axios from "axios";
-
 const BlockchainPage = () => {
-	const network = useSelector(state => state.blockchain.network);
+	const [blockchainInfo, loadBlockchain] = useBlockchainInfo();
 
-	const [blockchainInfo, setBlockchainInfo] = useState(null);
-
-	useEffect(async () => {
-		setBlockchainInfo(null);
-		const result = await axios.get(
-			`${network === "mainnet" ? bobcoinMainnet : bobcoinTestnet}/blockchain/info?limit=10`
-		);
-		setBlockchainInfo(result.data);
-	}, [network]);
-
-	const loadMore = async () => {
-		const { block } = blockchainInfo[blockchainInfo.length - 1];
-		const result = await axios.get(
-			`${network === "mainnet" ? bobcoinMainnet : bobcoinTestnet}/blockchain/info?limit=10&height=${
-				block.height
-			}&timestamp=${block.timestamp}`
-		);
-		setBlockchainInfo(info => [...info, ...result.data]);
-	};
-
-	if (!blockchainInfo)
+	if (!blockchainInfo.length)
 		return (
 			<div style={{ height: "70vh" }}>
 				<Loading />
@@ -118,7 +95,7 @@ const BlockchainPage = () => {
 				))}
 			</div>
 			<div className="has-text-centered">
-				<button onClick={loadMore} className="button">
+				<button onClick={loadBlockchain} className="button">
 					Load more
 				</button>
 			</div>

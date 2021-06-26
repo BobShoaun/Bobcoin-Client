@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 
 import { format } from "date-fns";
 
-const Block = ({ block, selected, isValid }) => {
+import { RESULT } from "blockcrypto";
+
+const Block = ({ block, selected, validation }) => {
 	return (
 		<div
 			className={`card is-flex is-flex-direction-column h-100 block ${
@@ -16,7 +18,7 @@ const Block = ({ block, selected, isValid }) => {
 						Block #{block.height}
 						{block.height === 0 && <span className="subtitle is-6"> (Genesis)</span>}
 					</h1>
-					{isValid ? (
+					{validation.code === RESULT.VALID ? (
 						<div className="icon has-text-info ml-auto">
 							<i className="material-icons-two-tone">check_circle_outline</i>
 						</div>
