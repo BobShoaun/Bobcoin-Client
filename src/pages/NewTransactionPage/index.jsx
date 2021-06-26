@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 
 import { useBlockchain } from "../../hooks/useBlockchain";
+import { useParams } from "../../hooks/useParams";
 
 import { addTransaction } from "../../store/transactionsSlice";
 import {
@@ -21,10 +22,15 @@ import TransactionFailureModal from "./TransactionFailureModal";
 import TransactionSuccessModal from "./TransactionSuccessModal";
 
 import SocketContext from "../../socket/SocketContext";
+import axios from "axios";
 
 const NewTransactionPage = () => {
 	const dispatch = useDispatch();
+
+	const [status, params] = useParams();
+
 	const keys = useSelector(state => state.wallet.keys);
+	const api = useSelector(state => state.blockchain.api);
 
 	const history = useHistory();
 
@@ -42,7 +48,7 @@ const NewTransactionPage = () => {
 
 	const { socket } = useContext(SocketContext);
 
-	const [loading, params, blockchain, transactions] = useBlockchain();
+	// const [loading, params, blockchain, transactions] = useBlockchain();
 
 	useEffect(() => {
 		try {
@@ -56,7 +62,7 @@ const NewTransactionPage = () => {
 		}
 	}, [senderSK]);
 
-	if (loading) return null;
+	// if (loading) return null;
 	const handleSenderKeyChange = senderSK => {
 		try {
 			const { sk, pk, address } = getKeys(params, senderSK);
@@ -86,21 +92,17 @@ const NewTransactionPage = () => {
 		setFee(isNaN(amt) ? "" : amt);
 	};
 
-	const createAndSignTransaction = () => {
+	const createAndSignTransaction = async () => {
 		const _amount = Math.trunc(amount * params.coin);
 		const _fee = Math.trunc(fee * params.coin);
 
-		const headBlock = getHighestValidBlock(params, blockchain);
-
-		// get utxos from mempool
-		const utxoSet = calculateMempoolUTXOSet(blockchain, headBlock, transactions);
+		const utxoSet = (await axios(`${api}/utxo/${senderAdd}`)).data;
 
 		// pick utxos from front to back.
 		let inputAmount = 0;
 		const inputs = [];
 		for (const utxo of utxoSet) {
 			if (inputAmount >= _amount) break;
-			if (utxo.address !== senderAdd) continue;
 			inputAmount += utxo.amount;
 			const input = createInput(utxo.txHash, utxo.outIndex, senderPK);
 			inputs.push(input);
@@ -119,10 +121,10 @@ const NewTransactionPage = () => {
 		const transaction = createTransaction(params, inputs, outputs);
 		const signature = signTransaction(transaction, senderSK);
 		transaction.inputs.forEach(input => (input.signature = signature));
-
 		transaction.hash = calculateTransactionHash(transaction);
 
-		const validation = isTransactionValid(params, transactions, transaction);
+		const { validation } = (await axios.post(`${api}/transaction`, { transaction })).data;
+
 		if (validation.code !== RESULT.VALID) {
 			setError(validation);
 			setErrorModal(true);
@@ -130,8 +132,8 @@ const NewTransactionPage = () => {
 			return;
 		}
 
-		dispatch(addTransaction(transaction));
-		socket.emit("transaction", transaction);
+		// dispatch(addTransaction(transaction));
+		// socket.emit("transaction", transaction);
 		setConfirmModal(true);
 	};
 

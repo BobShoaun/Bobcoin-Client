@@ -1,27 +1,40 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import Transaction from "./Transaction";
 
 import { useBlockchain } from "../hooks/useBlockchain";
 
 import { calculateMempool, getHighestValidBlock } from "blockcrypto";
+import axios from "axios";
 
 const Mempool = () => {
-	const [loading, params, blockchain, transactions] = useBlockchain();
-	if (loading || !blockchain.length || !transactions.length) return null;
+	const api = useSelector(state => state.blockchain.api);
 
-	const mempool = calculateMempool(
-		blockchain,
-		getHighestValidBlock(params, blockchain),
-		transactions
-	);
+	// const [loading, params, blockchain, transactions] = useBlockchain();
+	// if (loading || !blockchain.length || !transactions.length) return null;
+
+	// const mempool = calculateMempool(
+	// 	blockchain,
+	// 	getHighestValidBlock(params, blockchain),
+	// 	transactions
+	// );
+	const [mempool, setMempool] = useState([]);
+
+	const getMempool = async () => {
+		const mem = (await axios.get(`${api}/transaction/mempool`)).data;
+		setMempool(mem);
+		console.log(mem);
+	};
+
+	useEffect(() => getMempool(), [api]);
 
 	return (
 		<div>
 			{mempool.length ? (
-				mempool.map(transaction => (
-					<div key={transaction.hash} className="card mb-2">
+				mempool.map(transactionInfo => (
+					<div key={transactionInfo.transaction.hash} className="card mb-2">
 						<div className="card-content">
-							<Transaction transaction={transaction}></Transaction>
+							<Transaction transactionInfo={transactionInfo} />
 						</div>
 					</div>
 				))

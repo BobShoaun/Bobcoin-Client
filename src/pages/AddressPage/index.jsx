@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { useParams, useHistory, useLocation } from "react-router-dom";
 
 import { useBlockchain } from "../../hooks/useBlockchain";
+import { useParams as useConsensus } from "react-router";
 
 import { getHighestValidBlock, getTxBlock } from "blockcrypto";
 import QRCode from "qrcode";
@@ -22,6 +23,8 @@ const AddressPage = () => {
 	const [addressQR, setAddressQR] = useState("");
 
 	const network = useSelector(state => state.blockchain.network);
+
+	// const [status, params] = useConsensus();
 
 	const [loading, params, blockchain] = useBlockchain();
 
