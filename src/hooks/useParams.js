@@ -5,11 +5,11 @@ import { getParams } from "../store/consensusSlice";
 
 export const useParams = () => {
 	const dispatch = useDispatch();
-	const { status, params } = useSelector(state => state.consensus);
+	const { fetched, params } = useSelector(state => state.consensus);
 
 	useEffect(() => {
-		if (status !== "success") dispatch(getParams());
+		if (!fetched) dispatch(getParams());
 	}, []);
 
-	return [status, params];
+	return [!fetched, params];
 };

@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useParams, Link } from "react-router-dom";
 
-import { useBlockchain } from "../../hooks/useBlockchain";
+import { useParams as useConsensus } from "../../hooks/useParams";
 
-import Transactions from "../../components/Transactions";
+import Transaction from "../../components/Transaction";
+
 import { copyToClipboard } from "../../helpers";
 import Loading from "../../components/Loading";
 
@@ -15,7 +16,7 @@ const BlockPage = () => {
 	const { hash } = useParams();
 	const network = useSelector(state => state.blockchain.network);
 
-	const [loading, params] = useBlockchain();
+	const [loading, params] = useConsensus();
 
 	const [blockInfo, setBlockInfo] = useState(null);
 
@@ -28,15 +29,25 @@ const BlockPage = () => {
 		console.log(result.data);
 	}, [network, hash]);
 
-	if (loading || !blockInfo)
+	if (!blockInfo)
 		return (
 			<div style={{ height: "70vh" }}>
 				<Loading />
 			</div>
 		);
 
-	const { block, isValid, totalInput, totalOutput, fee, confirmations, hashTarget, reward } =
-		blockInfo;
+	const {
+		block,
+		isValid,
+		validation,
+		transactionsInfo,
+		totalInput,
+		totalOutput,
+		fee,
+		confirmations,
+		hashTarget,
+		reward,
+	} = blockInfo;
 
 	return (
 		<section className="section">
@@ -162,13 +173,14 @@ const BlockPage = () => {
 			<h2 className="title is-4 is-spaced">Transactions in this block</h2>
 			<hr />
 			<div className="mb-5">
-				{block.transactions.length ? (
-					<Transactions transactions={block.transactions} block={block}></Transactions>
-				) : (
-					<p className="subtitle has-text-centered is-6">
-						This block does not contain any transactions.
-					</p>
-				)}
+				{transactionsInfo.length &&
+					transactionsInfo.map(info => (
+						<div key={info.transaction.hash} className="card mb-2">
+							<div className="card-content">
+								<Transaction transactionInfo={info} block={block}></Transaction>
+							</div>
+						</div>
+					))}
 			</div>
 		</section>
 	);

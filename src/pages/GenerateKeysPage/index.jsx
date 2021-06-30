@@ -28,7 +28,7 @@ const GenerateKeysPage = () => {
 					onClick={() => setMode("hd")}
 					className={`button ${mode === "hd" ? "is-info" : "has-text-grey"}`}
 				>
-					Hierarchical Deterministic
+					Deterministic
 				</button>
 			</div>
 

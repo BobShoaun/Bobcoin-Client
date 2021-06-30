@@ -44,7 +44,7 @@ const OverviewPage = () => {
 
 			<div className="is-flex is-flex-wrap-wrap mb-3">
 				<div>
-					<h2 className="title is-size-5 is-size-4-tablet">Blockchain</h2>
+					<h2 className="title is-size-5 is-size-4-tablet">Blocks - Recently mined</h2>
 					<p className="subtitle is-size-6">Most recently mined blocks in the blockchain.</p>
 				</div>
 				<Link to="./blockchain" className="button is-secondary ml-auto has-text-weight-semibold">

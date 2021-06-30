@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useParams, Link, useLocation } from "react-router-dom";
 
-import { useBlockchain } from "../../hooks/useBlockchain";
+import { useParams as useConsensus } from "../../hooks/useParams";
 
 import Transaction from "../../components/Transaction";
 import { copyToClipboard } from "../../helpers";
@@ -16,7 +16,7 @@ const TransactionPage = () => {
 	const location = useLocation();
 	const network = useSelector(state => state.blockchain.network);
 
-	const [loading, params] = useBlockchain();
+	const [loading, params] = useConsensus();
 
 	const blockHash = new URLSearchParams(location.search).get("block");
 
@@ -27,7 +27,7 @@ const TransactionPage = () => {
 		const result = await axios.get(
 			`${
 				network === "mainnet" ? bobcoinMainnet : bobcoinTestnet
-			}/transactions/info/${hash}?block=${blockHash}`
+			}/transaction/info/${hash}?block=${blockHash}`
 		);
 		setTransactionInfo(result.data);
 		console.log(result.data);
@@ -40,8 +40,17 @@ const TransactionPage = () => {
 			</div>
 		);
 
-	const { transaction, isValid, block, totalInput, totalOutput, fee, isCoinbase, confirmations } =
-		transactionInfo;
+	const {
+		transaction,
+		isValid,
+		validation,
+		block,
+		totalInput,
+		totalOutput,
+		fee,
+		isCoinbase,
+		confirmations,
+	} = transactionInfo;
 
 	const status =
 		confirmations === 0 ? "Unconfirmed (in Mempool)" : `${confirmations} confirmations`;
@@ -57,7 +66,7 @@ const TransactionPage = () => {
 			<h1 className="title is-4">Summary</h1>
 
 			<div className="card card-content has-background-white">
-				<Transaction transaction={transaction} block={block}></Transaction>
+				<Transaction transactionInfo={transactionInfo} block={block}></Transaction>
 			</div>
 			<hr />
 
@@ -114,7 +123,7 @@ const TransactionPage = () => {
 							) : (
 								<div className="is-flex">
 									<i className="material-icons has-text-danger">dangerous</i>
-									{/* <p className="ml-2">{validation.msg}</p> */}
+									<p className="ml-2">{validation.msg}</p>
 								</div>
 							)}
 						</td>

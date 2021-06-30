@@ -24,8 +24,8 @@ export const initializeSocket = socket => {
 	// 	console.log("params: ", params);
 	// });
 
-	socket.on("transactions", transactions => {
-		store.dispatch(setTransactions(transactions));
-		console.log("transactions: ", transactions);
-	});
+	// socket.on("transactions", transactions => {
+	// 	store.dispatch(setTransactions(transactions));
+	// 	console.log("transactions: ", transactions);
+	// });
 };

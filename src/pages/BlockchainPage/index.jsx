@@ -41,8 +41,8 @@ const BlockchainPage = () => {
 				className="card blockchain-list px-3 px-5-tablet mb-5"
 				style={{ paddingBlock: "2em", overflow: "auto" }}
 			>
-				<p className="title mb-0" style={{ fontSize: ".87rem", minWidth: "3.5em" }}>
-					Height
+				<p className="title mb-0 has-text-centered" style={{ fontSize: ".87rem", minWidth: "2em" }}>
+					#
 				</p>
 				<p className="title mb-0" style={{ fontSize: ".87rem", minWidth: "10em" }}>
 					Hash
@@ -65,17 +65,22 @@ const BlockchainPage = () => {
 
 				{blockchainInfo.map(({ block, status }) => (
 					<React.Fragment key={block.hash}>
-						<p className="subtitle mb-0 has-text-centered" style={{ fontSize: ".87rem" }}>
+						<p
+							className="subtitle mb-0 has-text-centered"
+							style={{
+								fontSize: ".87rem",
+								textDecoration: status === "Orphaned" ? "line-through" : "none",
+							}}
+						>
 							{block.height}
 						</p>
-						<p className="subtitle mb-0" style={{ fontSize: ".87rem" }}>
-							{" "}
+						<p className="subtitle mb-0 truncated" style={{ fontSize: ".87rem" }}>
 							<Link to={`/block/${block.hash}`}>{block.hash}</Link>
 						</p>
 						<p className="subtitle mb-0" style={{ fontSize: ".87rem" }}>
 							{formatDistanceToNow(block.timestamp, { addSuffix: true, includeSeconds: true })}
 						</p>
-						<p className="subtitle mb-0" style={{ fontSize: ".87rem" }}>
+						<p className="subtitle mb-0 truncated" style={{ fontSize: ".87rem" }}>
 							<Link to={`/address/${block.transactions[0].outputs[0].address}`}>
 								{block.transactions[0].outputs[0].address ?? "-"}
 							</Link>

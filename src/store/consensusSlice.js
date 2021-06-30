@@ -16,7 +16,6 @@ const consensusSlice = createSlice({
 	initialState: {
 		params: {},
 		fetched: false,
-		status: null,
 	},
 	reducers: {
 		setParams(state, { payload: params }) {
@@ -29,14 +28,10 @@ const consensusSlice = createSlice({
 		},
 	},
 	extraReducers: {
-		[getParams.pending]: state => {
-			state.status = "loading";
-		},
+		[getParams.pending]: state => {},
 		[getParams.fulfilled]: (state, { payload }) => {
-			state.status = "success";
 			state.fetched = true;
 			state.params = payload;
-			console.log("params: ", payload);
 		},
 	},
 });

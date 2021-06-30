@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { useParams, useHistory, useLocation } from "react-router-dom";
 
 import { useBlockchain } from "../../hooks/useBlockchain";
-import { useParams as useConsensus } from "react-router";
+import { useParams as useConsensus } from "../../hooks/useParams";
 
 import { getHighestValidBlock, getTxBlock } from "blockcrypto";
 import QRCode from "qrcode";
@@ -24,9 +24,9 @@ const AddressPage = () => {
 
 	const network = useSelector(state => state.blockchain.network);
 
-	// const [status, params] = useConsensus();
+	const [loading, params] = useConsensus();
 
-	const [loading, params, blockchain] = useBlockchain();
+	// const [loading, params, blockchain] = useBlockchain();
 
 	const [addressInfo, setAddressInfo] = useState(null);
 
@@ -38,14 +38,14 @@ const AddressPage = () => {
 		setAddressInfo(result.data);
 	}, [network, address]);
 
-	const headBlockHash = useMemo(() => new URLSearchParams(location.search).get("head"), [location]);
+	// const headBlockHash = useMemo(() => new URLSearchParams(location.search).get("head"), [location]);
 
-	const headBlock = useMemo(
-		() =>
-			blockchain.find(block => block.hash === headBlockHash) ??
-			getHighestValidBlock(params, blockchain),
-		[blockchain, params, headBlockHash]
-	);
+	// const headBlock = useMemo(
+	// 	() =>
+	// 		blockchain.find(block => block.hash === headBlockHash) ??
+	// 		getHighestValidBlock(params, blockchain),
+	// 	[blockchain, params, headBlockHash]
+	// );
 
 	useEffect(() => {
 		QRCode.toString(address).then(setAddressQR);
@@ -56,7 +56,7 @@ const AddressPage = () => {
 		history.push(`./${searchInput.current.value}`);
 	};
 
-	if (!addressInfo || !blockchain.length)
+	if (!addressInfo)
 		return (
 			<div style={{ height: "70vh" }}>
 				<Loading />
@@ -64,7 +64,8 @@ const AddressPage = () => {
 		);
 
 	console.log(addressInfo);
-	const { isValid, totalReceived, totalSent, utxos, balance, receivedTxs, sentTxs } = addressInfo;
+	const { isValid, totalReceived, totalSent, utxos, balance, inboundTxs, outboundTxs } =
+		addressInfo;
 
 	return (
 		<section className="section">
@@ -127,7 +128,7 @@ const AddressPage = () => {
 						</tr>
 						<tr>
 							<td>Transaction count</td>
-							<td>{receivedTxs.length + sentTxs.length}</td>
+							<td>{inboundTxs.length + outboundTxs.length}</td>
 						</tr>
 						<tr>
 							<td>UTXO count</td>
@@ -148,7 +149,7 @@ const AddressPage = () => {
 						<tr>
 							<td>Final Balance</td>
 							<td className="has-text-weight-semibold">
-								{balance} {params.symbol}
+								{(balance / params.coin).toFixed(8)} {params.symbol}
 							</td>
 						</tr>
 					</tbody>
@@ -157,17 +158,13 @@ const AddressPage = () => {
 
 			<h1 className="title is-size-5 is-size-4-tablet mb-3">Inbound Transactions</h1>
 			<div className="mb-6">
-				{receivedTxs.length ? (
-					receivedTxs
-						.sort((a, b) => b.timestamp - a.timestamp)
+				{inboundTxs.length ? (
+					inboundTxs
+						.sort((a, b) => b.transaction.timestamp - a.transaction.timestamp)
 						.map(tx => (
-							<div key={tx.hash} className="card mb-2">
+							<div key={tx.transaction.hash} className="card mb-2">
 								<div className="card-content">
-									<Transaction
-										transaction={tx}
-										block={getTxBlock(blockchain, headBlock.hash, tx)}
-										headBlock={headBlock}
-									/>
+									<Transaction transactionInfo={tx} />
 								</div>
 							</div>
 						))
@@ -181,17 +178,13 @@ const AddressPage = () => {
 			</div>
 
 			<h1 className="title is-size-5 is-size-4-tablet mb-3">Outbound Transactions</h1>
-			{sentTxs.length ? (
-				sentTxs
-					.sort((a, b) => b.timestamp - a.timestamp)
+			{outboundTxs.length ? (
+				outboundTxs
+					.sort((a, b) => b.transaction.timestamp - a.transaction.timestamp)
 					.map(tx => (
-						<div key={tx.hash} className="card mb-2">
+						<div key={tx.transaction.hash} className="card mb-2">
 							<div className="card-content">
-								<Transaction
-									transaction={tx}
-									block={getTxBlock(blockchain, headBlock.hash, tx)}
-									headBlock={headBlock}
-								/>
+								<Transaction transactionInfo={tx} />
 							</div>
 						</div>
 					))

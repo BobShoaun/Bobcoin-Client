@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 
-import { useBlockchain } from "../../hooks/useBlockchain";
 import { useParams } from "../../hooks/useParams";
 
 import { addTransaction } from "../../store/transactionsSlice";
@@ -47,8 +46,6 @@ const NewTransactionPage = () => {
 	const [error, setError] = useState({});
 
 	const { socket } = useContext(SocketContext);
-
-	// const [loading, params, blockchain, transactions] = useBlockchain();
 
 	useEffect(() => {
 		try {
@@ -242,6 +239,7 @@ const NewTransactionPage = () => {
 						step=".01"
 						placeholder="0.00000000"
 					/>
+					<p className="help">Network fees sent to the miner.</p>
 				</div>
 			</div>
 

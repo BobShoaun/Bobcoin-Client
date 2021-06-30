@@ -48,7 +48,7 @@ const Blockchain = ({ selectedBlockHash, setSelectedBlock }) => {
 			)}
 			{blockchainInfo
 				.slice(page * blocksPerPage, page * blocksPerPage + blocksPerPage)
-				.map(({ block, validation }) => (
+				.map(({ block, validation, status }) => (
 					<div
 						onClick={() => {
 							setSelectedBlock?.(block);
@@ -56,9 +56,11 @@ const Blockchain = ({ selectedBlockHash, setSelectedBlock }) => {
 						}}
 						key={block.hash}
 						className="my-3 mx-2 is-clickable"
+						style={{ flex: "1 1 auto", minWidth: 0 }}
 					>
 						<Block
 							block={block}
+							status={status}
 							validation={validation}
 							selected={selectedBlockHash === block.hash}
 						/>

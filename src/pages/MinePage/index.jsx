@@ -6,28 +6,12 @@ import MineMempool from "./MineMempool";
 import MineSuccessModal from "./MineSuccessModal";
 import MineFailureModal from "./MineFailureModal";
 
-import { useBlockchain } from "../../hooks/useBlockchain";
 import { useParams } from "../../hooks/useParams";
 import { useBlockchainInfo } from "../../hooks/useBlockchainInfo";
 
 import { addBlock } from "../../store/blockchainSlice";
 import { addTransaction } from "../../store/transactionsSlice";
-import {
-	getHighestValidBlock,
-	calculateBlockReward,
-	addBlock as addBlockToBlockchain,
-	isBlockchainValid,
-	RESULT,
-	bigIntToHex64,
-	getTransactionFees,
-	createOutput,
-	createTransaction,
-	calculateTransactionHash,
-	createBlock,
-	calculateHashTarget,
-	isBlockValidInBlockchain,
-	hexToBigInt,
-} from "blockcrypto";
+import { calculateBlockReward, RESULT, hexToBigInt } from "blockcrypto";
 
 import Miner from "./miner.worker";
 import SocketContext from "../../socket/SocketContext";
@@ -109,7 +93,7 @@ const MinePage = () => {
 		}
 
 		const { block, validation, target } = (
-			await axios.post(`${api}/mine/create_candidate_block`, {
+			await axios.post(`${api}/mine/candidate_block`, {
 				previousBlock: headBlock,
 				mempoolTxs: [],
 				miner,
@@ -117,7 +101,7 @@ const MinePage = () => {
 		).data;
 
 		if (validation.code !== RESULT.VALID) {
-			console.error("Block is invalid, not broadcasting...: ", block);
+			console.error("Candidate block is invalid, not mining: ", block);
 			setError(validation);
 			setErrorModal(true);
 			return;

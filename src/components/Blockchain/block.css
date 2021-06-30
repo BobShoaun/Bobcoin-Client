@@ -1,0 +1,15 @@
+.truncated {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.block {
+	border: 2px solid #d0d1cd;
+	border-radius: 0.3rem;
+	min-width: 0;
+}
+
+.block-selected {
+	border-color: #5d737e;
+}
