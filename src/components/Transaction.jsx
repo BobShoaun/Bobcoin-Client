@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Link } from "react-router-dom";
 
 import { useParams } from "../hooks/useParams";
@@ -59,28 +59,45 @@ const Transaction = ({ transactionInfo, block }) => {
 			</div>
 
 			<section className="is-flex-tablet mb-3" style={{ gap: "2em" }}>
-				<div className="is-flex truncated" style={{ flex: "1" }}>
-					{isCoinbase ? (
-						<p>COINBASE (Newly Minted Coins)</p>
-					) : (
-						<>
-							<div className="truncated">
-								{inputInfo.map((info, index) => (
-									<Link key={index} className="is-block truncated" to={`/address/${info.address}`}>
-										{info.address}
-									</Link>
-								))}
-							</div>
-							<div className="ml-auto pl-2" style={{ whiteSpace: "nowrap" }}>
-								{inputInfo.map((input, index) => (
+				{isCoinbase ? (
+					<p style={{ flex: "1" }}>COINBASE (Newly Minted Coins)</p>
+				) : (
+					<div className="is-flex truncated" style={{ flex: "1" }}>
+						<div className="truncated">
+							{inputInfo.map((info, index) => (
+								<Link key={index} className="is-block truncated" to={`/address/${info.address}`}>
+									{info.address}
+								</Link>
+							))}
+						</div>
+
+						<div className="ml-auto pl-2" style={{ whiteSpace: "nowrap" }}>
+							{inputInfo.map((input, index) => (
+								<div
+									key={index}
+									className="is-flex is-align-items-center is-justify-content-flex-end"
+								>
 									<p key={index} className="has-text-weight-medium has-text-right">
 										{(input.amount / params.coin).toFixed(8)} {params.symbol}
 									</p>
-								))}
-							</div>
-						</>
-					)}
-				</div>
+									<a data-tip data-for="tx-out" className="is-block ml-3">
+										<Link
+											className="is-block truncated"
+											to={`/transaction/${transaction.inputs[index].txHash}`}
+										>
+											<span className="has-text-info material-icons-outlined md-18 is-block my-auto">
+												credit_score
+											</span>
+										</Link>
+										<ReactTooltip id="tx-out" type="info" effect="solid">
+											<span>Tx output</span>
+										</ReactTooltip>
+									</a>
+								</div>
+							))}
+						</div>
+					</div>
+				)}
 
 				<div>
 					<i className="material-icons md-28" style={{ lineHeight: "24px" }}>
@@ -106,8 +123,8 @@ const Transaction = ({ transactionInfo, block }) => {
 									{(output.amount / params.coin).toFixed(8)} {params.symbol}
 								</p>
 								{!outputSpent[index] ? (
-									<a data-tip data-for="unspent" className="is-block">
-										<span className="has-text-success material-icons-outlined ml-2 md-18 is-block my-auto">
+									<a data-tip data-for="unspent" className="ml-3 is-block">
+										<span className="has-text-success material-icons-outlined md-18 is-block my-auto">
 											credit_card
 										</span>
 										<ReactTooltip id="unspent" type="dark" effect="solid">
@@ -115,8 +132,8 @@ const Transaction = ({ transactionInfo, block }) => {
 										</ReactTooltip>
 									</a>
 								) : (
-									<a data-tip data-for="spent" className="is-block">
-										<span className="has-text-danger material-icons-outlined ml-2 md-18 is-block my-auto">
+									<a data-tip data-for="spent" className="is-block ml-3">
+										<span className="has-text-danger material-icons-outlined md-18 is-block my-auto">
 											credit_card_off
 										</span>
 										<ReactTooltip id="spent" type="error" effect="solid">
