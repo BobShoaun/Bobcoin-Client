@@ -75,6 +75,8 @@ const MinePage = () => {
 			return;
 		}
 
+		setTerminalLog(log => [...log, "Forming candidate block and verifying..."]);
+
 		const { block, validation, target } = (
 			await axios.post(`${api}/mine/candidate_block`, {
 				previousBlock: headBlock,
