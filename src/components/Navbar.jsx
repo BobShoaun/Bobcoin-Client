@@ -162,9 +162,9 @@ const Navbar = () => {
 						<div className="buttons">
 							<Link
 								to="/generate-key"
-								className="button is-primary has-text-dark has-text-weight-bold mr-3"
+								className="button is-primary has-text-light has-text-weight-semibold mr-3"
 							>
-								<span className="material-icons-two-tone mr-2">vpn_key</span>
+								<span className="material-icons-outlined mr-2">vpn_key</span>
 								<p>Generate Key</p>
 							</Link>
 
