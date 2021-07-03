@@ -9,12 +9,9 @@ import MineFailureModal from "./MineFailureModal";
 import { useParams } from "../../hooks/useParams";
 import { useBlockchainInfo } from "../../hooks/useBlockchainInfo";
 
-import { addBlock } from "../../store/blockchainSlice";
-import { addTransaction } from "../../store/transactionsSlice";
 import { calculateBlockReward, RESULT, hexToBigInt } from "blockcrypto";
 
 import Miner from "./miner.worker";
-import SocketContext from "../../socket/SocketContext";
 
 import Loading from "../../components/Loading";
 
@@ -22,12 +19,10 @@ import "./mine.css";
 import axios from "axios";
 
 const MinePage = () => {
-	const dispatch = useDispatch();
 	const keys = useSelector(state => state.wallet.keys);
 	const api = useSelector(state => state.blockchain.api);
 
 	const [miner, setMiner] = useState(keys.address);
-	// const [headBlock, setHeadBlock] = useState(null);
 	const [terminalLog, setTerminalLog] = useState([]);
 	const [successModal, setSuccessModal] = useState(false);
 	const [errorModal, setErrorModal] = useState(false);
@@ -35,13 +30,8 @@ const MinePage = () => {
 	const [selectedTxs, setSelectedTxs] = useState([]);
 	const activeWorker = useRef(null);
 
-	// const [loading, params, blockchain, transactions] = useBlockchain();
 	const [blockchainInfo, loadBlockchain] = useBlockchainInfo();
 	const [status, params] = useParams();
-
-	const { socket } = useContext(SocketContext);
-
-	const transactions = [];
 
 	useEffect(() => {
 		return () => {
@@ -52,21 +42,22 @@ const MinePage = () => {
 	}, []);
 
 	const [headBlock, setHeadBlock] = useState(null);
-
-	// const headBlock = useMemo(
-	// 	() => blockchainInfo.find(({ isHead }) => isHead)?.block,
-	// 	[blockchainInfo]
-	// );
 	const [prevBlock, setPrevBlock] = useState(null);
-
-	// useEffect(() => {
-	// 	if (blockchainInfo.length) setHeadBlock(blockchainInfo.find(({ isHead }) => isHead).block);
-	// }, [blockchainInfo]);
 
 	useEffect(async () => {
 		const block = (await axios.get(`${api}/blockchain/head_block`)).data;
 		setHeadBlock(block);
 	}, [blockchainInfo]);
+
+	// mempool
+	const [mempool, setMempool] = useState([]);
+
+	const getMempool = async () => {
+		const mem = (await axios.get(`${api}/transaction/mempool`)).data;
+		setMempool(mem);
+	};
+
+	useEffect(() => getMempool(), [api]);
 
 	if (!blockchainInfo.length)
 		return (
@@ -74,14 +65,6 @@ const MinePage = () => {
 				<Loading />
 			</div>
 		);
-
-	// const isLatest =
-	// 	getHighestValidBlock(
-	// 		params,
-	// 		blockchainInfo.map(({ block }) => block)
-	// 	).hash === headBlock?.hash;
-
-	// const isLatest = false;
 
 	const startMining = async () => {
 		if (activeWorker.current) {
@@ -95,7 +78,7 @@ const MinePage = () => {
 		const { block, validation, target } = (
 			await axios.post(`${api}/mine/candidate_block`, {
 				previousBlock: headBlock,
-				mempoolTxs: [],
+				mempoolTxs: selectedTxs,
 				miner,
 			})
 		).data;
@@ -139,7 +122,9 @@ const MinePage = () => {
 						break;
 					}
 
+					setSelectedTxs([]);
 					setSuccessModal(true);
+					getMempool();
 
 					if (Notification.permission !== "denied")
 						// ask user for permission
@@ -262,12 +247,12 @@ const MinePage = () => {
 							readOnly
 						></input>
 						<p className="help">Previous block to mine from.</p>
-						{prevBlock?.hash !== headBlock?.hash && (
+						{/* {prevBlock?.hash !== headBlock?.hash && (
 							<p className="help is-danger is-flex">
 								<span className="material-icons-outlined md-18 mr-2">warning</span>You are no longer
 								mining from the latest block.
 							</p>
-						)}
+						)} */}
 					</div>
 
 					<button onClick={activeWorker.current ? stopMining : startMining} className="button mb-0">
@@ -277,13 +262,20 @@ const MinePage = () => {
 				</section>
 			</section>
 
-			<h3 className="title is-4">Mempool</h3>
-			<p className="subtitle is-6 mb-4">Select transactions to include from the mempool.</p>
-			{/* <MineMempool
-				headBlock={headBlock}
+			<div className="is-flex is-align-items-center mb-5">
+				<div>
+					<h3 className="title is-4">Mempool</h3>
+					<p className="subtitle is-6 ">Select transactions to include from the mempool.</p>
+				</div>
+				<button onClick={getMempool} className="button ml-auto">
+					<span className="material-icons-outlined md-18 mr-2">refresh</span>Refresh
+				</button>
+			</div>
+			<MineMempool
+				mempool={mempool}
 				addTransaction={tx => setSelectedTxs(txs => [...txs, tx])}
 				removeTransaction={tx => setSelectedTxs(txs => txs.filter(tx2 => tx2.hash !== tx.hash))}
-			/> */}
+			/>
 
 			<MineSuccessModal
 				isOpen={successModal}

@@ -1,18 +1,11 @@
-import React, { useMemo } from "react";
-import { useBlockchain } from "../../hooks/useBlockchain";
+import React from "react";
 
-import { calculateMempool } from "blockcrypto";
+import { useParams } from "../../hooks/useParams";
+
 import Transaction from "../../components/Transaction";
 
-const MineMempool = ({ headBlock, addTransaction, removeTransaction }) => {
-	const [loading, params, blockchain, transactions] = useBlockchain();
-
-	const mempool = useMemo(
-		() => (headBlock ? calculateMempool(blockchain, headBlock, transactions) : []),
-		[blockchain, transactions, headBlock]
-	);
-
-	if (loading) return null;
+const MineMempool = ({ headBlock, mempool, addTransaction, removeTransaction }) => {
+	const [loading, params] = useParams();
 
 	const toggleSelected = (value, tx) => {
 		if (value) addTransaction(tx);
@@ -22,19 +15,19 @@ const MineMempool = ({ headBlock, addTransaction, removeTransaction }) => {
 	return (
 		<div>
 			{mempool.length ? (
-				mempool.map(transaction => (
-					<div key={transaction.hash} className="card mb-2">
+				mempool.map(info => (
+					<div key={info.transaction.hash} className="card mb-2">
 						<div className="card-content is-flex">
 							<div style={{ width: "2em" }}>
 								<input
 									className="tx is-clickable"
-									onChange={({ target }) => toggleSelected(target.checked, transaction)}
+									onChange={({ target }) => toggleSelected(target.checked, info.transaction)}
 									type="checkbox"
 								></input>
 							</div>
 
 							<div style={{ width: "calc(100% - 2em)" }}>
-								<Transaction transaction={transaction}></Transaction>
+								<Transaction transactionInfo={info}></Transaction>
 							</div>
 						</div>
 					</div>

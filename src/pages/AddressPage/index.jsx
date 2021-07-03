@@ -2,7 +2,6 @@ import React, { useState, useRef, useMemo, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useParams, useHistory, useLocation } from "react-router-dom";
 
-import { useBlockchain } from "../../hooks/useBlockchain";
 import { useParams as useConsensus } from "../../hooks/useParams";
 
 import { getHighestValidBlock, getTxBlock } from "blockcrypto";
@@ -25,8 +24,6 @@ const AddressPage = () => {
 	const network = useSelector(state => state.blockchain.network);
 
 	const [loading, params] = useConsensus();
-
-	// const [loading, params, blockchain] = useBlockchain();
 
 	const [addressInfo, setAddressInfo] = useState(null);
 

@@ -52,7 +52,7 @@ const Blockchain = ({ selectedBlockHash, setSelectedBlock }) => {
 					<div
 						onClick={() => {
 							setSelectedBlock?.(block);
-							console.log("set head block", block);
+							// console.log("set head block", block);
 						}}
 						key={block.hash}
 						className="my-3 mx-2 is-clickable"

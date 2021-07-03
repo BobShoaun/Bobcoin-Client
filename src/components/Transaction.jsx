@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 
 import { useParams } from "../hooks/useParams";
@@ -9,7 +9,7 @@ import { format } from "date-fns";
 import { RESULT } from "blockcrypto";
 
 const Transaction = ({ transactionInfo, block }) => {
-	const [status, params] = useParams();
+	const [loading, params] = useParams();
 
 	const {
 		transaction,
@@ -80,7 +80,7 @@ const Transaction = ({ transactionInfo, block }) => {
 									<p key={index} className="has-text-weight-medium has-text-right">
 										{(input.amount / params.coin).toFixed(8)} {params.symbol}
 									</p>
-									<a data-tip data-for="tx-out" className="is-block ml-3">
+									<div data-tip data-for="tx-out" className="is-block ml-3">
 										<Link
 											className="is-block truncated"
 											to={`/transaction/${transaction.inputs[index].txHash}`}
@@ -92,7 +92,7 @@ const Transaction = ({ transactionInfo, block }) => {
 										<ReactTooltip id="tx-out" type="info" effect="solid">
 											<span>Tx output</span>
 										</ReactTooltip>
-									</a>
+									</div>
 								</div>
 							))}
 						</div>

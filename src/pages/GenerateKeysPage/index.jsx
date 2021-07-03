@@ -17,7 +17,7 @@ const GenerateKeysPage = () => {
 				<span style={{ textTransform: "lowercase" }}>{params.name}</span>.
 			</p>
 
-			<div class="buttons has-addons is-right">
+			<div className="buttons has-addons is-right">
 				<button
 					onClick={() => setMode("traditional")}
 					className={`button ${mode === "traditional" ? "is-info" : "has-text-grey"}`}
