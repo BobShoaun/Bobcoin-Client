@@ -41,34 +41,42 @@ const LandingPage = () => {
 				</h3>
 				<div className="qualities-grid mx-7-tablet">
 					<div className="-has-background-info has-text-white">
-						<span className="material-icons-two-tone md-48 has-text-info">south</span>
+						<span className="material-icons-two-tone md-48 has-text-info">arrow_downward</span>
 						<h2 className="title is-size-5 is-size-4-tablet is-spaced mb-2">Low fees</h2>
-						<p className="subtitle is-6">Send money globally at the cost of peanuts</p>
+						<p className="subtitle is-6">
+							Transact globally by paying what you want, or pay nothing!
+						</p>
 					</div>
 
 					<div className="-has-background-info has-text-white">
 						<span className="material-icons-two-tone md-48 has-text-info">emoji_emotions</span>
 						<h2 className="title is-size-5 is-size-4-tablet is-spaced mb-2">Simple</h2>
-						<p className="subtitle is-6">Easy to use, all you need is this client</p>
-					</div>
-					<div className="-has-background-info has-text-white">
-						<span className="material-icons-two-tone md-48 has-text-info">terrain</span>
-						<h2 className="title is-size-5 is-size-4-tablet is-spaced mb-2">High Supply Cap</h2>
 						<p className="subtitle is-6">
-							Up to {(params.hardCap / params.coin).toLocaleString()} {params.symbol} available
+							Easy to use, all you need is this lightweight, browser client
 						</p>
 					</div>
 					<div className="-has-background-info has-text-white">
-						<span className="material-icons-two-tone md-48 has-text-info">trending_up</span>
+						<span className="material-icons-two-tone md-48 has-text-info">terrain</span>
+						<h2 className="title is-size-5 is-size-4-tablet is-spaced mb-2">Deflationary</h2>
+						<p className="subtitle is-6">
+							Total circulating supply will eventually be capped at{" "}
+							{(params.hardCap / params.coin).toLocaleString()} {params.symbol}
+						</p>
+					</div>
+					<div className="-has-background-info has-text-white">
+						<span className="material-icons-two-tone md-48 has-text-info">emoji_events</span>
 						<h2 className="title is-size-5 is-size-4-tablet is-spaced mb-2">Big Rewards</h2>
 						<p className="subtitle is-6">
-							Get {params.initBlkReward / params.coin} {params.symbol} for each block mined
+							Get {params.initBlkReward / params.coin} {params.symbol} minted straight to your
+							address with each block mined
 						</p>
 					</div>
 					<div className="-has-background-info has-text-white">
 						<span className="material-icons-two-tone md-48 has-text-info">monetization_on</span>
 						<h2 className="title is-size-5 is-size-4-tablet is-spaced mb-2">Inspired by Bitcoin</h2>
-						<p className="subtitle is-6">Implemented following bitcoin's algorithms</p>
+						<p className="subtitle is-6">
+							Implemented following the nakamoto consensus and bitcoin protocol.
+						</p>
 					</div>
 				</div>
 			</div>

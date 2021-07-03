@@ -20,7 +20,7 @@ import axios from "axios";
 
 const MinePage = () => {
 	const keys = useSelector(state => state.wallet.keys);
-	const api = useSelector(state => state.blockchain.api);
+	const api = useSelector(state => state.network.api);
 
 	const [miner, setMiner] = useState(keys.address);
 	const [terminalLog, setTerminalLog] = useState([]);

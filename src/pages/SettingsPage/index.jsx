@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { setNetwork as setNet } from "../../store/blockchainSlice";
+import { setNetwork as setNet } from "../../store/networkSlice";
 
 const SettingsPage = () => {
 	const dispatch = useDispatch();
 	const history = useHistory();
-	const net = useSelector(state => state.blockchain.network);
+	const net = useSelector(state => state.network.network);
 
 	const [network, setNetwork] = useState(net);
 	const [miningPopup, setMiningPopup] = useState(true);

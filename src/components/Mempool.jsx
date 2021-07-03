@@ -5,7 +5,7 @@ import Transaction from "./Transaction";
 import axios from "axios";
 
 const Mempool = () => {
-	const api = useSelector(state => state.blockchain.api);
+	const api = useSelector(state => state.network.api);
 	const [mempool, setMempool] = useState([]);
 
 	const getMempool = async () => {

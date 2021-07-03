@@ -1,10 +1,9 @@
-import React, { useState, useRef, useMemo, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useParams, useHistory, useLocation } from "react-router-dom";
 
 import { useParams as useConsensus } from "../../hooks/useParams";
 
-import { getHighestValidBlock, getTxBlock } from "blockcrypto";
 import QRCode from "qrcode";
 import { copyToClipboard } from "../../helpers";
 
@@ -21,7 +20,7 @@ const AddressPage = () => {
 	const searchInput = useRef();
 	const [addressQR, setAddressQR] = useState("");
 
-	const network = useSelector(state => state.blockchain.network);
+	const api = useSelector(state => state.network.api);
 
 	const [loading, params] = useConsensus();
 
@@ -29,11 +28,9 @@ const AddressPage = () => {
 
 	useEffect(async () => {
 		setAddressInfo(null);
-		const result = await axios.get(
-			`${network === "mainnet" ? bobcoinMainnet : bobcoinTestnet}/address/${address}`
-		);
+		const result = await axios.get(`${api}/address/${address}`);
 		setAddressInfo(result.data);
-	}, [network, address]);
+	}, [api, address]);
 
 	// const headBlockHash = useMemo(() => new URLSearchParams(location.search).get("head"), [location]);
 
@@ -168,7 +165,7 @@ const AddressPage = () => {
 				) : (
 					<div className="has-background-white py-4">
 						<p className="subtitle is-6 has-text-centered">
-							No one has sent {params.name}s to this address.
+							No one has sent <span className="is-lowercase">{params.name}</span>s to this address.
 						</p>
 					</div>
 				)}
@@ -188,7 +185,7 @@ const AddressPage = () => {
 			) : (
 				<div className="has-background-white py-4">
 					<p className="subtitle is-6 has-text-centered">
-						This address has not sent any {params.name}s.
+						This address has not sent any <span className="is-lowercase">{params.name}</span>s.
 					</p>
 				</div>
 			)}

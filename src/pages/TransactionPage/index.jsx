@@ -8,13 +8,12 @@ import Transaction from "../../components/Transaction";
 import { copyToClipboard } from "../../helpers";
 import Loading from "../../components/Loading";
 
-import { bobcoinMainnet, bobcoinTestnet } from "../../config";
 import axios from "axios";
 
 const TransactionPage = () => {
 	const { hash } = useParams();
 	const location = useLocation();
-	const network = useSelector(state => state.blockchain.network);
+	const api = useSelector(state => state.network.api);
 
 	const [loading, params] = useConsensus();
 
@@ -24,14 +23,10 @@ const TransactionPage = () => {
 
 	useEffect(async () => {
 		setTransactionInfo(null);
-		const result = await axios.get(
-			`${
-				network === "mainnet" ? bobcoinMainnet : bobcoinTestnet
-			}/transaction/info/${hash}?block=${blockHash}`
-		);
+		const result = await axios.get(`${api}/transaction/info/${hash}?block=${blockHash}`);
 		setTransactionInfo(result.data);
 		console.log(result.data);
-	}, [network, hash, blockHash]);
+	}, [api, hash, blockHash]);
 
 	if (!transactionInfo)
 		return (

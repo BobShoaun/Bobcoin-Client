@@ -1,13 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-
-import { bobcoinMainnet, bobcoinTestnet } from "../config";
 import axios from "axios";
 
 export const getParams = createAsyncThunk("consensus/getParams", async (payload, { getState }) => {
-	const network = getState().blockchain.network;
-	const result = await axios.get(
-		`${network === "mainnet" ? bobcoinMainnet : bobcoinTestnet}/consensus`
-	);
+	const api = getState().network.api;
+	const result = await axios.get(`${api}/consensus`);
 	return result.data;
 });
 

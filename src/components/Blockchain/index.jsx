@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { useWindowDimensions } from "../../hooks/useWindowDimensions";
 
 import Block from "./Block";
@@ -7,10 +8,11 @@ import { useBlockchainInfo } from "../../hooks/useBlockchainInfo";
 
 const Blockchain = ({ selectedBlockHash, setSelectedBlock }) => {
 	const [blockchainInfo, loadBlockchain] = useBlockchainInfo();
+	const status = useSelector(state => state.blockchain.status);
 
 	const [page, setPage] = useState(0);
 
-	const { height, width } = useWindowDimensions();
+	const { width } = useWindowDimensions();
 
 	const isTablet = width > 769;
 	const isDesktop = width > 1024;
@@ -18,8 +20,8 @@ const Blockchain = ({ selectedBlockHash, setSelectedBlock }) => {
 	const lastPage = Math.ceil(blockchainInfo.length / blocksPerPage) - 1;
 
 	const nextPage = () => {
-		if (page === lastPage) loadBlockchain();
-
+		if (page === lastPage) return;
+		loadBlockchain();
 		setPage(page => Math.min(page + 1, lastPage));
 	};
 
@@ -55,7 +57,7 @@ const Blockchain = ({ selectedBlockHash, setSelectedBlock }) => {
 							// console.log("set head block", block);
 						}}
 						key={block.hash}
-						className="my-3 mx-2 is-clickable"
+						className="my-3 mx-2 -is-clickable"
 						style={{ flex: "1 1 auto", minWidth: 0 }}
 					>
 						<Block
@@ -70,7 +72,7 @@ const Blockchain = ({ selectedBlockHash, setSelectedBlock }) => {
 			{isTablet ? (
 				<button
 					className="button py-6 px-1 ml-3 my-auto"
-					// disabled={page === lastPage}
+					disabled={page === lastPage || status === "loading"}
 					onClick={nextPage}
 				>
 					<i className="material-icons md-48">arrow_right</i>
@@ -79,7 +81,7 @@ const Blockchain = ({ selectedBlockHash, setSelectedBlock }) => {
 				<div className="has-text-centered">
 					<button
 						className="button mx-auto px-6"
-						// disabled={page === blockchainInfo.length - blocksPerPage}
+						disabled={page === lastPage || status === "loading"}
 						onClick={nextPage}
 					>
 						<i className="material-icons md-48">arrow_drop_down</i>

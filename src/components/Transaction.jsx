@@ -41,18 +41,21 @@ const Transaction = ({ transactionInfo, block }) => {
 							<i className="material-icons md-18">dangerous</i>
 						</div>
 					)}
-					<h3 className="title is-6 mb-0">Hash: &nbsp;</h3>
+					<h3 className="title is-6 mb-0 mr-1" style={{ whiteSpace: "nowrap" }}>
+						Hash:
+					</h3>
+					<Link
+						className="is-block truncated"
+						to={
+							block
+								? `/transaction/${transaction.hash}?block=${block.hash}`
+								: `/transaction/${transaction.hash}`
+						}
+					>
+						{transaction.hash ?? "-"}
+					</Link>
 				</div>
-				<Link
-					className="is-block truncated"
-					to={
-						block
-							? `/transaction/${transaction.hash}?block=${block.hash}`
-							: `/transaction/${transaction.hash}`
-					}
-				>
-					{transaction.hash ?? "-"}
-				</Link>
+
 				<p style={{ flexShrink: 0 }} className="ml-auto pl-2 subtitle is-6 mb-0 has-text-right">
 					{format(transaction.timestamp, "HH:mm d MMM yyyy")}
 				</p>

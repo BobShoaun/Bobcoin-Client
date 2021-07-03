@@ -8,15 +8,12 @@ import NewTransactionAction from "./components/NewTransactionAction";
 import Loading from "./components/Loading";
 
 import io from "socket.io-client";
-import { bobcoinMainnet, bobcoinTestnet } from "./config";
 
 import SocketContext from "./socket/SocketContext";
 import { initializeSocket } from "./socket/socket";
-import { resetTransactionSets, resetUtxoSets } from "blockcrypto";
 
 import { resetBlockchain } from "./store/blockchainSlice";
 import { resetParams } from "./store/consensusSlice";
-import { resetTransactions } from "./store/transactionsSlice";
 
 const OverviewPage = lazy(() => import("./pages/OverviewPage"));
 const GenerateKeysPage = lazy(() => import("./pages/GenerateKeysPage"));
@@ -28,26 +25,23 @@ const TransactionPage = lazy(() => import("./pages/TransactionPage"));
 const BlockchainPage = lazy(() => import("./pages/BlockchainPage"));
 const SettingsPage = lazy(() => import("./pages/SettingsPage"));
 const LandingPage = lazy(() => import("./pages/LandingPage"));
+const ParametersPage = lazy(() => import("./pages/ParametersPage"));
 
 const App = () => {
 	const dispatch = useDispatch();
-	const network = useSelector(state => state.blockchain.network);
+	const api = useSelector(state => state.network.api);
 	const [socket, setSocket] = useState(null);
 
 	useEffect(() => {
-		resetTransactionSets();
-		resetUtxoSets();
-
 		socket?.disconnect();
-		const soc = io(network === "mainnet" ? bobcoinMainnet : bobcoinTestnet);
+		const soc = io(api);
 
 		dispatch(resetBlockchain());
-		dispatch(resetTransactions());
 		dispatch(resetParams());
 
 		initializeSocket(soc);
 		setSocket(soc);
-	}, [network]);
+	}, [api]);
 
 	return (
 		<SocketContext.Provider value={{ socket, setSocket }}>
@@ -61,13 +55,11 @@ const App = () => {
 								<Route path="/new-transaction" component={NewTransactionPage} />
 								<Route path="/mine" component={MinePage} />
 								<Route path="/blockchain" component={BlockchainPage} />
-
 								<Route path="/block/:hash" component={BlockPage}></Route>
 								<Route path="/transaction/:hash" component={TransactionPage}></Route>
-
 								<Route path="/address/:address" component={AddressPage}></Route>
-								{/* <Route path="/address" component={AddressPage}></Route> */}
 								<Route path="/settings" component={SettingsPage} />
+								<Route path="/parameters" component={ParametersPage} />
 								<Route path="/overview" component={OverviewPage} />
 								<Route path="/" component={LandingPage} />
 							</Switch>

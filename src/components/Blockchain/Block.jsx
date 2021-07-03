@@ -19,9 +19,17 @@ const Block = ({ block, status, selected, validation }) => {
 						Block #{block.height}
 						{block.height === 0 && <span className="subtitle is-6 mb-0"> (Genesis)</span>}
 					</h1>
+					{selected && (
+						<span
+							className="has-background-success has-text-white has-text-weight-medium px-2 ml-2"
+							style={{ fontSize: ".75rem", borderRadius: "2rem" }}
+						>
+							Best
+						</span>
+					)}
 					{validation.code === RESULT.VALID ? (
 						<div className="icon has-text-info ml-auto">
-							<i className="material-icons-two-tone">check_circle_outline</i>
+							<i className="material-icons-two-tone md-18">done</i>
 						</div>
 					) : (
 						<div className="icon has-text-danger ml-auto">

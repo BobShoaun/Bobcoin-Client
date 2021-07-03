@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import "./navbar.css";
 
 const Navbar = () => {
-	const network = useSelector(state => state.blockchain.network);
+	const network = useSelector(state => state.network.network);
 	const keys = useSelector(state => state.wallet.keys);
 	return (
 		<nav className="navbar is-dark" role="navigation" aria-label="main navigation">
@@ -49,7 +49,7 @@ const Navbar = () => {
 					<span className="material-icons-outlined is-white md-28 mb-0" style={{ color: "white" }}>
 						payments
 					</span>
-					<p className="is-size-7">Payment</p>
+					<p className="is-size-7">Transact</p>
 				</Link>
 
 				<div
@@ -106,16 +106,52 @@ const Navbar = () => {
 
 			<div id="navbarBasicExample" className="navbar-menu">
 				<div className="navbar-start">
-					<Link to="/overview" className="navbar-item has-text-weight-semi-bold mr-2">
-						Overview
-					</Link>
+					<div className="navbar-item has-dropdown is-hoverable mr-2">
+						<div className="navbar-link">Explore</div>
+						<div className="navbar-dropdown is-boxed">
+							<Link to="/overview" className="navbar-item has-text-weight-semibold">
+								<span className="material-icons-two-tone md-18 mr-2">travel_explore</span>
+								Overview
+							</Link>
+							<Link to="/blockchain" className="navbar-item has-text-weight-semibold">
+								<span className="material-icons-two-tone md-18 mr-2">account_tree</span>
+								Blockchain
+							</Link>
+							<Link to="/parameters" className="navbar-item has-text-weight-semibold">
+								<span className="material-icons-two-tone md-18 mr-2">gavel</span>
+								Consensus Rules
+							</Link>
+						</div>
+					</div>
 
-					<Link to="/blockchain" className="navbar-item mr-2">
-						Blockchain
-					</Link>
-					<Link to="/new-transaction" className="navbar-item mr-2">
-						New Transaction
-					</Link>
+					<div className="navbar-item has-dropdown is-hoverable mr-2">
+						<div className="navbar-link">Transact</div>
+						<div className="navbar-dropdown is-boxed">
+							<Link to="/new-transaction" className="navbar-item has-text-weight-semibold">
+								<span className="material-icons-two-tone md-18 mr-2">send</span>
+								Send
+							</Link>
+							<Link to="/new-transaction" className="navbar-item has-text-weight-semibold">
+								<span className="material-icons-two-tone md-18 mr-2">call_received</span>
+								Receive
+							</Link>
+						</div>
+					</div>
+
+					<div className="navbar-item has-dropdown is-hoverable mr-2">
+						<div className="navbar-link">Participate</div>
+						<div className="navbar-dropdown is-boxed">
+							<Link to="/api" className="navbar-item has-text-weight-semibold">
+								<span className="material-icons-two-tone md-18 mr-2">code</span>
+								API
+							</Link>
+							<Link to="/full-node" className="navbar-item has-text-weight-semibold">
+								<span className="material-icons-two-tone md-18 mr-2">dns</span>
+								Run a full node
+							</Link>
+						</div>
+					</div>
+
 					<Link to="/mine" className="navbar-item mr-2">
 						Mine
 					</Link>
@@ -124,14 +160,17 @@ const Navbar = () => {
 				<div className="navbar-end">
 					<div className="navbar-item">
 						<div className="buttons">
-							<Link to="/generate-key" className="button is-primary mr-3">
+							<Link
+								to="/generate-key"
+								className="button is-primary has-text-dark has-text-weight-bold mr-3"
+							>
 								<span className="material-icons-two-tone mr-2">vpn_key</span>
-								<p className="has-text-weight-bold has-text-dark">Generate Key</p>
+								<p>Generate Key</p>
 							</Link>
 
 							<Link to={`/address/${keys.address}`} className="button has-text-weight-bold mr-3">
 								<span className="material-icons-two-tone mr-2">account_balance_wallet</span>
-								<span>My Wallet</span>
+								<p>My Wallet</p>
 							</Link>
 
 							<div className="dropdown is-right network-button">

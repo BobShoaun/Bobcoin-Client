@@ -4,7 +4,6 @@ import { useHistory } from "react-router-dom";
 
 import { useParams } from "../../hooks/useParams";
 
-import { addTransaction } from "../../store/transactionsSlice";
 import {
 	getKeys,
 	getHighestValidBlock,
@@ -29,7 +28,7 @@ const NewTransactionPage = () => {
 	const [status, params] = useParams();
 
 	const keys = useSelector(state => state.wallet.keys);
-	const api = useSelector(state => state.blockchain.api);
+	const api = useSelector(state => state.network.api);
 
 	const history = useHistory();
 

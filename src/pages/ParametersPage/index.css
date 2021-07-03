@@ -1,0 +1,7 @@
+.params-list > p:last-of-type {
+	margin-bottom: 1em !important;
+}
+
+.params-list hr:last-of-type {
+	display: none !important;
+}

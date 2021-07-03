@@ -39,8 +39,7 @@ const MineMempool = ({ headBlock, mempool, addTransaction, removeTransaction }) 
 				>
 					<span className="material-icons-outlined mr-3 md-18">pending_actions</span>
 					<p className="subtitle is-6 has-text-centered">
-						There are currently no pending transactions, looks like {params.name} ain't going to
-						Mars.
+						There are currently no pending transactions...
 					</p>
 				</div>
 			)}

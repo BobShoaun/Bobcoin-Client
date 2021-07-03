@@ -9,12 +9,11 @@ import Transaction from "../../components/Transaction";
 import { copyToClipboard } from "../../helpers";
 import Loading from "../../components/Loading";
 
-import { bobcoinMainnet, bobcoinTestnet } from "../../config";
 import axios from "axios";
 
 const BlockPage = () => {
 	const { hash } = useParams();
-	const network = useSelector(state => state.blockchain.network);
+	const api = useSelector(state => state.network.api);
 
 	const [loading, params] = useConsensus();
 
@@ -22,12 +21,10 @@ const BlockPage = () => {
 
 	useEffect(async () => {
 		setBlockInfo(null);
-		const result = await axios.get(
-			`${network === "mainnet" ? bobcoinMainnet : bobcoinTestnet}/block/info/${hash}`
-		);
+		const result = await axios.get(`${api}/block/info/${hash}`);
 		setBlockInfo(result.data);
 		console.log(result.data);
-	}, [network, hash]);
+	}, [api, hash]);
 
 	if (!blockInfo)
 		return (
@@ -170,8 +167,7 @@ const BlockPage = () => {
 					</tr>
 				</tbody>
 			</table>
-			<h2 className="title is-4 is-spaced">Transactions in this block</h2>
-			<hr />
+			<h2 className="title is-4">Transactions in this block</h2>
 			<div className="mb-5">
 				{transactionsInfo.length &&
 					transactionsInfo.map(info => (
