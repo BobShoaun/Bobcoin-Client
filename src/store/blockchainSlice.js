@@ -16,33 +16,86 @@ export const getBlockchain = createAsyncThunk(
 	}
 );
 
+export const getMiningInfo = createAsyncThunk(
+	"blockchain/getMiningInfo",
+	async (_, { getState }) => {
+		const api = getState().network.api;
+		return (await axios.get(`${api}/mine/info`)).data;
+	}
+);
+
+export const getHeadBlock = createAsyncThunk("blockchain/getHeadBlock", async (_, { getState }) => {
+	const api = getState().network.api;
+	return (await axios.get(`${api}/blockchain/head`)).data;
+});
+
+export const getUnconfirmedBlocks = createAsyncThunk(
+	"blockchain/getUnconfirmedBlocks",
+	async (_, { getState }) => {
+		const api = getState().network.api;
+		return (await axios.get(`${api}/blockchain/unconfirmed`)).data;
+	}
+);
+
+export const getMempool = createAsyncThunk("blockchain/getMempool", async (_, { getState }) => {
+	const api = getState().network.api;
+	return (await axios.get(`${api}/transaction/mempool/info`)).data;
+});
+
+const initialState = {
+	unconfirmedBlocks: [],
+	unconfirmedBlocksFetched: false,
+	matureBlocks: [],
+	matureBlocksFetched: false,
+	orphanedBlocks: [],
+	orphanedBlocksFetched: false,
+	mempool: [],
+	mempoolFetched: false,
+	headBlock: null,
+	headBlockFetched: false,
+};
+
 const blockchainSlice = createSlice({
 	name: "blockchain",
-	initialState: {
-		chain: [],
-		fetched: false,
-		status: "idle",
-	},
+	initialState,
 	reducers: {
-		addBlock: (state, { payload: block }) => {
-			state.chain.unshift(block);
+		setUnconfirmedBlocks: (state, { payload: unconfirmedBlocks }) => {
+			state.unconfirmedBlocks = unconfirmedBlocks;
+			state.unconfirmedBlocksFetched = true;
 		},
-		resetBlockchain: state => {
-			state.chain = [];
-			state.fetched = false;
-			state.status = "idle";
+		setMempool: (state, { payload: mempool }) => {
+			state.mempool = mempool;
+			state.mempoolFetched = true;
 		},
+		setHeadBlock: (state, { payload: headBlock }) => {
+			state.headBlock = headBlock;
+			state.headBlockFetched = true;
+		},
+		reset: () => initialState,
 	},
 	extraReducers: {
-		[getBlockchain.pending]: state => {
-			state.status = "loading";
+		[getMiningInfo.fulfilled]: (state, { payload: { headBlock, mempool, unconfirmedBlocks } }) => {
+			state.unconfirmedBlocks = unconfirmedBlocks;
+			state.unconfirmedBlocksFetched = true;
+			state.mempool = mempool;
+			state.mempoolFetched = true;
+			state.headBlock = headBlock;
+			state.headBlockFetched = true;
 		},
-		[getBlockchain.fulfilled]: (state, { payload }) => {
-			state.status = "success";
-			state.chain.push(...payload);
+		[getHeadBlock.fulfilled]: (state, { payload: headBlock }) => {
+			state.headBlock = headBlock;
+			state.headBlockFetched = true;
+		},
+		[getUnconfirmedBlocks.fulfilled]: (state, { payload: unconfirmedBlocks }) => {
+			state.unconfirmedBlocks = unconfirmedBlocks;
+			state.unconfirmedBlocksFetched = true;
+		},
+		[getMempool.fulfilled]: (state, { payload: mempool }) => {
+			state.mempool = mempool;
+			state.mempoolFetched = true;
 		},
 	},
 });
 
-export const { addBlock, resetBlockchain } = blockchainSlice.actions;
+export const { reset, setUnconfirmedBlocks, setMempool, setHeadBlock } = blockchainSlice.actions;
 export default blockchainSlice.reducer;

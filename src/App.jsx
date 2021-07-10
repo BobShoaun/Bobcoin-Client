@@ -12,7 +12,7 @@ import io from "socket.io-client";
 import SocketContext from "./socket/SocketContext";
 import { initializeSocket } from "./socket/socket";
 
-import { resetBlockchain } from "./store/blockchainSlice";
+import { reset } from "./store/blockchainSlice";
 import { resetParams } from "./store/consensusSlice";
 
 const OverviewPage = lazy(() => import("./pages/OverviewPage"));
@@ -36,7 +36,7 @@ const App = () => {
 		socket?.disconnect();
 		const soc = io(api);
 
-		dispatch(resetBlockchain());
+		dispatch(reset());
 		dispatch(resetParams());
 
 		initializeSocket(soc);

@@ -35,7 +35,7 @@ const NewTransactionPage = () => {
 	const [showSK, setShowSK] = useState(false);
 	const [amount, setAmount] = useState("");
 	const [fee, setFee] = useState("");
-	const [senderSK, setSenderSK] = useState(keys.sk);
+	const [senderSK, setSenderSK] = useState(keys.sk ?? "");
 	const [senderPK, setSenderPK] = useState("");
 	const [senderAdd, setSenderAdd] = useState("");
 	const [recipientAdd, setRecipientAdd] = useState("");
@@ -92,12 +92,12 @@ const NewTransactionPage = () => {
 		const _amount = Math.trunc(amount * params.coin);
 		const _fee = Math.trunc(fee * params.coin);
 
-		const utxoSet = (await axios(`${api}/utxo/${senderAdd}`)).data;
+		const utxos = (await axios(`${api}/utxo/${senderAdd}`)).data;
 
 		// pick utxos from front to back.
 		let inputAmount = 0;
 		const inputs = [];
-		for (const utxo of utxoSet) {
+		for (const utxo of utxos) {
 			if (inputAmount >= _amount) break;
 			inputAmount += utxo.amount;
 			const input = createInput(utxo.txHash, utxo.outIndex, senderPK);
@@ -119,7 +119,7 @@ const NewTransactionPage = () => {
 		transaction.inputs.forEach(input => (input.signature = signature));
 		transaction.hash = calculateTransactionHash(transaction);
 
-		const { validation } = (await axios.post(`${api}/transaction`, { transaction })).data;
+		const validation = (await axios.post(`${api}/transaction`, { transaction })).data;
 
 		if (validation.code !== RESULT.VALID) {
 			setError(validation);
@@ -128,8 +128,6 @@ const NewTransactionPage = () => {
 			return;
 		}
 
-		// dispatch(addTransaction(transaction));
-		// socket.emit("transaction", transaction);
 		setConfirmModal(true);
 	};
 

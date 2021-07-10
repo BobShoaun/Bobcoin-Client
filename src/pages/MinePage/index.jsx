@@ -1,13 +1,17 @@
 import React, { useState, useEffect, useContext, useRef, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import { getMiningInfo } from "../../store/blockchainSlice";
+
 import Blockchain from "../../components/Blockchain/";
 import MineMempool from "./MineMempool";
 import MineSuccessModal from "./MineSuccessModal";
 import MineFailureModal from "./MineFailureModal";
 
 import { useParams } from "../../hooks/useParams";
-import { useBlockchainInfo } from "../../hooks/useBlockchainInfo";
+import { useHeadBlock } from "../../hooks/useHeadBlock";
+import { useUnconfirmedBlocks } from "../../hooks/useUnconfirmedBlocks";
+import { useMempool } from "../../hooks/useMempool";
 
 import { calculateBlockReward, RESULT, hexToBigInt } from "blockcrypto";
 
@@ -19,10 +23,14 @@ import "./mine.css";
 import axios from "axios";
 
 const MinePage = () => {
+	const [headBlockLoading, headBlock] = useHeadBlock();
+	const [unconfirmedBlocksLoading, unconfirmedBlocks] = useUnconfirmedBlocks();
+	const [mempoolLoading, mempool] = useMempool();
+
 	const keys = useSelector(state => state.wallet.keys);
 	const api = useSelector(state => state.network.api);
 
-	const [miner, setMiner] = useState(keys.address);
+	const [miner, setMiner] = useState(keys.address ?? "");
 	const [terminalLog, setTerminalLog] = useState([]);
 	const [successModal, setSuccessModal] = useState(false);
 	const [errorModal, setErrorModal] = useState(false);
@@ -30,7 +38,6 @@ const MinePage = () => {
 	const [selectedTxs, setSelectedTxs] = useState([]);
 	const activeWorker = useRef(null);
 
-	const [blockchainInfo, loadBlockchain] = useBlockchainInfo();
 	const [status, params] = useParams();
 
 	useEffect(() => {
@@ -41,25 +48,9 @@ const MinePage = () => {
 		};
 	}, []);
 
-	const [headBlock, setHeadBlock] = useState(null);
-	const [prevBlock, setPrevBlock] = useState(null);
+	const loading = headBlockLoading || unconfirmedBlocksLoading || mempoolLoading;
 
-	useEffect(async () => {
-		const block = (await axios.get(`${api}/blockchain/head_block`)).data;
-		setHeadBlock(block);
-	}, [blockchainInfo]);
-
-	// mempool
-	const [mempool, setMempool] = useState([]);
-
-	const getMempool = async () => {
-		const mem = (await axios.get(`${api}/transaction/mempool`)).data;
-		setMempool(mem);
-	};
-
-	useEffect(() => getMempool(), [api]);
-
-	if (!blockchainInfo.length)
+	if (loading)
 		return (
 			<div style={{ height: "70vh" }}>
 				<Loading />
@@ -78,9 +69,9 @@ const MinePage = () => {
 		setTerminalLog(log => [...log, "Forming candidate block and verifying..."]);
 
 		const { block, validation, target } = (
-			await axios.post(`${api}/mine/candidate_block`, {
+			await axios.post(`${api}/mine/candidate-block`, {
 				previousBlock: headBlock,
-				mempoolTxs: selectedTxs,
+				transactions: selectedTxs,
 				miner,
 			})
 		).data;
@@ -114,8 +105,7 @@ const MinePage = () => {
 					]);
 					activeWorker.current = null;
 
-					const { block, validation } = (await axios.post(`${api}/block`, { block: data.block }))
-						.data;
+					const validation = (await axios.post(`${api}/block`, { block: data.block })).data;
 
 					if (validation.code !== RESULT.VALID) {
 						console.error("Block is invalid", block);
@@ -126,7 +116,6 @@ const MinePage = () => {
 
 					setSelectedTxs([]);
 					setSuccessModal(true);
-					getMempool();
 
 					if (Notification.permission !== "denied")
 						// ask user for permission
@@ -186,10 +175,7 @@ const MinePage = () => {
 			</p>
 
 			<div className="mb-6">
-				<Blockchain
-					selectedBlockHash={headBlock?.hash}
-					// setSelectedBlock={block => activeWorker.current || setHeadBlock(block)}
-				/>
+				<Blockchain blockchain={unconfirmedBlocks} selectedBlockHash={headBlock.hash} />
 			</div>
 
 			<section className="is-flex-tablet mb-5" style={{ gap: "3em" }}>
@@ -242,7 +228,7 @@ const MinePage = () => {
 					<div className="field mb-5">
 						<label className="label">Head block</label>
 						<input
-							value={headBlock?.hash ?? "-"}
+							value={headBlock.hash ?? "-"}
 							className="input"
 							type="text"
 							placeholder="Enter block hash"
@@ -269,7 +255,7 @@ const MinePage = () => {
 					<h3 className="title is-4">Mempool</h3>
 					<p className="subtitle is-6 ">Select transactions to include from the mempool.</p>
 				</div>
-				<button onClick={getMempool} className="button ml-auto">
+				<button className="button ml-auto">
 					<span className="material-icons-outlined md-18 mr-2">refresh</span>Refresh
 				</button>
 			</div>
@@ -283,7 +269,7 @@ const MinePage = () => {
 				isOpen={successModal}
 				close={() => setSuccessModal(false)}
 				params={params}
-				blockReward={(calculateBlockReward(params, headBlock?.height + 1) / params.coin).toFixed(8)}
+				blockReward={(calculateBlockReward(params, headBlock.height) / params.coin).toFixed(8)}
 			/>
 
 			<MineFailureModal isOpen={errorModal} close={() => setErrorModal(false)} error={error} />

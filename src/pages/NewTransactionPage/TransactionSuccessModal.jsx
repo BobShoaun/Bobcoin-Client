@@ -17,7 +17,7 @@ const TransactionSuccessModal = ({ isOpen, close }) => {
 						alt="transaction"
 					/>
 					<p className="subtitle is-5 has-text-centered">
-						Your transaction has been signed and broadcasted to the network. Theres no turning back!
+						Your transaction has been signed and broadcasted to the network.
 					</p>
 					<div className="has-text-centered">
 						<button onClick={close} className="button is-dark has-text-weight-semibold">

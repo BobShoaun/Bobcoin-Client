@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import { useParams } from "../../hooks/useParams";
 
 import Transaction from "../../components/Transaction";
 
-const MineMempool = ({ headBlock, mempool, addTransaction, removeTransaction }) => {
+const MineMempool = ({ mempool, addTransaction, removeTransaction }) => {
 	const [loading, params] = useParams();
 
 	const toggleSelected = (value, tx) => {
@@ -12,10 +12,29 @@ const MineMempool = ({ headBlock, mempool, addTransaction, removeTransaction }) 
 		else removeTransaction(tx);
 	};
 
+	const mempoolInfo = useMemo(
+		() =>
+			mempool.map(({ transaction, inputs }) => {
+				const outputs = transaction.outputs.map(output => ({ ...output, spent: false }));
+				const totalInput = inputs.reduce((total, input) => total + input.amount, 0);
+				const totalOutput = transaction.outputs.reduce((total, output) => total + output.amount, 0);
+				return {
+					transaction,
+					isCoinbase: false,
+					confirmations: 0,
+					inputs,
+					outputs,
+					totalInput,
+					totalOutput,
+				};
+			}),
+		[mempool]
+	);
+
 	return (
 		<div>
-			{mempool.length ? (
-				mempool.map(info => (
+			{mempoolInfo.length ? (
+				mempoolInfo.map(info => (
 					<div key={info.transaction.hash} className="card mb-2">
 						<div className="card-content is-flex">
 							<div style={{ width: "2em" }}>

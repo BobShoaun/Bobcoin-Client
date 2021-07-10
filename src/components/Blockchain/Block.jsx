@@ -6,7 +6,7 @@ import { format } from "date-fns";
 import { RESULT } from "blockcrypto";
 import "./block.css";
 
-const Block = ({ block, status, selected, validation }) => {
+const Block = ({ block, status, selected }) => {
 	return (
 		<div
 			className={`card is-flex is-flex-direction-column h-100 block ${
@@ -24,17 +24,8 @@ const Block = ({ block, status, selected, validation }) => {
 							className="has-background-success has-text-white has-text-weight-medium px-2 ml-2"
 							style={{ fontSize: ".75rem", borderRadius: "2rem" }}
 						>
-							Best
+							Head
 						</span>
-					)}
-					{validation.code === RESULT.VALID ? (
-						<div className="icon has-text-info ml-auto">
-							<i className="material-icons-two-tone md-18">done</i>
-						</div>
-					) : (
-						<div className="icon has-text-danger ml-auto">
-							<i className="material-icons">dangerous</i>
-						</div>
 					)}
 				</div>
 			</div>

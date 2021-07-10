@@ -11,8 +11,7 @@ import { RESULT } from "blockcrypto";
 const Transaction = ({ transactionInfo, block }) => {
 	const [loading, params] = useParams();
 
-	const { transaction, isCoinbase, confirmations, inputs, outputs, totalOutput, totalInput } =
-		transactionInfo;
+	const { transaction, inputs } = transactionInfo;
 
 	const getConfirmationColor = confirmations => {
 		if (confirmations > params.blkMaturity) return "confirmations-8";
@@ -23,7 +22,7 @@ const Transaction = ({ transactionInfo, block }) => {
 		<div className="">
 			<div className="is-flex-tablet is-align-items-center mb-3">
 				<div className="is-flex is-align-items-center">
-					{/* {validation.code === RESULT.VALID ? (
+					{validation.code === RESULT.VALID ? (
 						<div className="icon mr-1">
 							<i className="material-icons md-18">check_circle</i>
 						</div>
@@ -31,7 +30,7 @@ const Transaction = ({ transactionInfo, block }) => {
 						<div className="icon has-text-danger mr-1">
 							<i className="material-icons md-18">dangerous</i>
 						</div>
-					)} */}
+					)}
 					<h3 className="title is-6 mb-0 mr-1" style={{ whiteSpace: "nowrap" }}>
 						Hash:
 					</h3>
@@ -58,15 +57,15 @@ const Transaction = ({ transactionInfo, block }) => {
 				) : (
 					<div className="is-flex truncated" style={{ flex: "1" }}>
 						<div className="truncated">
-							{inputs.map((input, index) => (
-								<Link key={index} className="is-block truncated" to={`/address/${input.address}`}>
-									{input.address}
+							{inputInfo.map((info, index) => (
+								<Link key={index} className="is-block truncated" to={`/address/${info.address}`}>
+									{info.address}
 								</Link>
 							))}
 						</div>
 
 						<div className="ml-auto pl-2" style={{ whiteSpace: "nowrap" }}>
-							{inputs.map((input, index) => (
+							{inputInfo.map((input, index) => (
 								<div
 									key={index}
 									className="is-flex is-align-items-center is-justify-content-flex-end"
@@ -75,7 +74,10 @@ const Transaction = ({ transactionInfo, block }) => {
 										{(input.amount / params.coin).toFixed(8)} {params.symbol}
 									</p>
 									<div data-tip data-for="tx-out" className="is-block ml-3">
-										<Link className="is-block truncated" to={`/transaction/${input.txHash}`}>
+										<Link
+											className="is-block truncated"
+											to={`/transaction/${transaction.inputs[index].txHash}`}
+										>
 											<span className="has-text-info material-icons-outlined md-18 is-block my-auto">
 												credit_score
 											</span>
@@ -98,14 +100,14 @@ const Transaction = ({ transactionInfo, block }) => {
 
 				<div className="is-flex  truncated" style={{ flex: "1" }}>
 					<div className="truncated">
-						{outputs.map((output, index) => (
+						{transaction.outputs.map((output, index) => (
 							<Link key={index} className="is-block truncated" to={`/address/${output.address}`}>
 								{output.address}
 							</Link>
 						))}
 					</div>
 					<div className="ml-auto pl-2" style={{ whiteSpace: "nowrap" }}>
-						{outputs.map((output, index) => (
+						{transaction.outputs.map((output, index) => (
 							<div
 								key={index}
 								className="is-flex is-align-items-center is-justify-content-flex-end"
@@ -113,22 +115,22 @@ const Transaction = ({ transactionInfo, block }) => {
 								<p className="has-text-weight-medium has-text-right">
 									{(output.amount / params.coin).toFixed(8)} {params.symbol}
 								</p>
-								{output.spent ? (
-									<a data-tip data-for="spent" className="is-block ml-3">
-										<span className="has-text-danger material-icons-outlined md-18 is-block my-auto">
-											credit_card_off
-										</span>
-										<ReactTooltip id="spent" type="error" effect="solid">
-											<span>Spent output</span>
-										</ReactTooltip>
-									</a>
-								) : (
+								{!outputSpent[index] ? (
 									<a data-tip data-for="unspent" className="ml-3 is-block">
 										<span className="has-text-success material-icons-outlined md-18 is-block my-auto">
 											credit_card
 										</span>
 										<ReactTooltip id="unspent" type="dark" effect="solid">
 											<span>Unspent output</span>
+										</ReactTooltip>
+									</a>
+								) : (
+									<a data-tip data-for="spent" className="is-block ml-3">
+										<span className="has-text-danger material-icons-outlined md-18 is-block my-auto">
+											credit_card_off
+										</span>
+										<ReactTooltip id="spent" type="error" effect="solid">
+											<span>Spent output</span>
 										</ReactTooltip>
 									</a>
 								)}
@@ -161,7 +163,7 @@ const Transaction = ({ transactionInfo, block }) => {
 								className="title is-6 is-inline-block mb-1 py-1 px-3"
 								style={{ background: "lightgray", borderRadius: "0.3em" }}
 							>
-								Fee = {((totalInput - totalOutput) / params.coin).toFixed(8)} {params.symbol}
+								Fee = {(fee / params.coin).toFixed(8)} {params.symbol}
 							</span>
 						</div>
 					)}
