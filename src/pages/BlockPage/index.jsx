@@ -9,6 +9,8 @@ import Transaction from "../../components/Transaction";
 import { copyToClipboard } from "../../helpers";
 import Loading from "../../components/Loading";
 
+import { bigIntToHex64, calculateHashTarget, calculateBlockReward } from "blockcrypto";
+
 import axios from "axios";
 
 const BlockPage = () => {
@@ -23,28 +25,42 @@ const BlockPage = () => {
 		setBlockInfo(null);
 		const result = await axios.get(`${api}/block/info/${hash}`);
 		setBlockInfo(result.data);
-		console.log(result.data);
 	}, [api, hash]);
 
-	if (!blockInfo)
+	if (!blockInfo || loading)
 		return (
 			<div style={{ height: "70vh" }}>
 				<Loading />
 			</div>
 		);
 
-	const {
-		block,
-		isValid,
-		validation,
-		transactionsInfo,
-		totalInput,
-		totalOutput,
-		fee,
-		confirmations,
-		hashTarget,
-		reward,
-	} = blockInfo;
+	const statusColor = status => {
+		switch (status) {
+			case "Confirmed":
+				return "has-background-success";
+			case "Unconfirmed":
+				return "has-background-warning";
+			case "Orphaned":
+				return "has-background-danger";
+			default:
+				return "has-background-primary";
+		}
+	};
+
+	const { block, transactionsInfo, confirmations, status } = blockInfo;
+
+	const totalInput = transactionsInfo
+		.slice(1)
+		.reduce(
+			(total, info) => total + info.inputs.reduce((total, input) => total + input.amount, 0),
+			0
+		);
+	const totalOutput = transactionsInfo
+		.slice(1)
+		.reduce(
+			(total, info) => total + info.outputs.reduce((total, output) => total + output.amount, 0),
+			0
+		);
 
 	return (
 		<section className="section">
@@ -77,28 +93,37 @@ const BlockPage = () => {
 						<td>{new Date(block.timestamp).toUTCString()}</td>
 					</tr>
 					<tr>
+						<td>Status</td>
+						<td>
+							<span
+								style={{ borderRadius: "0.3em" }}
+								className={`title is-7 py-1 px-2 has-background-success has-text-white ${statusColor(
+									status
+								)}`}
+							>
+								{status}
+							</span>
+						</td>
+					</tr>
+					<tr>
 						<td>Confirmations</td>
 						<td>{confirmations}</td>
 					</tr>
 					<tr>
 						<td>Miner</td>
 						<td style={{ wordBreak: "break-all" }}>
-							{block.transactions[0].outputs[0].address ? (
-								<div className="is-flex">
-									<Link to={`/address/${block.transactions[0].outputs[0].address}`}>
-										{block.transactions[0].outputs[0].address}
-									</Link>
-									<span
-										onClick={() => copyToClipboard(block.transactions[0].outputs[0].address)}
-										className="material-icons-outlined md-18 my-auto ml-2 is-clickable"
-										style={{ color: "lightgray" }}
-									>
-										content_copy
-									</span>
-								</div>
-							) : (
-								"-"
-							)}
+							<div className="is-flex">
+								<Link to={`/address/${block.transactions[0].outputs[0].address}`}>
+									{block.transactions[0].outputs[0].address}
+								</Link>
+								<span
+									onClick={() => copyToClipboard(block.transactions[0].outputs[0].address)}
+									className="material-icons-outlined md-18 my-auto ml-2 is-clickable"
+									style={{ color: "lightgray" }}
+								>
+									content_copy
+								</span>
+							</div>
 						</td>
 					</tr>
 
@@ -108,7 +133,9 @@ const BlockPage = () => {
 					</tr>
 					<tr>
 						<td>Target Hash</td>
-						<td style={{ wordBreak: "break-all" }}>{hashTarget}</td>
+						<td style={{ wordBreak: "break-all" }}>
+							{bigIntToHex64(calculateHashTarget(params, block))}
+						</td>
 					</tr>
 					<tr>
 						<td>Nonce</td>
@@ -133,7 +160,7 @@ const BlockPage = () => {
 						<td style={{ wordBreak: "break-all" }}>{block.merkleRoot}</td>
 					</tr>
 					<tr>
-						<td>Total transaction volume</td>
+						<td>Total transacted amount</td>
 						<td>
 							{(totalInput / params.coin).toFixed(8)} {params.symbol}
 						</td>
@@ -141,28 +168,14 @@ const BlockPage = () => {
 					<tr>
 						<td>Block reward</td>
 						<td>
-							{(reward / params.coin).toFixed(8)} {params.symbol}
+							{(calculateBlockReward(params, block.height) / params.coin).toFixed(8)}{" "}
+							{params.symbol}
 						</td>
 					</tr>
 					<tr>
 						<td>Total Fees</td>
 						<td>
-							{(fee / params.coin).toFixed(8)} {params.symbol}
-						</td>
-					</tr>
-					<tr>
-						<td>Valid</td>
-						<td>
-							{isValid ? (
-								<div className="">
-									<i className="material-icons has-text-success">check_circle_outline</i>
-								</div>
-							) : (
-								<div className="is-flex">
-									<i className="material-icons has-text-danger">dangerous</i>
-									{/* <p className="ml-2">{validation.msg}</p> */}
-								</div>
-							)}
+							{((totalInput - totalOutput) / params.coin).toFixed(8)} {params.symbol}
 						</td>
 					</tr>
 				</tbody>
@@ -170,10 +183,18 @@ const BlockPage = () => {
 			<h2 className="title is-4">Transactions in this block</h2>
 			<div className="mb-5">
 				{transactionsInfo.length &&
-					transactionsInfo.map(info => (
-						<div key={info.transaction.hash} className="card mb-2">
+					transactionsInfo.map(({ transaction, inputs, outputs }, index) => (
+						<div key={transaction.hash} className="card mb-2">
 							<div className="card-content">
-								<Transaction transactionInfo={info} block={block}></Transaction>
+								<Transaction
+									isCoinbase={index === 0}
+									confirmations={confirmations}
+									transaction={transaction}
+									inputs={inputs}
+									outputs={outputs}
+									block={block}
+									status={status}
+								></Transaction>
 							</div>
 						</div>
 					))}

@@ -1,16 +1,36 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+
 import { Link } from "react-router-dom";
 
 import Loading from "../../components/Loading";
-import { useBlockchainInfo } from "../../hooks/useBlockchainInfo";
 
 import { formatDistanceToNow } from "date-fns";
 import "./blockchain.css";
 
-const BlockchainPage = () => {
-	const [blockchainInfo, loadBlockchain] = useBlockchainInfo();
+import axios from "axios";
 
-	if (!blockchainInfo.length)
+const BlockchainPage = () => {
+	const api = useSelector(state => state.network.api);
+	const headBlock = useSelector(state => state.blockchain.headBlock);
+
+	const [blockchain, setBlockchain] = useState([]);
+	const [currentHeight, setCurrentHeight] = useState(0);
+
+	const limit = 10;
+
+	const loadBlockchain = async height => {
+		const result = await axios.get(`${api}/blockchain/info?height=${height}&limit=${limit}`);
+		setBlockchain(blockchain => [...blockchain, ...result.data]);
+		setCurrentHeight(height);
+	};
+
+	useEffect(() => {
+		if (!headBlock) return;
+		loadBlockchain(headBlock.height);
+	}, [api, headBlock]);
+
+	if (!blockchain.length)
 		return (
 			<div style={{ height: "70vh" }}>
 				<Loading />
@@ -53,7 +73,7 @@ const BlockchainPage = () => {
 				<p className="title mb-0" style={{ fontSize: ".87rem", minWidth: "8em" }}>
 					Miner
 				</p>
-				<p className="title mb-0" style={{ fontSize: ".87rem", minWidth: "7em" }}>
+				<p className="title mb-0 has-text-centered" style={{ fontSize: ".87rem", minWidth: "7em" }}>
 					Status
 				</p>
 
@@ -63,7 +83,7 @@ const BlockchainPage = () => {
 				<hr className="my-0" />
 				<hr className="my-0" />
 
-				{blockchainInfo.map(({ block, status }) => (
+				{blockchain.map(({ block, status }) => (
 					<React.Fragment key={block.hash}>
 						<p
 							className="subtitle mb-0 has-text-centered"
@@ -96,11 +116,14 @@ const BlockchainPage = () => {
 							</span>
 						</p>
 					</React.Fragment>
-					// <Block key={block.hash} block={block} />
 				))}
 			</div>
 			<div className="has-text-centered">
-				<button onClick={loadBlockchain} className="button">
+				<button
+					onClick={() => loadBlockchain(currentHeight - limit)}
+					disabled={currentHeight < limit}
+					className="button"
+				>
 					Load more
 				</button>
 			</div>

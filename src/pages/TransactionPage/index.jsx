@@ -28,27 +28,22 @@ const TransactionPage = () => {
 		console.log(result.data);
 	}, [api, hash, blockHash]);
 
-	if (!transactionInfo)
+	if (!transactionInfo || loading)
 		return (
 			<div style={{ height: "70vh" }}>
 				<Loading />
 			</div>
 		);
 
-	const {
-		transaction,
-		isValid,
-		validation,
-		block,
-		totalInput,
-		totalOutput,
-		fee,
-		isCoinbase,
-		confirmations,
-	} = transactionInfo;
+	const { transaction, block, inputs, outputs, status } = transactionInfo;
 
-	const status =
-		confirmations === 0 ? "Unconfirmed (in Mempool)" : `${confirmations} confirmations`;
+	const totalInput = inputs.reduce((total, input) => total + input.amount, 0);
+	const totalOutput = outputs.reduce((total, output) => total + output.amount, 0);
+	const fee = totalInput - totalOutput;
+	const isCoinbase = transaction.inputs.length === 0;
+
+	// const status =
+	// 	confirmations === 0 ? "Unconfirmed (in Mempool)" : `${confirmations} confirmations`;
 
 	return (
 		<section className="section">
@@ -61,7 +56,15 @@ const TransactionPage = () => {
 			<h1 className="title is-4">Summary</h1>
 
 			<div className="card card-content has-background-white">
-				<Transaction transactionInfo={transactionInfo} block={block}></Transaction>
+				<Transaction
+					transaction={transaction}
+					inputs={inputs}
+					outputs={outputs}
+					block={block}
+					status={status}
+					isCoinbase={isCoinbase}
+					confirmations={0}
+				/>
 			</div>
 			<hr />
 
@@ -107,21 +110,6 @@ const TransactionPage = () => {
 					<tr>
 						<td>Fee</td>
 						<td>{isCoinbase ? "-" : (fee / params.coin).toFixed(8) + " " + params.symbol}</td>
-					</tr>
-					<tr>
-						<td>Valid?</td>
-						<td>
-							{isValid ? (
-								<div className="">
-									<i className="material-icons has-text-success">check_circle_outline</i>
-								</div>
-							) : (
-								<div className="is-flex">
-									<i className="material-icons has-text-danger">dangerous</i>
-									<p className="ml-2">{validation.msg}</p>
-								</div>
-							)}
-						</td>
 					</tr>
 				</tbody>
 			</table>

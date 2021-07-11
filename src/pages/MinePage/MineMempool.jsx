@@ -5,48 +5,43 @@ import { useParams } from "../../hooks/useParams";
 import Transaction from "../../components/Transaction";
 
 const MineMempool = ({ mempool, addTransaction, removeTransaction }) => {
-	const [loading, params] = useParams();
-
 	const toggleSelected = (value, tx) => {
 		if (value) addTransaction(tx);
 		else removeTransaction(tx);
 	};
 
-	const mempoolInfo = useMemo(
-		() =>
-			mempool.map(({ transaction, inputs }) => {
-				const outputs = transaction.outputs.map(output => ({ ...output, spent: false }));
-				const totalInput = inputs.reduce((total, input) => total + input.amount, 0);
-				const totalOutput = transaction.outputs.reduce((total, output) => total + output.amount, 0);
-				return {
-					transaction,
-					isCoinbase: false,
-					confirmations: 0,
-					inputs,
-					outputs,
-					totalInput,
-					totalOutput,
-				};
-			}),
-		[mempool]
-	);
+	// const mempoolInfo = useMemo(
+	// 	() =>
+	// 		mempool.map(({ transaction, inputs }) => ({
+	// 			transaction,
+	// 			inputs,
+	// 			outputs: transaction.outputs.map(output => ({ ...output, spent: false })),
+	// 		})),
+	// 	[mempool]
+	// );
 
 	return (
 		<div>
-			{mempoolInfo.length ? (
-				mempoolInfo.map(info => (
-					<div key={info.transaction.hash} className="card mb-2">
+			{mempool.length ? (
+				mempool.map(({ transaction, inputs, outputs }) => (
+					<div key={transaction.hash} className="card mb-2">
 						<div className="card-content is-flex">
 							<div style={{ width: "2em" }}>
 								<input
 									className="tx is-clickable"
-									onChange={({ target }) => toggleSelected(target.checked, info.transaction)}
+									onChange={({ target }) => toggleSelected(target.checked, transaction)}
 									type="checkbox"
 								></input>
 							</div>
 
 							<div style={{ width: "calc(100% - 2em)" }}>
-								<Transaction transactionInfo={info}></Transaction>
+								<Transaction
+									isCoinbase={false}
+									confirmations={0}
+									transaction={transaction}
+									inputs={inputs}
+									outputs={outputs}
+								></Transaction>
 							</div>
 						</div>
 					</div>

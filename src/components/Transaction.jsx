@@ -6,13 +6,12 @@ import { useParams } from "../hooks/useParams";
 import ReactTooltip from "react-tooltip";
 import { format } from "date-fns";
 
-import { RESULT } from "blockcrypto";
-
-const Transaction = ({ transactionInfo, block }) => {
+const Transaction = ({ transaction, confirmations, inputs, outputs, block, status }) => {
 	const [loading, params] = useParams();
 
-	const { transaction, isCoinbase, confirmations, inputs, outputs, totalOutput, totalInput } =
-		transactionInfo;
+	const totalInput = inputs.reduce((total, input) => total + input.amount, 0);
+	const totalOutput = outputs.reduce((total, output) => total + output.amount, 0);
+	const isCoinbase = transaction.inputs.length === 0 && transaction.outputs.length === 1;
 
 	const getConfirmationColor = confirmations => {
 		if (confirmations > params.blkMaturity) return "confirmations-8";
@@ -113,7 +112,16 @@ const Transaction = ({ transactionInfo, block }) => {
 								<p className="has-text-weight-medium has-text-right">
 									{(output.amount / params.coin).toFixed(8)} {params.symbol}
 								</p>
-								{output.spent ? (
+								{status === "Orphaned" ? (
+									<a data-tip data-for="spent" className="is-block ml-3">
+										<span className="has-text-grey material-icons-outlined md-18 is-block my-auto">
+											credit_card
+										</span>
+										<ReactTooltip id="spent" type="dark" effect="solid">
+											<span>Unspendable Output</span>
+										</ReactTooltip>
+									</a>
+								) : output.spent ? (
 									<a data-tip data-for="spent" className="is-block ml-3">
 										<span className="has-text-danger material-icons-outlined md-18 is-block my-auto">
 											credit_card_off

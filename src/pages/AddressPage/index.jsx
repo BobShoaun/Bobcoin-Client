@@ -10,8 +10,10 @@ import { copyToClipboard } from "../../helpers";
 import Transaction from "../../components/Transaction";
 import Loading from "../../components/Loading";
 
-import { bobcoinMainnet, bobcoinTestnet } from "../../config";
+import { isAddressValid } from "blockcrypto";
+
 import axios from "axios";
+import ReactTooltip from "react-tooltip";
 
 const AddressPage = () => {
 	const { address } = useParams();
@@ -32,15 +34,6 @@ const AddressPage = () => {
 		setAddressInfo(result.data);
 	}, [api, address]);
 
-	// const headBlockHash = useMemo(() => new URLSearchParams(location.search).get("head"), [location]);
-
-	// const headBlock = useMemo(
-	// 	() =>
-	// 		blockchain.find(block => block.hash === headBlockHash) ??
-	// 		getHighestValidBlock(params, blockchain),
-	// 	[blockchain, params, headBlockHash]
-	// );
-
 	useEffect(() => {
 		QRCode.toString(address).then(setAddressQR);
 	}, [address]);
@@ -57,9 +50,29 @@ const AddressPage = () => {
 			</div>
 		);
 
-	console.log(addressInfo);
-	const { isValid, totalReceived, totalSent, utxos, balance, inboundTxs, outboundTxs } =
-		addressInfo;
+	const { utxos, transactionsInfo } = addressInfo;
+	const balance = utxos.reduce((total, utxo) => total + utxo.amount, 0);
+	const totalReceived = transactionsInfo.reduce(
+		(total, { outputs }) =>
+			total +
+			outputs
+				.filter(output => output.address === address)
+				.reduce((total, output) => total + output.amount, 0),
+		0
+	);
+	const totalSent = transactionsInfo.reduce(
+		(total, { inputs }) =>
+			total +
+			inputs
+				.filter(input => input.address === address)
+				.reduce((total, input) => total + input.amount, 0),
+		0
+	);
+
+	let isValid = false;
+	try {
+		isValid = isAddressValid(params, address);
+	} catch {}
 
 	return (
 		<section className="section">
@@ -107,35 +120,61 @@ const AddressPage = () => {
 							</td>
 						</tr>
 						<tr>
-							<td>Valid?</td>
+							<td className="is-flex is-align-items-center">
+								<span>Valid?</span>
+								<div data-tip data-for="valid" className="is-block ml-2">
+									<span className="has-text-info material-icons-outlined md-14 is-block my-auto">
+										info
+									</span>
+									<ReactTooltip id="valid" type="dark" effect="solid">
+										<span>whether checksum in address is fulfilled</span>
+									</ReactTooltip>
+								</div>
+							</td>
 							<td>
 								{isValid ? (
-									<div className="icon has-text-success ml-auto">
-										<i className="material-icons">check_circle_outline</i>
-									</div>
+									<i className="has-text-success material-icons md-20">check_circle_outline</i>
 								) : (
-									<div className="icon has-text-danger ml-auto">
-										<i className="material-icons">dangerous</i>
-									</div>
+									<i className="has-text-danger material-icons md-20">dangerous</i>
 								)}
 							</td>
 						</tr>
 						<tr>
 							<td>Transaction count</td>
-							<td>{inboundTxs.length + outboundTxs.length}</td>
+							<td>{transactionsInfo.length}</td>
 						</tr>
 						<tr>
 							<td>UTXO count</td>
 							<td>{utxos.length}</td>
 						</tr>
 						<tr>
-							<td>Total Received</td>
+							<td className="is-flex is-align-items-center">
+								<span>Total Received</span>
+								<div data-tip data-for="total-received" className="is-block ml-2">
+									<span className="has-text-info material-icons-outlined md-14 is-block my-auto">
+										info
+									</span>
+									<ReactTooltip id="total-received" type="dark" effect="solid">
+										<span>total output amount to address</span>
+									</ReactTooltip>
+								</div>
+							</td>
 							<td>
 								{(totalReceived / params.coin).toFixed(8)} {params.symbol}
 							</td>
 						</tr>
 						<tr>
-							<td>Total Sent</td>
+							<td className="is-flex is-align-items-center">
+								<span>Total Sent</span>
+								<div data-tip data-for="total-sent" className="is-block ml-2">
+									<span className="has-text-info material-icons-outlined md-14 is-block my-auto">
+										info
+									</span>
+									<ReactTooltip id="total-sent" type="dark" effect="solid">
+										<span>total input amount to address</span>
+									</ReactTooltip>
+								</div>
+							</td>
 							<td>
 								{(totalSent / params.coin).toFixed(8)} {params.symbol}
 							</td>
@@ -150,45 +189,27 @@ const AddressPage = () => {
 				</table>
 			</div>
 
-			<h1 className="title is-size-5 is-size-4-tablet mb-3">Inbound Transactions</h1>
+			<h1 className="title is-size-5 is-size-4-tablet mb-3">Transactions</h1>
 			<div className="mb-6">
-				{inboundTxs.length ? (
-					inboundTxs
+				{transactionsInfo.length ? (
+					transactionsInfo
 						.sort((a, b) => b.transaction.timestamp - a.transaction.timestamp)
-						.map(tx => (
-							<div key={tx.transaction.hash} className="card mb-2">
+						.map(({ transaction, inputs, outputs }) => (
+							<div key={transaction.hash} className="card mb-3">
 								<div className="card-content">
-									<Transaction transactionInfo={tx} />
+									<Transaction transaction={transaction} inputs={inputs} outputs={outputs} />
 								</div>
 							</div>
 						))
 				) : (
 					<div className="has-background-white py-4">
 						<p className="subtitle is-6 has-text-centered">
-							No one has sent <span className="is-lowercase">{params.name}</span>s to this address.
+							The address has not sent or received{" "}
+							<span className="is-lowercase">{params.name}</span>s.
 						</p>
 					</div>
 				)}
 			</div>
-
-			<h1 className="title is-size-5 is-size-4-tablet mb-3">Outbound Transactions</h1>
-			{outboundTxs.length ? (
-				outboundTxs
-					.sort((a, b) => b.transaction.timestamp - a.transaction.timestamp)
-					.map(tx => (
-						<div key={tx.transaction.hash} className="card mb-2">
-							<div className="card-content">
-								<Transaction transactionInfo={tx} />
-							</div>
-						</div>
-					))
-			) : (
-				<div className="has-background-white py-4">
-					<p className="subtitle is-6 has-text-centered">
-						This address has not sent any <span className="is-lowercase">{params.name}</span>s.
-					</p>
-				</div>
-			)}
 		</section>
 	);
 };

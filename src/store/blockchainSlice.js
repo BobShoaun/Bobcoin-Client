@@ -1,21 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-export const getBlockchain = createAsyncThunk(
-	"blockchain/getBlockchain",
-	async (payload, { getState }) => {
-		const blockchain = getState().blockchain.chain;
-		let params = "";
-		if (blockchain.length) {
-			const { block } = blockchain[blockchain.length - 1];
-			params = `&height=${block.height}&timestamp=${block.timestamp}`;
-		}
-		const api = getState().network.api;
-		const result = await axios.get(`${api}/blockchain/info?limit=10${params}`);
-		return result.data;
-	}
-);
-
 export const getMiningInfo = createAsyncThunk(
 	"blockchain/getMiningInfo",
 	async (_, { getState }) => {

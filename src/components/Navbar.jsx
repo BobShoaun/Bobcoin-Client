@@ -127,13 +127,27 @@ const Navbar = () => {
 					<div className="navbar-item has-dropdown is-hoverable mr-2">
 						<div className="navbar-link">Transact</div>
 						<div className="navbar-dropdown is-boxed">
-							<Link to="/new-transaction" className="navbar-item has-text-weight-semibold">
+							<Link to="/send" className="navbar-item has-text-weight-semibold">
 								<span className="material-icons-two-tone md-18 mr-2">send</span>
 								Send
 							</Link>
-							<Link to="/new-transaction" className="navbar-item has-text-weight-semibold">
+							<Link to="/receive" className="navbar-item has-text-weight-semibold">
 								<span className="material-icons-two-tone md-18 mr-2">call_received</span>
 								Receive
+							</Link>
+						</div>
+					</div>
+
+					<div className="navbar-item has-dropdown is-hoverable mr-2">
+						<div className="navbar-link">Earn</div>
+						<div className="navbar-dropdown is-boxed">
+							<Link to="/mine" className="navbar-item has-text-weight-semibold">
+								<span className="material-icons-two-tone md-18 mr-2">memory</span>
+								Mine
+							</Link>
+							<Link to="/faucet" className="navbar-item has-text-weight-semibold">
+								<span className="material-icons-two-tone md-18 mr-2">water_drop</span>
+								Faucet
 							</Link>
 						</div>
 					</div>
@@ -151,10 +165,6 @@ const Navbar = () => {
 							</Link>
 						</div>
 					</div>
-
-					<Link to="/mine" className="navbar-item mr-2">
-						Mine
-					</Link>
 				</div>
 
 				<div className="navbar-end">

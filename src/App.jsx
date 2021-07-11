@@ -26,6 +26,7 @@ const BlockchainPage = lazy(() => import("./pages/BlockchainPage"));
 const SettingsPage = lazy(() => import("./pages/SettingsPage"));
 const LandingPage = lazy(() => import("./pages/LandingPage"));
 const ParametersPage = lazy(() => import("./pages/ParametersPage"));
+const ReceivePage = lazy(() => import("./pages/ReceivePage"));
 
 const App = () => {
 	const dispatch = useDispatch();
@@ -52,7 +53,8 @@ const App = () => {
 						<div className="container" style={{ width: "100%", height: "100%" }}>
 							<Switch>
 								<Route path="/generate-key" component={GenerateKeysPage} />
-								<Route path="/new-transaction" component={NewTransactionPage} />
+								<Route path="/send" component={NewTransactionPage} />
+								<Route path="/receive" component={ReceivePage} />
 								<Route path="/mine" component={MinePage} />
 								<Route path="/blockchain" component={BlockchainPage} />
 								<Route path="/block/:hash" component={BlockPage}></Route>

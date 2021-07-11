@@ -14,11 +14,11 @@ const Parameter = ({ _key, value, info }) => (
 			</h2>
 			<p className="ml-2 subtitle is-5">{value}</p>
 		</div>
-		<p className="subtitle is-7 is-flex is-align-items-center mb-5">
+		<p className="subtitle is-7 is-flex is-align-items-center mb-4">
 			<span className="material-icons-outlined md-14 mr-1">info</span>
 			{info}
 		</p>
-		<hr className="mt-0 mb-5" />
+		<hr className="mt-0 mb-4" />
 	</>
 );
 

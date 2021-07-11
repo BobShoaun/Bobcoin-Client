@@ -5,8 +5,6 @@ import { useWindowDimensions } from "../../hooks/useWindowDimensions";
 import Block from "./Block";
 import axios from "axios";
 
-import { useBlockchainInfo } from "../../hooks/useBlockchainInfo";
-
 const Blockchain = ({ blockchain, selectedBlockHash, setSelectedBlock }) => {
 	const api = useSelector(state => state.network.api);
 	// const [unconfirmedBlocks, setUnconfirmedBlocks] = useState(blockchain);
@@ -40,7 +38,7 @@ const Blockchain = ({ blockchain, selectedBlockHash, setSelectedBlock }) => {
 
 	return (
 		<div className="is-flex-tablet m-2 h-100">
-			{isTablet ? (
+			{/* {isTablet ? (
 				<button
 					className="button py-6 px-1 mr-3 my-auto"
 					// disabled={page === 0}
@@ -58,7 +56,7 @@ const Blockchain = ({ blockchain, selectedBlockHash, setSelectedBlock }) => {
 						<i className="material-icons md-48">arrow_drop_up</i>
 					</button>
 				</div>
-			)}
+			)} */}
 			{blockchain
 				// .slice(page * blocksPerPage, page * blocksPerPage + blocksPerPage)
 				.map(block => (
@@ -73,7 +71,7 @@ const Blockchain = ({ blockchain, selectedBlockHash, setSelectedBlock }) => {
 						<Block block={block} status="Unconfirmed" selected={selectedBlockHash === block.hash} />
 					</div>
 				))}
-
+			{/* 
 			{isTablet ? (
 				<button
 					className="button py-6 px-1 ml-3 my-auto"
@@ -92,7 +90,7 @@ const Blockchain = ({ blockchain, selectedBlockHash, setSelectedBlock }) => {
 						<i className="material-icons md-48">arrow_drop_down</i>
 					</button>
 				</div>
-			)}
+			)} */}
 		</div>
 	);
 };
