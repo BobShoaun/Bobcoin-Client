@@ -85,7 +85,9 @@ const LandingPage = () => {
 				<h1 className="title is-size-5 is-size-4-tablet mb-2 is-spaced">
 					What are you waiting for?
 				</h1>
-				<p className="subtitle is-size-6 is-size-5-tablet">Start investing in bobcoins</p>
+				<p className="subtitle is-size-6 is-size-5-tablet">
+					Get started by investing in {params.name}
+				</p>
 				<hr />
 			</div>
 			<ol className="subtitle is-5 pl-3 px-6-tablet" style={{ marginBottom: "5em" }}>

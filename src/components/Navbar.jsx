@@ -155,11 +155,11 @@ const Navbar = () => {
 					<div className="navbar-item has-dropdown is-hoverable mr-2">
 						<div className="navbar-link">Participate</div>
 						<div className="navbar-dropdown is-boxed">
-							<Link to="/api" className="navbar-item has-text-weight-semibold">
+							<Link to="/developer" className="navbar-item has-text-weight-semibold">
 								<span className="material-icons-two-tone md-18 mr-2">code</span>
 								API
 							</Link>
-							<Link to="/full-node" className="navbar-item has-text-weight-semibold">
+							<Link to="/node" className="navbar-item has-text-weight-semibold">
 								<span className="material-icons-two-tone md-18 mr-2">dns</span>
 								Run a full node
 							</Link>

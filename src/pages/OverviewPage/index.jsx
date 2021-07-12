@@ -59,7 +59,9 @@ const OverviewPage = () => {
 			<div className="is-flex is-flex-wrap-wrap mb-4" style={{ gap: ".5em" }}>
 				<div>
 					<h2 className="title is-size-5 is-size-4-tablet">Mempool - Pending transactions</h2>
-					<p className="subtitle is-size-6">All pending transactions that are unconfirmed.</p>
+					<p className="subtitle is-size-6">
+						All unconfirmed transactions that are waiting to be put into blocks.
+					</p>
 				</div>
 				<Link
 					to="/new-transaction"

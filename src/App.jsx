@@ -27,6 +27,9 @@ const SettingsPage = lazy(() => import("./pages/SettingsPage"));
 const LandingPage = lazy(() => import("./pages/LandingPage"));
 const ParametersPage = lazy(() => import("./pages/ParametersPage"));
 const ReceivePage = lazy(() => import("./pages/ReceivePage"));
+const FaucetPage = lazy(() => import("./pages/FaucetPage"));
+const NodePage = lazy(() => import("./pages/NodePage"));
+const DeveloperPage = lazy(() => import("./pages/DeveloperPage"));
 
 const App = () => {
 	const dispatch = useDispatch();
@@ -63,6 +66,9 @@ const App = () => {
 								<Route path="/settings" component={SettingsPage} />
 								<Route path="/parameters" component={ParametersPage} />
 								<Route path="/overview" component={OverviewPage} />
+								<Route path="/faucet" component={FaucetPage} />
+								<Route path="/node" component={NodePage} />
+								<Route path="/developer" component={DeveloperPage} />
 								<Route path="/" component={LandingPage} />
 							</Switch>
 						</div>

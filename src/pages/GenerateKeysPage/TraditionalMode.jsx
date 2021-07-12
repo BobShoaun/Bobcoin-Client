@@ -141,47 +141,38 @@ const TraditionalMode = () => {
 					<section className="modal-card-body p-6-tablet" style={{ borderRadius: "1em" }}>
 						<div className="mb-5 is-flex is-align-items-center is-justify-content-center">
 							<i className="material-icons-outlined md-36 mr-3 has-text-black">vpn_key</i>
-							<h3 className="title is-3">Your keys are saved!</h3>
+							<h3 className="title is-3">Your keys are saved</h3>
 						</div>
-						<div
-							className="mx-5-tablet"
-							style={{
-								display: "grid",
-								gridTemplateColumns: "1fr auto",
-								columnGap: "1em",
-								rowGap: ".5em",
-							}}
-						>
-							<p className="subtitle is-6 mb-0 has-text-right" style={{ whiteSpace: "nowrap" }}>
-								Private key:
-							</p>
-							<p className="has-text-weight-semibold is-6 mb-0" style={{ wordBreak: "break-all" }}>
-								{keys.sk}
-							</p>
-							<p className="subtitle is-6 has-text-right mb-0">Address:</p>
-							<p className="has-text-weight-semibold is-6 mb-0">{keys.address}</p>
-						</div>
-						<img
+
+						{/* <img
 							style={{ width: "80%", display: "block" }}
 							className="mx-auto"
 							src="images/key.jpg"
 							alt="transaction"
-						/>
+						/> */}
 
-						<p className="subtitle is-5 has-text-centered">
-							Your private key and address has now been stored locally for your convenience. Now you
-							can start sending and receiving {params.name}s!
+						<p className="subtitle is-5 has-text-centered is-spaced mb-5">
+							Your keys are stored locally in the browser for your convenience. Now you can start
+							sending and receiving {params.name}s!
 						</p>
+
+						<p className="title is-spaced is-6 mb-2">Private key:</p>
+						<pre className="subtitle is-spaced is-6 py-2 mb-4">{keys.sk}</pre>
+
+						<p className="title is-spaced is-6 mb-2">Address:</p>
+						<pre className="subtitle is-spaced is-6 py-2 mb-6">{keys.address}</pre>
+
 						<p className="help has-text-centered mb-4">
 							*It is your responsiblity to keep your private keys safe, clear your browser's local
-							storage and use a cold storage for maximum security.
+							storage and use an offline cold storage for maximum security.
 						</p>
+
 						<div className="has-text-centered">
 							<button
 								onClick={() => setModalOpen(false)}
 								className="button is-dark has-text-weight-semibold"
 							>
-								Alright
+								Okay
 							</button>
 						</div>
 					</section>

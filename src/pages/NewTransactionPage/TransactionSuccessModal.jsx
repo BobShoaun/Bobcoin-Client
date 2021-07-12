@@ -3,7 +3,7 @@ const TransactionSuccessModal = ({ isOpen, close }) => {
 		<div className={`modal ${isOpen && "is-active"}`}>
 			<div className="modal-background"></div>
 			<div className="modal-card">
-				<section className="modal-card-body p-6" style={{ borderRadius: "1em" }}>
+				<section className="modal-card-body p-6-tablet" style={{ borderRadius: "1em" }}>
 					<div className="mb-3 is-flex is-align-items-center is-justify-content-center">
 						<i className="material-icons-outlined md-36 mr-3 has-text-success">
 							check_circle_outline
@@ -17,7 +17,8 @@ const TransactionSuccessModal = ({ isOpen, close }) => {
 						alt="transaction"
 					/>
 					<p className="subtitle is-5 has-text-centered">
-						Your transaction has been signed and broadcasted to the network.
+						Your transaction has been signed and broadcasted to the network. Please wait for a miner
+						to validate and confirm the transaction by including it in a block.
 					</p>
 					<div className="has-text-centered">
 						<button onClick={close} className="button is-dark has-text-weight-semibold">

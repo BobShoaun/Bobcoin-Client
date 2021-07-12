@@ -6,23 +6,17 @@ const MineFailureModal = ({ isOpen, close, error }) => {
 		<div className={`modal ${isOpen ? "is-active" : ""}`}>
 			<div className="modal-background"></div>
 			<div className="modal-card">
-				<section className="modal-card-body p-6" style={{ borderRadius: "1em" }}>
+				<section className="modal-card-body p-6-tablet" style={{ borderRadius: "1em" }}>
 					<div className="mb-5 is-flex is-align-items-center is-justify-content-center">
 						<i className="material-icons-outlined md-36 mr-3 has-text-danger">gpp_maybe</i>
 						<h3 className="title is-3">You have an invalid block!</h3>
 					</div>
-					{/* <img
-						style={{ width: "80%", display: "block" }}
-						className="mx-auto mb-5"
-						src="images/block.jpg"
-						alt="transaction"
-					/> */}
 
 					<h2 className="title is-5 has-text-centered is-spaced mb-4">
 						Here are some possible reasons:
 					</h2>
 
-					<ol className="subtitle is-5 mb-6 mx-5">
+					<ol className="subtitle is-6 mb-6 mx-5">
 						<li className="mb-2">Your block is malformed. (missing data)</li>
 						<li className="mb-2">You mined from an invalid branch.</li>
 						<li className="mb-2">A transaction you included in the block is invalid.</li>
