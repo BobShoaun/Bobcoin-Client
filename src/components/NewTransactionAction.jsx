@@ -19,7 +19,7 @@ const NewTransactionAction = () => {
 			}}
 			onMouseEnter={() => setExpandButton(true)}
 			onMouseLeave={() => setExpandButton(false)}
-			to="/new-transaction"
+			to="/send"
 			className="button is-link"
 		>
 			<div className="is-flex is-align-items-center test">

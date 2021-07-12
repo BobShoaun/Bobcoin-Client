@@ -184,7 +184,7 @@ const BlockPage = () => {
 			<div className="mb-5">
 				{transactionsInfo.length &&
 					transactionsInfo.map(({ transaction, inputs, outputs }, index) => (
-						<div key={transaction.hash} className="card mb-2">
+						<div key={transaction.hash} className="card mb-3">
 							<div className="card-content">
 								<Transaction
 									isCoinbase={index === 0}

@@ -10,9 +10,9 @@ export const useMempool = () => {
 
 	const loading = !fetched;
 
-	useEffect(() => {
-		if (loading) dispatch(getMempool());
-	}, [loading]);
+	// useEffect(() => {
+	// 	if (loading) dispatch(getMempool());
+	// }, [loading]);
 
 	return [loading, mempool];
 };

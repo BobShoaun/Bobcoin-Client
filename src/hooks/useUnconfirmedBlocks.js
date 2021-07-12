@@ -10,9 +10,9 @@ export const useUnconfirmedBlocks = () => {
 
 	const loading = !fetched;
 
-	useEffect(() => {
-		if (loading) dispatch(getUnconfirmedBlocks());
-	}, [loading]);
+	// useEffect(() => {
+	// 	if (loading) dispatch(getUnconfirmedBlocks());
+	// }, [loading]);
 
 	return [loading, unconfirmedBlocks];
 };

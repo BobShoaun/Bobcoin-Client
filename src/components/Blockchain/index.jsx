@@ -1,23 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import React, { useState } from "react";
 import { useWindowDimensions } from "../../hooks/useWindowDimensions";
+import { useUnconfirmedBlocks } from "../../hooks/useUnconfirmedBlocks";
+import { useHeadBlock } from "../../hooks/useHeadBlock";
 
 import Block from "./Block";
-import axios from "axios";
 
-const Blockchain = ({ blockchain, selectedBlockHash, setSelectedBlock }) => {
-	const api = useSelector(state => state.network.api);
-	// const [unconfirmedBlocks, setUnconfirmedBlocks] = useState(blockchain);
-
-	// const getUnconfirmed = async () => {
-	// 	const unconfirmedBlocks = (await axios.get(`${api}/blockchain/unconfirmed`)).data;
-	// 	setUnconfirmedBlocks(unconfirmedBlocks);
-	// };
-
-	// useEffect(() => getUnconfirmed(), [api]);
-
-	// const [blockchainInfo, loadBlockchain] = useBlockchainInfo();
-	// const status = useSelector(state => state.blockchain.status);
+const Blockchain = ({ showHead }) => {
+	const [headBlockLoading, headBlock] = useHeadBlock();
+	const [unconfirmedBlocksLoading, unconfirmedBlocks] = useUnconfirmedBlocks();
 
 	const [page, setPage] = useState(0);
 
@@ -25,19 +15,13 @@ const Blockchain = ({ blockchain, selectedBlockHash, setSelectedBlock }) => {
 
 	const isTablet = width > 769;
 	const isDesktop = width > 1024;
-	const blocksPerPage = isDesktop ? 4 : 3;
-	// const lastPage = Math.ceil(blockchainInfo.length / blocksPerPage) - 1;
+	const blocksPerPage = isDesktop ? 5 : 3;
 
-	const nextPage = () => {
-		// if (page === lastPage) return;
-		// loadBlockchain();
-		// setPage(page => Math.min(page + 1, lastPage));
-	};
-
-	// if (!blockchainInfo.length) return null;
+	const loading = headBlockLoading || unconfirmedBlocksLoading;
+	if (loading) return null;
 
 	return (
-		<div className="is-flex-tablet m-2 h-100">
+		<div className="is-flex-tablet h-100">
 			{/* {isTablet ? (
 				<button
 					className="button py-6 px-1 mr-3 my-auto"
@@ -57,20 +41,20 @@ const Blockchain = ({ blockchain, selectedBlockHash, setSelectedBlock }) => {
 					</button>
 				</div>
 			)} */}
-			{blockchain
-				// .slice(page * blocksPerPage, page * blocksPerPage + blocksPerPage)
-				.map(block => (
-					<div
-						onClick={() => {
-							setSelectedBlock?.(block);
-						}}
-						key={block.hash}
-						className="my-3 mx-2 -is-clickable"
-						style={{ flex: "1 1 auto", minWidth: 0 }}
-					>
-						<Block block={block} status="Unconfirmed" selected={selectedBlockHash === block.hash} />
-					</div>
-				))}
+			{unconfirmedBlocks.slice(0, blocksPerPage).map(block => (
+				<div
+					onClick={() => {}}
+					key={block.hash}
+					className="my-3 mx-2 -is-clickable"
+					style={{ flex: "1 1 auto", minWidth: 0 }}
+				>
+					<Block
+						block={block}
+						status="Unconfirmed"
+						selected={showHead && headBlock.hash === block.hash}
+					/>
+				</div>
+			))}
 			{/* 
 			{isTablet ? (
 				<button

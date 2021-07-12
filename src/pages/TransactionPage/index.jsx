@@ -40,7 +40,7 @@ const TransactionPage = () => {
 	const totalInput = inputs.reduce((total, input) => total + input.amount, 0);
 	const totalOutput = outputs.reduce((total, output) => total + output.amount, 0);
 	const fee = totalInput - totalOutput;
-	const isCoinbase = transaction.inputs.length === 0;
+	const isCoinbase = !transaction.inputs.length;
 
 	// const status =
 	// 	confirmations === 0 ? "Unconfirmed (in Mempool)" : `${confirmations} confirmations`;
@@ -115,6 +115,8 @@ const TransactionPage = () => {
 			</table>
 
 			<h1 className="title is-4">Inputs</h1>
+
+			{isCoinbase && <p>No inputs for coinbase transaction</p>}
 
 			<div className="mb-5">
 				<table className="-table mb-5" style={{ width: "100%", borderSpacing: "10px" }}>

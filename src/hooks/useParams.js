@@ -7,9 +7,9 @@ export const useParams = () => {
 	const dispatch = useDispatch();
 	const { fetched, params } = useSelector(state => state.consensus);
 
-	useEffect(() => {
-		if (!fetched) dispatch(getParams());
-	}, []);
+	// useEffect(() => {
+	// 	if (!fetched) dispatch(getParams());
+	// }, []);
 
 	return [!fetched, params];
 };

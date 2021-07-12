@@ -148,7 +148,7 @@ const Transaction = ({ transaction, confirmations, inputs, outputs, block, statu
 			<section className="is-flex is-flex-wrap-wrap">
 				<div className="mt-auto">
 					<span
-						className={`subtitle is-6 is-inline-block mb-1 py-1 px-3 has-text-white ${getConfirmationColor(
+						className={`subtitle is-6 is-inline-block py-1 px-3 has-text-white ${getConfirmationColor(
 							confirmations
 						)}`}
 						style={{ borderRadius: "0.3em" }}
@@ -158,16 +158,16 @@ const Transaction = ({ transaction, confirmations, inputs, outputs, block, statu
 				</div>
 				<div className="has-text-right ml-auto">
 					<span
-						className="title is-6 is-inline-block mb-1 py-1 px-3 has-background-dark has-text-white"
-						style={{ borderRadius: "0.3em" }}
+						className="is-inline-block subtitle is-6 px-3 py-1 mb-0 has-background-dark has-text-white has-text-weight-medium"
+						style={{ borderRadius: "0.3em", fpaddingBlock: ".1em" }}
 					>
 						Amount = {(totalOutput / params.coin).toFixed(8)} {params.symbol}
 					</span>
 					{!isCoinbase && (
 						<div>
 							<span
-								className="title is-6 is-inline-block mb-1 py-1 px-3"
-								style={{ background: "lightgray", borderRadius: "0.3em" }}
+								className="is-inline-block subtitle is-6 px-3 py-1 mt-1 has-text-dark has-text-weight-medium"
+								style={{ background: "lightgray", borderRadius: "0.3em", paddingBlock: ".1em" }}
 							>
 								Fee = {((totalInput - totalOutput) / params.coin).toFixed(8)} {params.symbol}
 							</span>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 
@@ -6,20 +6,16 @@ import { useParams } from "../../hooks/useParams";
 
 import {
 	getKeys,
-	getHighestValidBlock,
-	calculateMempoolUTXOSet,
 	createInput,
 	createOutput,
 	createTransaction,
 	signTransaction,
 	calculateTransactionHash,
-	isTransactionValid,
 	RESULT,
 } from "blockcrypto";
 import TransactionFailureModal from "./TransactionFailureModal";
 import TransactionSuccessModal from "./TransactionSuccessModal";
 
-import SocketContext from "../../socket/SocketContext";
 import axios from "axios";
 
 const NewTransactionPage = () => {
@@ -44,8 +40,6 @@ const NewTransactionPage = () => {
 	const [errorModal, setErrorModal] = useState(false);
 	const [error, setError] = useState({});
 
-	const { socket } = useContext(SocketContext);
-
 	useEffect(() => {
 		try {
 			const { pk, address } = getKeys(params, senderSK);
@@ -58,7 +52,12 @@ const NewTransactionPage = () => {
 		}
 	}, [senderSK]);
 
-	// if (loading) return null;
+	const resetFields = () => {
+		setRecipientAdd("");
+		setAmount("");
+		setFee("");
+	};
+
 	const handleSenderKeyChange = senderSK => {
 		try {
 			const { sk, pk, address } = getKeys(params, senderSK);
@@ -92,7 +91,7 @@ const NewTransactionPage = () => {
 		const _amount = Math.trunc(amount * params.coin);
 		const _fee = Math.trunc(fee * params.coin);
 
-		const utxos = (await axios(`${api}/utxo/${senderAdd}`)).data;
+		const utxos = (await axios(`${api}/utxo/mempool/${senderAdd}`)).data;
 
 		// pick utxos from front to back.
 		let inputAmount = 0;
@@ -122,12 +121,13 @@ const NewTransactionPage = () => {
 		const validation = (await axios.post(`${api}/transaction`, { transaction })).data;
 
 		if (validation.code !== RESULT.VALID) {
+			console.error("tx invalid: ", transaction);
 			setError(validation);
 			setErrorModal(true);
-			console.error(validation);
 			return;
 		}
 
+		resetFields();
 		setConfirmModal(true);
 	};
 

@@ -1,40 +1,49 @@
-import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import React from "react";
 import Transaction from "./Transaction";
-
-import axios from "axios";
+import { useMempool } from "../hooks/useMempool";
 
 const Mempool = () => {
-	const api = useSelector(state => state.network.api);
-	const [mempool, setMempool] = useState([]);
+	const [mempoolLoading, mempool] = useMempool();
 
-	const getMempool = async () => {
-		const mem = (await axios.get(`${api}/transaction/mempool`)).data;
-		setMempool(mem);
-	};
+	if (mempoolLoading)
+		return (
+			<main
+				className="has-background-white mb-6 is-flex is-justify-content-center"
+				style={{ padding: "2.5em" }}
+			>
+				<span className="material-icons-outlined mr-3 md-18">sync</span>
+				<p className="subtitle is-6 has-text-centered">Loading...</p>
+			</main>
+		);
 
-	useEffect(() => getMempool(), [api]);
-
+	if (!mempool.length)
+		return (
+			<main
+				className="has-background-white mb-6 is-flex is-justify-content-center"
+				style={{ padding: "2.5em" }}
+			>
+				<span className="material-icons-outlined mr-3 md-18">pending_actions</span>
+				<p className="subtitle is-6 has-text-centered">
+					There are currently no pending transactions...
+				</p>
+			</main>
+		);
 	return (
-		<div>
-			{mempool.length ? (
-				mempool.map(transactionInfo => (
-					<div key={transactionInfo.transaction.hash} className="card mb-2">
-						<div className="card-content">
-							<Transaction transactionInfo={transactionInfo} />
-						</div>
+		<main>
+			{mempool.map(({ transaction, inputs, outputs }) => (
+				<div key={transaction.hash} className="card mb-2">
+					<div className="card-content">
+						<Transaction
+							isCoinbase={false}
+							confirmations={0}
+							transaction={transaction}
+							inputs={inputs}
+							outputs={outputs}
+						/>
 					</div>
-				))
-			) : (
-				<div
-					className="has-background-white mb-6 is-flex is-justify-content-center"
-					style={{ padding: "2.5em" }}
-				>
-					<span className="material-icons-outlined mr-3 md-18">pending_actions</span>
-					<p className="subtitle is-6 has-text-centered">There are no pending transactions...</p>
 				</div>
-			)}
-		</div>
+			))}
+		</main>
 	);
 };
 

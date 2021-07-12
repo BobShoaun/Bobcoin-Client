@@ -1,7 +1,5 @@
-import React, { useState, useEffect, useContext, useRef, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
-
-import { getMiningInfo } from "../../store/blockchainSlice";
+import React, { useState, useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
 
 import Blockchain from "../../components/Blockchain/";
 import MineMempool from "./MineMempool";
@@ -10,8 +8,6 @@ import MineFailureModal from "./MineFailureModal";
 
 import { useParams } from "../../hooks/useParams";
 import { useHeadBlock } from "../../hooks/useHeadBlock";
-import { useUnconfirmedBlocks } from "../../hooks/useUnconfirmedBlocks";
-import { useMempool } from "../../hooks/useMempool";
 
 import { calculateBlockReward, RESULT, hexToBigInt } from "blockcrypto";
 
@@ -23,9 +19,8 @@ import "./mine.css";
 import axios from "axios";
 
 const MinePage = () => {
+	const [paramsLoading, params] = useParams();
 	const [headBlockLoading, headBlock] = useHeadBlock();
-	const [unconfirmedBlocksLoading, unconfirmedBlocks] = useUnconfirmedBlocks();
-	const [mempoolLoading, mempool] = useMempool();
 
 	const keys = useSelector(state => state.wallet.keys);
 	const api = useSelector(state => state.network.api);
@@ -38,8 +33,6 @@ const MinePage = () => {
 	const [selectedTxs, setSelectedTxs] = useState([]);
 	const activeWorker = useRef(null);
 
-	const [status, params] = useParams();
-
 	useEffect(() => {
 		return () => {
 			// terminate worker when leaving page / component
@@ -48,7 +41,7 @@ const MinePage = () => {
 		};
 	}, []);
 
-	const loading = headBlockLoading || unconfirmedBlocksLoading || mempoolLoading;
+	const loading = headBlockLoading || paramsLoading;
 
 	if (loading)
 		return (
@@ -66,7 +59,7 @@ const MinePage = () => {
 			return;
 		}
 
-		setTerminalLog(log => [...log, "Forming candidate block and verifying..."]);
+		setTerminalLog(log => [...log, "\nForming and verifying candidate block..."]);
 
 		const { block, validation, target } = (
 			await axios.post(`${api}/mine/candidate-block`, {
@@ -85,7 +78,7 @@ const MinePage = () => {
 
 		setTerminalLog(log => [
 			...log,
-			`\nMining started...\nprevious block: ${headBlock.hash}\ntarget hash: ${target}\n `,
+			`Mining started...\nprevious block: ${headBlock.hash}\ntarget hash: ${target}\n `,
 		]);
 
 		const worker = new Miner();
@@ -175,7 +168,7 @@ const MinePage = () => {
 			</p>
 
 			<div className="mb-6">
-				<Blockchain blockchain={unconfirmedBlocks} selectedBlockHash={headBlock.hash} />
+				<Blockchain showHead />
 			</div>
 
 			<section className="is-flex-tablet mb-5" style={{ gap: "3em" }}>
@@ -255,12 +248,11 @@ const MinePage = () => {
 					<h3 className="title is-4">Mempool</h3>
 					<p className="subtitle is-6 ">Select transactions to include from the mempool.</p>
 				</div>
-				<button className="button ml-auto">
+				{/* <button className="button ml-auto">
 					<span className="material-icons-outlined md-18 mr-2">refresh</span>Refresh
-				</button>
+				</button> */}
 			</div>
 			<MineMempool
-				mempool={mempool}
 				addTransaction={tx => setSelectedTxs(txs => [...txs, tx])}
 				removeTransaction={tx => setSelectedTxs(txs => txs.filter(tx2 => tx2.hash !== tx.hash))}
 			/>

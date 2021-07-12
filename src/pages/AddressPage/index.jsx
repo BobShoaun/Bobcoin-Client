@@ -189,7 +189,7 @@ const AddressPage = () => {
 				</table>
 			</div>
 
-			<h1 className="title is-size-5 is-size-4-tablet mb-3">Transactions</h1>
+			<h1 className="title is-size-5 is-size-4-tablet">Transactions</h1>
 			<div className="mb-6">
 				{transactionsInfo.length ? (
 					transactionsInfo

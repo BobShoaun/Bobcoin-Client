@@ -10,9 +10,9 @@ import Loading from "../../components/Loading";
 import "./index.css";
 
 const OverviewPage = () => {
-	const [status, params] = useParams();
+	const [loading, params] = useParams();
 
-	if (status === "loading")
+	if (loading)
 		return (
 			<div style={{ height: "70vh" }}>
 				<Loading />
@@ -42,13 +42,13 @@ const OverviewPage = () => {
 			</div>
 			<hr className="mb-6 mt-3" />
 
-			<div className="is-flex is-flex-wrap-wrap mb-3">
+			<div className="is-flex is-flex-wrap-wrap mb-3" style={{ gap: ".5em" }}>
 				<div>
 					<h2 className="title is-size-5 is-size-4-tablet">Blocks - Recently mined</h2>
 					<p className="subtitle is-size-6">Most recently mined blocks in the blockchain.</p>
 				</div>
 				<Link to="./blockchain" className="button is-secondary ml-auto has-text-weight-semibold">
-					<span className="material-icons mr-2">grid_view</span>
+					<span className="material-icons mr-2">view_in_ar</span>
 					<span>View all Blocks</span>
 				</Link>
 			</div>
@@ -56,7 +56,7 @@ const OverviewPage = () => {
 				<Blockchain />
 			</div>
 
-			<div className="is-flex is-flex-wrap-wrap mb-4">
+			<div className="is-flex is-flex-wrap-wrap mb-4" style={{ gap: ".5em" }}>
 				<div>
 					<h2 className="title is-size-5 is-size-4-tablet">Mempool - Pending transactions</h2>
 					<p className="subtitle is-size-6">All pending transactions that are unconfirmed.</p>
@@ -65,7 +65,7 @@ const OverviewPage = () => {
 					to="/new-transaction"
 					className="button is-secondary ml-auto has-text-weight-semibold"
 				>
-					<span className="material-icons mr-2">attach_money</span>
+					<span className="material-icons mr-2">send</span>
 					<span>Make Transaction</span>
 				</Link>
 			</div>

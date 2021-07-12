@@ -10,9 +10,9 @@ export const useHeadBlock = () => {
 
 	const loading = !fetched;
 
-	useEffect(() => {
-		if (loading) dispatch(getHeadBlock());
-	}, [loading]);
+	// useEffect(() => {
+	// 	if (loading) dispatch(getHeadBlock());
+	// }, [loading]);
 
 	return [loading, headBlock];
 };
