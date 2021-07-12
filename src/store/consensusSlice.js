@@ -7,21 +7,20 @@ export const getParams = createAsyncThunk("consensus/getParams", async (payload,
 	return result.data;
 });
 
+const initialState = {
+	params: {},
+	fetched: false,
+};
+
 const consensusSlice = createSlice({
 	name: "consensus",
-	initialState: {
-		params: {},
-		fetched: false,
-	},
+	initialState,
 	reducers: {
 		setParams(state, { payload: params }) {
 			state.params = params;
 			state.fetched = true;
 		},
-		resetParams: state => {
-			state.params = {};
-			state.fetched = false;
-		},
+		reset: () => initialState,
 	},
 	extraReducers: {
 		[getParams.pending]: state => {},
@@ -32,5 +31,5 @@ const consensusSlice = createSlice({
 	},
 });
 
-export const { setParams, resetParams } = consensusSlice.actions;
+export const { setParams, reset } = consensusSlice.actions;
 export default consensusSlice.reducer;

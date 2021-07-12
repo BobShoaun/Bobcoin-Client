@@ -12,8 +12,8 @@ import io from "socket.io-client";
 import SocketContext from "./socket/SocketContext";
 import { initializeSocket } from "./socket/socket";
 
-import { reset } from "./store/blockchainSlice";
-import { resetParams } from "./store/consensusSlice";
+import { reset as resetBlockchain } from "./store/blockchainSlice";
+import { reset as resetParams } from "./store/consensusSlice";
 
 const OverviewPage = lazy(() => import("./pages/OverviewPage"));
 const GenerateKeysPage = lazy(() => import("./pages/GenerateKeysPage"));
@@ -40,7 +40,7 @@ const App = () => {
 		socket?.disconnect();
 		const soc = io(api);
 
-		dispatch(reset());
+		dispatch(resetBlockchain());
 		dispatch(resetParams());
 
 		initializeSocket(soc);
@@ -72,7 +72,7 @@ const App = () => {
 								<Route path="/" component={LandingPage} />
 							</Switch>
 						</div>
-						<div style={{ display: "none" }} className="is-block-desktop">
+						<div className="is-hidden is-block-desktop">
 							<NewTransactionAction />
 						</div>
 					</Suspense>

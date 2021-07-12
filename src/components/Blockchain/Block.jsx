@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 
 import { format } from "date-fns";
 
-import { RESULT } from "blockcrypto";
 import "./block.css";
 
 const Block = ({ block, status, selected }) => {
