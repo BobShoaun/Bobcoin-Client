@@ -99,7 +99,7 @@ const Navbar = () => {
 			<div className="navbar-brand">
 				<Link className="navbar-item mr-2" to="/">
 					<span className="material-icons-outlined mr-2">monetization_on</span>
-					<h1 className="has-text-weight-semibold">BobCoin (XBC)</h1>
+					<h1 className="has-text-weight-semibold">Bobcoin (XBC)</h1>
 					{/* <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28" alt="logo" /> */}
 				</Link>
 			</div>
@@ -178,7 +178,7 @@ const Navbar = () => {
 								<p>Generate Key</p>
 							</Link>
 
-							<Link to={`/address/${keys.address}`} className="button has-text-weight-bold mr-3">
+							<Link to={"/wallet"} className="button has-text-weight-bold mr-3">
 								<span className="material-icons-two-tone mr-2">account_balance_wallet</span>
 								<p>My Wallet</p>
 							</Link>

@@ -33,18 +33,8 @@ const ReceivePage = () => {
 			</p>
 
 			<section className="px-0 py-6 px-6-tablet">
-				<div className="box mx-auto mb-6" style={{ width: "250px", height: "250px" }}>
-					{addQR ? (
-						<div dangerouslySetInnerHTML={{ __html: addQR }}></div>
-					) : (
-						<div
-							className="is-flex has-text-centered"
-							style={{ width: "100%", height: "100%", background: "lightgray" }}
-						></div>
-					)}
-				</div>
-				<div className="field mx-auto" style={{ maxWidth: "30em" }}>
-					<label className="label">{params.name} Address</label>
+				<div className="field mx-auto mb-6" style={{ maxWidth: "30em" }}>
+					<label className="label">Your {params.name} Address</label>
 					<div className="field has-addons mb-0">
 						<div className="control is-expanded">
 							<input className="input" type="text" value={address} readOnly />
@@ -55,7 +45,23 @@ const ReceivePage = () => {
 							</button>
 						</p>
 					</div>
-					<p className="help">This is used as an address to send and receive {params.symbol}.</p>
+				</div>
+
+				<div className="box mx-auto mb-6" style={{ width: "250px", height: "250px" }}>
+					{addQR ? (
+						<div dangerouslySetInnerHTML={{ __html: addQR }}></div>
+					) : (
+						<div
+							className="is-flex has-text-centered"
+							style={{ width: "100%", height: "100%", background: "lightgray" }}
+						></div>
+					)}
+				</div>
+
+				<div className="card mx-auto" style={{ width: "40em" }}>
+					<div className="card-content has-text-centered">
+						<button className="button is-info is-light">Generate new address</button>
+					</div>
 				</div>
 			</section>
 		</main>

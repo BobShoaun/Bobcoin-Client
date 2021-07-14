@@ -127,7 +127,7 @@ const ParametersPage = () => {
 					<Parameter
 						_key="blkMaturity"
 						value={params.blkMaturity}
-						info="An arbitrarily selected number that decides how many confirmations does a block need to be considered mature."
+						info="How many confirmations does a block need to be considered mature."
 					/>
 					<Parameter
 						_key="hardCap"

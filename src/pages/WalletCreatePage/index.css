@@ -1,0 +1,11 @@
+.mnemonic-card {
+	/* background: lightgray; */
+}
+
+.mnemonic-list {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 2em;
+	place-items: center;
+	/* background: lightgray; */
+}
