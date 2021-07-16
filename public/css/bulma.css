@@ -4598,7 +4598,7 @@ label.panel-block {
     display: block; }
     .tabs li.is-active a {
       border-bottom-color: #0081a7;
-      color: #0081a7; }
+      color: #ff785a; }
   .tabs ul {
     align-items: center;
     border-bottom-color: #dbdbdb;

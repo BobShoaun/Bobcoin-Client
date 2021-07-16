@@ -59,11 +59,11 @@ const App = () => {
 						<div className="container" style={{ width: "100%", height: "100%" }}>
 							<Switch>
 								<Route path="/generate-key" component={GenerateKeysPage} />
-								<Route path="/send" component={NewTransactionPage} />
 								<Route path="/receive" component={ReceivePage} />
 								<Route path="/mine" component={MinePage} />
 								<Route path="/blockchain" component={BlockchainPage} />
 								<Route path="/block/:hash" component={BlockPage}></Route>
+								<Route path="/transaction/create" component={NewTransactionPage}></Route>
 								<Route path="/transaction/:hash" component={TransactionPage}></Route>
 								<Route path="/address/:address" component={AddressPage}></Route>
 								<Route path="/settings" component={SettingsPage} />

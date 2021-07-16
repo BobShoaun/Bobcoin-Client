@@ -124,19 +124,9 @@ const Navbar = () => {
 						</div>
 					</div>
 
-					<div className="navbar-item has-dropdown is-hoverable mr-2">
-						<div className="navbar-link">Transact</div>
-						<div className="navbar-dropdown is-boxed">
-							<Link to="/send" className="navbar-item has-text-weight-semibold">
-								<span className="material-icons-two-tone md-18 mr-2">send</span>
-								Send
-							</Link>
-							<Link to="/receive" className="navbar-item has-text-weight-semibold">
-								<span className="material-icons-two-tone md-18 mr-2">call_received</span>
-								Receive
-							</Link>
-						</div>
-					</div>
+					<Link to="/transaction/create" className="navbar-item">
+						Transaction
+					</Link>
 
 					<div className="navbar-item has-dropdown is-hoverable mr-2">
 						<div className="navbar-link">Earn</div>
