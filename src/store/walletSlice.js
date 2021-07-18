@@ -11,8 +11,8 @@ const walletSlice = createSlice({
 		mnemonic: localStorage.getItem("mnemonic"),
 		xprv: localStorage.getItem("xprv"),
 		xpub: localStorage.getItem("xpub"),
-		externalKeys: [],
-		internalKeys: [],
+		externalKeys: JSON.parse(localStorage.getItem("externalKeys")) ?? [],
+		internalKeys: JSON.parse(localStorage.getItem("internalKeys")) ?? [],
 	},
 	reducers: {
 		setKeys(state, { payload: keys }) {
@@ -28,12 +28,18 @@ const walletSlice = createSlice({
 			localStorage.setItem("mnemonic", hdKeys.mnemonic);
 			localStorage.setItem("xprv", hdKeys.xprv);
 			localStorage.setItem("xpub", hdKeys.xpub);
+			state.externalKeys = [];
+			state.internalKeys = [];
+			localStorage.removeItem("externalKeys");
+			localStorage.removeItem("internalKeys");
 		},
 		addExternalKeys(state, { payload: { sk, pk, addr, index } }) {
 			state.externalKeys.push({ sk, pk, addr, index });
+			localStorage.setItem("externalKeys", JSON.stringify(state.externalKeys));
 		},
 		addInternalKeys(state, { payload: { sk, pk, addr, index } }) {
 			state.internalKeys.push({ sk, pk, addr, index });
+			localStorage.setItem("internalKeys", JSON.stringify(state.internalKeys));
 		},
 	},
 });

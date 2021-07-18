@@ -13,7 +13,7 @@ const TransactionSuccessModal = ({ isOpen, close }) => {
 					<img
 						style={{ width: "80%", display: "block" }}
 						className="mx-auto"
-						src="images/transaction.jpg"
+						src="/images/transaction.jpg"
 						alt="transaction"
 					/>
 					<p className="subtitle is-5 has-text-centered">

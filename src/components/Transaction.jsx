@@ -5,6 +5,9 @@ import { useParams } from "../hooks/useParams";
 
 import ReactTooltip from "react-tooltip";
 import { format } from "date-fns";
+import { useWindowDimensions } from "../hooks/useWindowDimensions";
+
+import { getMaxDecimalPlaces } from "../helpers";
 
 const Transaction = ({ transaction, confirmations, inputs, outputs, block, status }) => {
 	const [loading, params] = useParams();
@@ -12,25 +15,30 @@ const Transaction = ({ transaction, confirmations, inputs, outputs, block, statu
 	const totalInput = inputs.reduce((total, input) => total + input.amount, 0);
 	const totalOutput = outputs.reduce((total, output) => total + output.amount, 0);
 	const isCoinbase = transaction.inputs.length === 0 && transaction.outputs.length === 1;
+	const fee = totalInput - totalOutput;
 
 	const getConfirmationColor = confirmations => {
 		if (confirmations > params.blkMaturity) return "confirmations-8";
 		return `confirmations-${confirmations}`;
 	};
 
+	const { width } = useWindowDimensions();
+	const isTablet = width > 769;
+
+	const decimalPlaces = isTablet
+		? 8
+		: getMaxDecimalPlaces([
+				totalInput / params.coin,
+				totalOutput / params.coin,
+				fee / params.coin,
+				...inputs.map(input => input.amount / params.coin),
+				...outputs.map(output => output.amount / params.coin),
+		  ]) + 1;
+
 	return (
 		<div className="">
 			<div className="is-flex-tablet is-align-items-center mb-3">
 				<div className="is-flex is-align-items-center">
-					{/* {validation.code === RESULT.VALID ? (
-						<div className="icon mr-1">
-							<i className="material-icons md-18">check_circle</i>
-						</div>
-					) : (
-						<div className="icon has-text-danger mr-1">
-							<i className="material-icons md-18">dangerous</i>
-						</div>
-					)} */}
 					<h3 className="title is-6 mb-0 mr-1" style={{ whiteSpace: "nowrap" }}>
 						Hash:
 					</h3>
@@ -71,7 +79,7 @@ const Transaction = ({ transaction, confirmations, inputs, outputs, block, statu
 									className="is-flex is-align-items-center is-justify-content-flex-end"
 								>
 									<p key={index} className="has-text-weight-medium has-text-right">
-										{(input.amount / params.coin).toFixed(8)} {params.symbol}
+										{(input.amount / params.coin).toFixed(decimalPlaces)} {params.symbol}
 									</p>
 									<div data-tip data-for="tx-out" className="is-block ml-3">
 										<Link className="is-block truncated" to={`/transaction/${input.txHash}`}>
@@ -110,7 +118,7 @@ const Transaction = ({ transaction, confirmations, inputs, outputs, block, statu
 								className="is-flex is-align-items-center is-justify-content-flex-end"
 							>
 								<p className="has-text-weight-medium has-text-right">
-									{(output.amount / params.coin).toFixed(8)} {params.symbol}
+									{(output.amount / params.coin).toFixed(decimalPlaces)} {params.symbol}
 								</p>
 								{status === "Orphaned" ? (
 									<a data-tip data-for="spent" className="is-block ml-3">
@@ -161,7 +169,7 @@ const Transaction = ({ transaction, confirmations, inputs, outputs, block, statu
 						className="is-inline-block subtitle is-6 px-3 py-1 mb-0 has-background-dark has-text-white has-text-weight-medium"
 						style={{ borderRadius: "0.3em", fpaddingBlock: ".1em" }}
 					>
-						Amount = {(totalOutput / params.coin).toFixed(8)} {params.symbol}
+						Amount = {(totalOutput / params.coin).toFixed(decimalPlaces)} {params.symbol}
 					</span>
 					{!isCoinbase && (
 						<div>
@@ -169,7 +177,7 @@ const Transaction = ({ transaction, confirmations, inputs, outputs, block, statu
 								className="is-inline-block subtitle is-6 px-3 py-1 mt-1 has-text-dark has-text-weight-medium"
 								style={{ background: "lightgray", borderRadius: "0.3em", paddingBlock: ".1em" }}
 							>
-								Fee = {((totalInput - totalOutput) / params.coin).toFixed(8)} {params.symbol}
+								Fee = {(fee / params.coin).toFixed(decimalPlaces)} {params.symbol}
 							</span>
 						</div>
 					)}

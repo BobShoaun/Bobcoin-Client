@@ -23,9 +23,12 @@ const MinePage = () => {
 	const [headBlockLoading, headBlock] = useHeadBlock();
 
 	const keys = useSelector(state => state.wallet.keys);
+	const { externalKeys } = useSelector(state => state.wallet);
 	const api = useSelector(state => state.network.api);
 
-	const [miner, setMiner] = useState(keys.address ?? "");
+	const [miner, setMiner] = useState(
+		externalKeys[externalKeys.length - 1].addr ?? keys.address ?? ""
+	);
 	const [terminalLog, setTerminalLog] = useState([]);
 	const [successModal, setSuccessModal] = useState(false);
 	const [errorModal, setErrorModal] = useState(false);

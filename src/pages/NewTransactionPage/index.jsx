@@ -249,7 +249,7 @@ const NewTransactionPage = () => {
 					onClick={createAndSignTransaction}
 				>
 					<span className="material-icons-outlined mr-2">payments</span>
-					Create & Sign
+					Sign & Send
 				</button>
 			</div>
 			<div className="is-clearfix"></div>

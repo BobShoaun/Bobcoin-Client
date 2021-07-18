@@ -31,11 +31,9 @@ const WalletCreatePage = () => {
 	};
 
 	const saveKeys = () => {
-		const childKeys = deriveKeys(params, hdKeys.xprv, 0, 0, 0);
+		const { sk, pk, addr } = deriveKeys(params, hdKeys.xprv, 0, 0, 0);
 		dispatch(setHdWalletKeys(hdKeys));
-		dispatch(
-			addExternalKeys({ sk: childKeys.sk, pk: childKeys.pk, addr: childKeys.addr, index: 0 })
-		);
+		dispatch(addExternalKeys({ sk, pk, addr, index: 0 }));
 		setModalOpen(true);
 	};
 

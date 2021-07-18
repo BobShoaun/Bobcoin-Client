@@ -160,13 +160,13 @@ const Navbar = () => {
 				<div className="navbar-end">
 					<div className="navbar-item">
 						<div className="buttons">
-							<Link
+							{/* <Link
 								to="/generate-key"
 								className="button is-primary has-text-light has-text-weight-semibold mr-3"
 							>
 								<span className="material-icons-outlined mr-2">vpn_key</span>
 								<p>Generate Key</p>
-							</Link>
+							</Link> */}
 
 							<Link to={"/wallet"} className="button has-text-weight-bold mr-3">
 								<span className="material-icons-two-tone mr-2">account_balance_wallet</span>
