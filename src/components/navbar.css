@@ -23,10 +23,21 @@
 	position: absolute;
 	bottom: 69px;
 	right: 0;
-	padding: 0.5em 0.5em 0 0.5em;
-	width: 10em;
+	padding-top: 1em;
 }
 
 .more-button:focus-within > .more-dropdown {
+	display: block;
+}
+
+.explore-dropdown {
+	display: none;
+	position: absolute;
+	bottom: 69px;
+	left: 0;
+	padding-block: 0.5em;
+}
+
+.explore-button:focus-within > .explore-dropdown {
 	display: block;
 }

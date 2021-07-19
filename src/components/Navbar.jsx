@@ -13,35 +13,102 @@ const Navbar = () => {
 				className="has-background-dark has-text-centered is-flex is-justify-content-space-evenly is-hidden-desktop"
 				style={{ position: "fixed", zIndex: 100, bottom: 0, width: "100vw" }}
 			>
-				<Link to="/overview" className="has-text-white nav-mobile p-2" style={{ flexBasis: "20%" }}>
-					<span className="material-icons-outlined md-28 mb-0" style={{ color: "white" }}>
+				<div
+					tabIndex="1"
+					className="has-text-white nav-mobile p-2 explore-button"
+					style={{ flexBasis: "20%", position: "relative" }}
+				>
+					<span className="material-icons-outlined is-white md-28 mb-0" style={{ color: "white" }}>
 						explore
 					</span>
 					<p className="is-size-7">Explore</p>
-				</Link>
-				<Link
-					to="/blockchain"
-					className="has-text-white nav-mobile p-2"
-					style={{ flexBasis: "20%" }}
+					<div className="explore-dropdown has-background-dark" role="menu">
+						<Link
+							to="/overview"
+							className="has-text-white nav-mobile px-4 py-3 is-flex is-align-items-center"
+						>
+							<span className="material-icons-outlined is-white md-20 mr-3">travel_explore</span>
+							<p className="is-size-6">Overview</p>
+						</Link>
+						<Link
+							to="/blockchain"
+							className="has-text-white nav-mobile px-4 py-3 is-flex is-align-items-center"
+						>
+							<span className="material-icons-outlined is-white md-20 mr-3">view_in_ar</span>
+							<p className="is-size-6">Blockchain</p>
+						</Link>
+						<Link
+							to="/parameters"
+							className="has-text-white nav-mobile px-4 py-3 is-flex is-align-items-center"
+						>
+							<span className="material-icons-outlined is-white md-20 mr-3">gavel</span>
+							<p className="is-size-6">Consensus</p>
+						</Link>
+					</div>
+				</div>
+
+				<div
+					tabIndex="1"
+					className="has-text-white nav-mobile p-2 explore-button"
+					style={{ flexBasis: "20%", position: "relative" }}
 				>
 					<span className="material-icons-outlined is-white md-28 mb-0" style={{ color: "white" }}>
-						view_in_ar
+						trending_up
 					</span>
-					<p className="is-size-7">Blockchain</p>
-				</Link>
+					<p className="is-size-7">Earn</p>
+					<div className="explore-dropdown has-background-dark" role="menu">
+						<Link
+							to="/mine"
+							className="has-text-white nav-mobile px-4 py-3 is-flex is-align-items-center"
+						>
+							<span className="material-icons-outlined is-white md-20 mr-3">engineering</span>
+							<p className="is-size-6">Mine</p>
+						</Link>
+						<Link
+							to="/faucet"
+							className="has-text-white nav-mobile px-4 py-3 is-flex is-align-items-center"
+						>
+							<span className="material-icons-outlined is-white md-20 mr-3">water_drop</span>
+							<p className="is-size-6">Faucet</p>
+						</Link>
+					</div>
+				</div>
 
-				<Link
-					to={`/address/${keys.address}`}
-					className="has-text-white nav-mobile p-2"
-					style={{ flexBasis: "20%" }}
-				>
+				<Link to={`/wallet`} className="has-text-white nav-mobile p-2" style={{ flexBasis: "20%" }}>
 					<span className="material-icons-outlined is-white md-28 mb-0" style={{ color: "white" }}>
 						account_balance_wallet
 					</span>
 					<p className="is-size-7">Wallet</p>
 				</Link>
 
-				<Link
+				<div
+					tabIndex="1"
+					className="has-text-white nav-mobile p-2 explore-button"
+					style={{ flexBasis: "20%", position: "relative" }}
+				>
+					<span className="material-icons-outlined is-white md-28 mb-0" style={{ color: "white" }}>
+						support
+					</span>
+					<p className="is-size-7">Join</p>
+					<div className="explore-dropdown has-background-dark" role="menu">
+						<Link
+							to="/developer"
+							className="has-text-white nav-mobile px-4 py-3 is-flex is-align-items-center"
+						>
+							<span className="material-icons-outlined is-white md-20 mr-3">code</span>
+							<p className="is-size-6">API</p>
+						</Link>
+						<Link
+							to="/node"
+							className="has-text-white nav-mobile px-4 py-3 is-flex is-align-items-center"
+						>
+							<span className="material-icons-outlined is-white md-20 mr-3">dns</span>
+							<p className="is-size-6">Full node</p>
+						</Link>
+					</div>
+				</div>
+
+				{/* <Link
 					to="/new-transaction"
 					className="has-text-white nav-mobile p-2"
 					style={{ flexBasis: "20%" }}
@@ -50,7 +117,7 @@ const Navbar = () => {
 						payments
 					</span>
 					<p className="is-size-7">Transact</p>
-				</Link>
+				</Link> */}
 
 				<div
 					tabIndex="1"
@@ -68,30 +135,22 @@ const Navbar = () => {
 								{network === "mainnet" ? "MainNet" : "TestNet"}
 							</strong>
 						</p>
-						<div className="is-flex is-flex-wrap-wrap">
-							<Link
-								to="/settings"
-								className="has-text-white nav-mobile p-2"
-								style={{ flexGrow: 1 }}
-							>
-								<span className="material-icons-outlined is-white md-28 mb-0">settings</span>
-								<p className="is-size-7">Settings</p>
-							</Link>
 
-							<Link to="/mine" className="has-text-white nav-mobile p-2" style={{ flexGrow: 1 }}>
-								<span className="material-icons-outlined is-white md-28 mb-0">engineering</span>
-								<p className="is-size-7">Mine</p>
-							</Link>
+						<Link
+							to="/settings"
+							className="has-text-white nav-mobile px-4 py-3 is-flex is-align-items-center"
+						>
+							<span className="material-icons-outlined is-white md-20 mr-3">settings</span>
+							<p className="is-size-6">Settings</p>
+						</Link>
 
-							<Link
-								to="/generate-key"
-								className="has-text-white nav-mobile p-2"
-								style={{ flexGrow: 1 }}
-							>
-								<span className="material-icons-outlined is-white md-28 mb-0">vpn_key</span>
-								<p className="is-size-7">Generate Key</p>
-							</Link>
-						</div>
+						<Link
+							to="/transaction/create"
+							className="has-text-white nav-mobile px-4 py-3 is-flex is-align-items-center"
+						>
+							<span className="material-icons-outlined is-white md-20 mr-3">payment</span>
+							<p className="is-size-6">Transaction</p>
+						</Link>
 					</div>
 				</div>
 			</section>
@@ -160,14 +219,6 @@ const Navbar = () => {
 				<div className="navbar-end">
 					<div className="navbar-item">
 						<div className="buttons">
-							{/* <Link
-								to="/generate-key"
-								className="button is-primary has-text-light has-text-weight-semibold mr-3"
-							>
-								<span className="material-icons-outlined mr-2">vpn_key</span>
-								<p>Generate Key</p>
-							</Link> */}
-
 							<Link to={"/wallet"} className="button has-text-weight-bold mr-3">
 								<span className="material-icons-two-tone mr-2">account_balance_wallet</span>
 								<p>My Wallet</p>
