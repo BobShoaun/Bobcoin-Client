@@ -191,7 +191,7 @@ const Navbar = () => {
 						<div className="navbar-link">Earn</div>
 						<div className="navbar-dropdown is-boxed">
 							<Link to="/mine" className="navbar-item has-text-weight-semibold">
-								<span className="material-icons-two-tone md-18 mr-2">memory</span>
+								<span className="material-icons-two-tone md-18 mr-2">engineering</span>
 								Mine
 							</Link>
 							<Link to="/faucet" className="navbar-item has-text-weight-semibold">

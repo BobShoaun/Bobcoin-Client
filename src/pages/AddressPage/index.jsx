@@ -18,7 +18,6 @@ import ReactTooltip from "react-tooltip";
 const AddressPage = () => {
 	const { address } = useParams();
 	const history = useHistory();
-	const location = useLocation();
 	const searchInput = useRef();
 	const [addressQR, setAddressQR] = useState("");
 
@@ -69,10 +68,7 @@ const AddressPage = () => {
 		0
 	);
 
-	let isValid = false;
-	try {
-		isValid = isAddressValid(params, address);
-	} catch {}
+	const isValid = isAddressValid(params, address);
 
 	return (
 		<section className="section">
@@ -107,33 +103,36 @@ const AddressPage = () => {
 					<tbody>
 						<tr>
 							<td>Address</td>
-							<td className="is-flex" style={{ wordBreak: "break-all" }}>
-								{address}
-
-								<span
-									onClick={() => copyToClipboard(address)}
-									className="material-icons-outlined md-18 my-auto ml-2 is-clickable"
-									style={{ color: "lightgrey" }}
-								>
-									content_copy
-								</span>
+							<td>
+								<div className="is-flex" style={{ wordBreak: "break-all" }}>
+									{address}
+									<span
+										onClick={() => copyToClipboard(address)}
+										className="material-icons-outlined md-18 my-auto ml-2 is-clickable"
+										style={{ color: "lightgrey" }}
+									>
+										content_copy
+									</span>
+								</div>
 							</td>
 						</tr>
 						<tr>
-							<td className="is-flex is-align-items-center">
-								<span>Valid?</span>
-								<div data-tip data-for="valid" className="is-block ml-2">
-									<span className="has-text-info material-icons-outlined md-14 is-block my-auto">
-										info
-									</span>
-									<ReactTooltip id="valid" type="dark" effect="solid">
-										<span>whether checksum in address is fulfilled</span>
-									</ReactTooltip>
+							<td>
+								<div className="is-flex is-align-items-center">
+									<span>Valid?</span>
+									<div data-tip data-for="valid" className="is-block ml-2">
+										<span className="has-text-info material-icons-outlined md-14 is-block my-auto">
+											info
+										</span>
+										<ReactTooltip id="valid" type="dark" effect="solid">
+											<span>whether checksum in address is fulfilled</span>
+										</ReactTooltip>
+									</div>
 								</div>
 							</td>
 							<td>
 								{isValid ? (
-									<i className="has-text-success material-icons md-20">check_circle_outline</i>
+									<i className="has-text-success material-icons md-20 mb-0">check_circle_outline</i>
 								) : (
 									<i className="has-text-danger material-icons md-20">dangerous</i>
 								)}
@@ -148,15 +147,17 @@ const AddressPage = () => {
 							<td>{utxos.length}</td>
 						</tr>
 						<tr>
-							<td className="is-flex is-align-items-center">
-								<span>Total Received</span>
-								<div data-tip data-for="total-received" className="is-block ml-2">
-									<span className="has-text-info material-icons-outlined md-14 is-block my-auto">
-										info
-									</span>
-									<ReactTooltip id="total-received" type="dark" effect="solid">
-										<span>total output amount to address</span>
-									</ReactTooltip>
+							<td>
+								<div className="is-flex is-align-items-center">
+									<span>Total Received</span>
+									<div data-tip data-for="total-received" className="is-block ml-2">
+										<span className="has-text-info material-icons-outlined md-14 is-block my-auto">
+											info
+										</span>
+										<ReactTooltip id="total-received" type="dark" effect="solid">
+											<span>total output amount to address</span>
+										</ReactTooltip>
+									</div>
 								</div>
 							</td>
 							<td>
@@ -164,15 +165,17 @@ const AddressPage = () => {
 							</td>
 						</tr>
 						<tr>
-							<td className="is-flex is-align-items-center">
-								<span>Total Sent</span>
-								<div data-tip data-for="total-sent" className="is-block ml-2">
-									<span className="has-text-info material-icons-outlined md-14 is-block my-auto">
-										info
-									</span>
-									<ReactTooltip id="total-sent" type="dark" effect="solid">
-										<span>total input amount to address</span>
-									</ReactTooltip>
+							<td>
+								<div className="is-flex is-align-items-center">
+									<span>Total Sent</span>
+									<div data-tip data-for="total-sent" className="is-block ml-2">
+										<span className="has-text-info material-icons-outlined md-14 is-block my-auto">
+											info
+										</span>
+										<ReactTooltip id="total-sent" type="dark" effect="solid">
+											<span>total input amount to address</span>
+										</ReactTooltip>
+									</div>
 								</div>
 							</td>
 							<td>
@@ -194,10 +197,15 @@ const AddressPage = () => {
 				{transactionsInfo.length ? (
 					transactionsInfo
 						.sort((a, b) => b.transaction.timestamp - a.transaction.timestamp)
-						.map(({ transaction, inputs, outputs }) => (
+						.map(({ transaction, inputs, outputs, confirmations }) => (
 							<div key={transaction.hash} className="card mb-3">
 								<div className="card-content">
-									<Transaction transaction={transaction} inputs={inputs} outputs={outputs} />
+									<Transaction
+										transaction={transaction}
+										inputs={inputs}
+										outputs={outputs}
+										confirmations={confirmations}
+									/>
 								</div>
 							</div>
 						))

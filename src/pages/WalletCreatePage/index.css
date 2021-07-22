@@ -4,8 +4,14 @@
 
 .mnemonic-list {
 	display: grid;
-	grid-template-columns: repeat(4, 1fr);
+	grid-template-columns: repeat(2, 1fr);
 	gap: 2.25em;
-	/* place-items: center; */
-	/* background: lightgray; */
+}
+
+@media screen and (min-width: 769px), print {
+	.mnemonic-list {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 2.25em;
+	}
 }

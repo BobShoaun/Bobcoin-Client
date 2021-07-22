@@ -240,7 +240,7 @@ const MinePage = () => {
 					</div>
 
 					<button onClick={activeWorker.current ? stopMining : startMining} className="button mb-0">
-						<i className="material-icons mr-2">engineering</i>
+						<i className="material-icons mr-2">memory</i>
 						{activeWorker.current ? "Stop mining" : "Start mining"}
 					</button>
 				</section>

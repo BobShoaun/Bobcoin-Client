@@ -34,7 +34,6 @@ const Mempool = () => {
 				<div key={transaction.hash} className="card mb-2">
 					<div className="card-content">
 						<Transaction
-							isCoinbase={false}
 							confirmations={0}
 							transaction={transaction}
 							inputs={inputs}

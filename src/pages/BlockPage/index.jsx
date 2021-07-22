@@ -107,7 +107,7 @@ const BlockPage = () => {
 					</tr>
 					<tr>
 						<td>Confirmations</td>
-						<td>{confirmations}</td>
+						<td>{status === "Orphaned" ? "-" : confirmations}</td>
 					</tr>
 					<tr>
 						<td>Miner</td>

@@ -1,13 +1,36 @@
-import React from "react";
+import React, { useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 
 import { useParams } from "../../hooks/useParams";
 
 import Loading from "../../components/Loading";
+import { deriveKeys, validateMnemonic, getHdKey } from "blockcrypto";
+import { setHdKeys as setHdWalletKeys, addExternalKeys } from "../../store/walletSlice";
 
 const WalletImportPage = () => {
+	const dispatch = useDispatch();
 	const history = useHistory();
 	const [loading, params] = useParams();
+	const wordListSelect = useRef(null);
+	const [mnemonic, setMnemonic] = useState("");
+
+	const importWallet = async () => {
+		const wordList = wordListSelect.current.value;
+		if (wordList === "none") {
+			console.error("wordlist not selected!");
+			return;
+		}
+		if (!validateMnemonic(mnemonic, wordList)) {
+			console.error("invalid mnemonic");
+			return;
+		}
+		const hdKeys = await getHdKey(mnemonic, "");
+		const { sk, pk, addr } = deriveKeys(params, hdKeys.xprv, 0, 0, 0);
+		dispatch(setHdWalletKeys({ mnemonic, xprv: hdKeys.xprv, xpub: hdKeys.xpub }));
+		dispatch(addExternalKeys({ sk, pk, addr, index: 0 }));
+		history.push("./");
+	};
 
 	if (loading)
 		return (
@@ -28,14 +51,18 @@ const WalletImportPage = () => {
 					<label className="label">Word List</label>
 					<div className="control">
 						<div className="select">
-							<select required>
-								<option hidden disabled selected value>
+							<select ref={wordListSelect} required defaultValue="none">
+								<option hidden disabled value="none">
 									-- select a language --
 								</option>
-								<option>English</option>
-								<option>Spanish</option>
-								<option>French</option>
-								<option>Chinese Simplified</option>
+								<option value="english">English</option>
+								<option value="spanish">Spanish</option>
+								<option value="french">French</option>
+								<option value="chinese_simplified">Chinese (Simplified)</option>
+								<option value="chinese_traditional">Chinese (Traditional)</option>
+								<option value="italian">Italian</option>
+								<option value="japanese">Japanese</option>
+								<option value="korean">Korean</option>
 							</select>
 						</div>
 					</div>
@@ -47,9 +74,10 @@ const WalletImportPage = () => {
 						<textarea
 							className="textarea is-info has-fixed-size"
 							placeholder="Please enter your 12 word mnemonic phrase seperated by spaces"
+							onChange={e => setMnemonic(e.target.value)}
 						></textarea>
 					</div>
-					<p className="help">Make sure you are not being watched! Unless you trust the person.</p>
+					{/* <p className="help">Make sure you are not being watched! Unless you trust the person.</p> */}
 				</div>
 
 				<div className="field is-grouped">
@@ -57,7 +85,9 @@ const WalletImportPage = () => {
 						<button className="button">Cancel</button>
 					</div>
 					<div className="control">
-						<button className="button is-primary">Import</button>
+						<button onClick={importWallet} className="button is-primary">
+							Import
+						</button>
 					</div>
 				</div>
 			</section>

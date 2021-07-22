@@ -124,7 +124,12 @@ const SummaryTab = () => {
 					pending.map(({ transaction, inputs, outputs }) => (
 						<div key={transaction.hash} className="card mb-3">
 							<div className="card-content">
-								<Transaction transaction={transaction} inputs={inputs} outputs={outputs} />
+								<Transaction
+									transaction={transaction}
+									inputs={inputs}
+									outputs={outputs}
+									confirmations={0}
+								/>
 							</div>
 						</div>
 					))
@@ -146,10 +151,15 @@ const SummaryTab = () => {
 				{transactionsInfo.length ? (
 					transactionsInfo
 						.sort((a, b) => b.transaction.timestamp - a.transaction.timestamp)
-						.map(({ transaction, inputs, outputs }) => (
+						.map(({ transaction, inputs, outputs, confirmations }) => (
 							<div key={transaction.hash} className="card mb-3">
 								<div className="card-content">
-									<Transaction transaction={transaction} inputs={inputs} outputs={outputs} />
+									<Transaction
+										transaction={transaction}
+										inputs={inputs}
+										outputs={outputs}
+										confirmations={confirmations}
+									/>
 								</div>
 							</div>
 						))

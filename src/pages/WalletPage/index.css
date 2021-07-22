@@ -5,3 +5,13 @@
 .wallet-card:is(:hover, :focus) {
 	box-shadow: 0 1em 3em 0em rgb(10 10 10 / 20%), 0 0px 0 1px rgb(10 10 10 / 2%);
 }
+
+.wallet-option-icon {
+	font-size: 3em;
+}
+
+@media screen and (min-width: 769px), print {
+	.wallet-option-icon {
+		font-size: 5em;
+	}
+}

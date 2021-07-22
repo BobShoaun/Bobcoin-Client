@@ -50,7 +50,6 @@ const MineMempool = ({ addTransaction, removeTransaction }) => {
 
 						<div style={{ width: "calc(100% - 2em)" }}>
 							<Transaction
-								isCoinbase={false}
 								confirmations={0}
 								transaction={transaction}
 								inputs={inputs}

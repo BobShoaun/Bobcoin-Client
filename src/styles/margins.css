@@ -44,8 +44,11 @@
 	.mr-6-tablet {
 		margin-right: 3rem !important;
 	}
-	.mx-5-table {
+	.mx-5-tablet {
 		margin-inline: 1.5rem !important;
+	}
+	.my-8-tablet {
+		margin-block: 8em;
 	}
 }
 

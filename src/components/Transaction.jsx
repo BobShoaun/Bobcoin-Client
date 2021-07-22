@@ -153,7 +153,7 @@ const Transaction = ({ transaction, confirmations, inputs, outputs, block, statu
 					</div>
 				</div>
 			</section>
-			<section className="is-flex is-flex-wrap-wrap">
+			<section className="is-flex is-flex-wrap-wrap" style={{ gap: "1em" }}>
 				<div className="mt-auto">
 					<span
 						className={`subtitle is-6 is-inline-block py-1 px-3 has-text-white ${getConfirmationColor(
@@ -161,7 +161,7 @@ const Transaction = ({ transaction, confirmations, inputs, outputs, block, statu
 						)}`}
 						style={{ borderRadius: "0.3em" }}
 					>
-						{confirmations > 0 ? `${confirmations} Confirmations` : "Unconfirmed (Mempool)"}
+						{status === "Orphaned" ? status : `${confirmations} Confirmations`}
 					</span>
 				</div>
 				<div className="has-text-right ml-auto">

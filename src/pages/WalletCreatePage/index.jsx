@@ -24,7 +24,10 @@ const WalletCreatePage = () => {
 
 	const generate = async () => {
 		const wordList = wordListSelect.current.value;
-		if (!wordList) console.error("wordlist not selected!");
+		if (!wordList) {
+			console.error("wordlist not selected!");
+			return;
+		}
 		const hdKeys = await generateHdKey("", wordList);
 		setHdKeys(hdKeys);
 		setShowBackup(true);

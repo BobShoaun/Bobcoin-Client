@@ -35,15 +35,12 @@ const TransactionPage = () => {
 			</div>
 		);
 
-	const { transaction, block, inputs, outputs, status } = transactionInfo;
+	const { transaction, block, inputs, outputs, status, confirmations } = transactionInfo;
 
 	const totalInput = inputs.reduce((total, input) => total + input.amount, 0);
 	const totalOutput = outputs.reduce((total, output) => total + output.amount, 0);
 	const fee = totalInput - totalOutput;
 	const isCoinbase = !transaction.inputs.length;
-
-	// const status =
-	// 	confirmations === 0 ? "Unconfirmed (in Mempool)" : `${confirmations} confirmations`;
 
 	return (
 		<section className="section">
@@ -62,8 +59,7 @@ const TransactionPage = () => {
 					outputs={outputs}
 					block={block}
 					status={status}
-					isCoinbase={isCoinbase}
-					confirmations={0}
+					confirmations={confirmations}
 				/>
 			</div>
 			<hr />
@@ -79,6 +75,10 @@ const TransactionPage = () => {
 					<tr>
 						<td>Status</td>
 						<td>{status}</td>
+					</tr>
+					<tr>
+						<td>Confirmations</td>
+						<td>{status === "Orphaned" ? "-" : confirmations}</td>
 					</tr>
 					<tr>
 						<td>Block Height</td>
