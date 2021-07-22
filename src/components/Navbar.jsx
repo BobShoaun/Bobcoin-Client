@@ -183,10 +183,6 @@ const Navbar = () => {
 						</div>
 					</div>
 
-					<Link to="/transaction/create" className="navbar-item">
-						Transaction
-					</Link>
-
 					<div className="navbar-item has-dropdown is-hoverable mr-2">
 						<div className="navbar-link">Earn</div>
 						<div className="navbar-dropdown is-boxed">
@@ -211,6 +207,16 @@ const Navbar = () => {
 							<Link to="/node" className="navbar-item has-text-weight-semibold">
 								<span className="material-icons-two-tone md-18 mr-2">dns</span>
 								Run a full node
+							</Link>
+						</div>
+					</div>
+
+					<div className="navbar-item has-dropdown is-hoverable mr-2">
+						<div className="navbar-link">More</div>
+						<div className="navbar-dropdown is-boxed">
+							<Link to="/transaction/create" className="navbar-item has-text-weight-semibold">
+								<span className="material-icons-two-tone md-18 mr-2">payment</span>
+								Transaction
 							</Link>
 						</div>
 					</div>

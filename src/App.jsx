@@ -74,9 +74,6 @@ const App = () => {
 								<Route path="/developer" component={DeveloperPage} />
 								<Route path="/wallet/import" component={WalletImportPage} />
 								<Route path="/wallet/create" component={WalletCreatePage} />
-								<Route path="/wallet/send" component={NewTransactionPage} />
-								<Route path="/wallet/receive" component={ReceivePage} />
-								<Route path="/wallet/keys" component={WalletPage} />
 								<Route path="/wallet" component={WalletPage} />
 								<Route path="/" component={LandingPage} />
 							</Switch>

@@ -93,9 +93,9 @@ const LandingPage = () => {
 			<ol className="subtitle is-5 pl-3 px-6-tablet" style={{ marginBottom: "5em" }}>
 				<li className="mb-5 is-size-6 is-size-5-tablet">
 					<div className="is-flex">
-						<p>Generate a private key and address.</p>
+						<p>Create or import a wallet.</p>
 						<Link
-							to="generate-key"
+							to="wallet"
 							className="button is-small is-info ml-auto has-text-weight-semibold px-4"
 						>
 							<span className="material-icons-outlined md-28">arrow_right_alt</span>
@@ -104,7 +104,7 @@ const LandingPage = () => {
 				</li>
 				<li className="mb-5 is-size-6 is-size-5-tablet">
 					<div className="is-flex">
-						<p className="">Obtain XBC by mining, or ask the creator himself for some coins.</p>
+						<p className="">Obtain XBC by mining, or ask the creator himself for some.</p>
 						<Link
 							to="mine"
 							className="button is-small is-info ml-auto has-text-weight-semibold px-4"
@@ -128,7 +128,7 @@ const LandingPage = () => {
 					<div className="is-flex">
 						<p>Make global transactions to anyone.</p>
 						<Link
-							to="new-transaction"
+							to="wallet"
 							className="button is-small is-info ml-auto has-text-weight-semibold px-4"
 						>
 							<span className="material-icons-outlined md-28">arrow_right_alt</span>

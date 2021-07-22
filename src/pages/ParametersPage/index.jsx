@@ -134,6 +134,16 @@ const ParametersPage = () => {
 						value={params.hardCap.toLocaleString()}
 						info="Maximum supply cap expressed in the smallest denomination. Calculated as the infinite sum of (blkRewardHalflife * initBlkReward) / 2 ^ n"
 					/>
+					<Parameter
+						_key="derivPurpose"
+						value={params.derivPurpose}
+						info="The purpose in the bip-44 derivation path."
+					/>
+					<Parameter
+						_key="derivCoinType"
+						value={params.derivCoinType}
+						info="bip-44 derivation path coin type."
+					/>
 				</div>
 			</section>
 		</main>

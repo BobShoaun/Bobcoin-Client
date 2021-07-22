@@ -64,7 +64,7 @@ const OverviewPage = () => {
 					</p>
 				</div>
 				<Link
-					to="/new-transaction"
+					to="/transaction/create"
 					className="button is-secondary ml-auto has-text-weight-semibold"
 				>
 					<span className="material-icons mr-2">send</span>
