@@ -33,6 +33,7 @@ const SummaryTab = () => {
 
 	const { utxos, transactions } = walletInfo;
 	const balance = utxos.reduce((total, utxo) => total + utxo.amount, 0);
+	const blocksMined = transactions.filter(tx => tx.inputs.length === 0).length;
 	const totalReceived = transactions.reduce(
 		(total, { outputs }) =>
 			total +
@@ -105,6 +106,8 @@ const SummaryTab = () => {
 						<p className="subtitle is-spaced has-text-weight-medium is-6 mb-0">
 							{transactions.length}
 						</p>
+						<h3 className="title is-spaced is-6 mb-0">Blocks mined: </h3>
+						<p className="subtitle is-spaced has-text-weight-medium is-6 mb-0">{blocksMined}</p>
 						<h3 className="title is-spaced is-6 mb-0">Pending transactions:</h3>
 						<p className="subtitle is-spaced has-text-weight-medium is-6 mb-0">{pending.length}</p>
 					</div>

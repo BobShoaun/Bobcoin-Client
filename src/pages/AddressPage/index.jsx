@@ -51,6 +51,7 @@ const AddressPage = () => {
 
 	const { utxos, transactions } = addressInfo;
 	const balance = utxos.reduce((total, utxo) => total + utxo.amount, 0);
+	const blocksMined = transactions.filter(tx => tx.inputs.length === 0).length;
 	const totalReceived = transactions.reduce(
 		(total, { outputs }) =>
 			total +
@@ -93,11 +94,11 @@ const AddressPage = () => {
 					</p>
 				</form>
 			</div>
-			<div className="is-flex-tablet is-align-items-center mb-6">
+			<div className="is-flex-tablet is-align-items-center mb-6" style={{ gap: "2em" }}>
 				<p
 					dangerouslySetInnerHTML={{ __html: addressQR }}
-					className="mx-auto mb-6 mr-6-tablet mb-0-tablet box"
-					style={{ width: "300px" }}
+					className="m-5 box"
+					style={{ flexBasis: "22em" }}
 				></p>
 				<table className="table is-fullwidth">
 					<tbody>
@@ -139,12 +140,16 @@ const AddressPage = () => {
 							</td>
 						</tr>
 						<tr>
-							<td>Transaction count</td>
+							<td>Transactions</td>
 							<td>{transactions.length}</td>
 						</tr>
 						<tr>
-							<td>UTXO count</td>
+							<td>UTXOs</td>
 							<td>{utxos.length}</td>
+						</tr>
+						<tr>
+							<td>Blocks mined</td>
+							<td>{blocksMined}</td>
 						</tr>
 						<tr>
 							<td>
