@@ -37,7 +37,7 @@ const MineMempool = ({ addTransaction, removeTransaction }) => {
 
 	return (
 		<main>
-			{mempool.map(({ transaction, inputs, outputs }) => (
+			{mempool.map(transaction => (
 				<div key={transaction.hash} className="card mb-2">
 					<div className="card-content is-flex">
 						<div style={{ width: "2em" }}>
@@ -49,12 +49,7 @@ const MineMempool = ({ addTransaction, removeTransaction }) => {
 						</div>
 
 						<div style={{ width: "calc(100% - 2em)" }}>
-							<Transaction
-								confirmations={0}
-								transaction={transaction}
-								inputs={inputs}
-								outputs={outputs}
-							/>
+							<Transaction transaction={transaction} />
 						</div>
 					</div>
 				</div>

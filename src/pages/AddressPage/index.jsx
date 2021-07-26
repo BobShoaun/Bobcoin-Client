@@ -49,9 +49,9 @@ const AddressPage = () => {
 			</div>
 		);
 
-	const { utxos, transactionsInfo } = addressInfo;
+	const { utxos, transactions } = addressInfo;
 	const balance = utxos.reduce((total, utxo) => total + utxo.amount, 0);
-	const totalReceived = transactionsInfo.reduce(
+	const totalReceived = transactions.reduce(
 		(total, { outputs }) =>
 			total +
 			outputs
@@ -59,7 +59,7 @@ const AddressPage = () => {
 				.reduce((total, output) => total + output.amount, 0),
 		0
 	);
-	const totalSent = transactionsInfo.reduce(
+	const totalSent = transactions.reduce(
 		(total, { inputs }) =>
 			total +
 			inputs
@@ -140,7 +140,7 @@ const AddressPage = () => {
 						</tr>
 						<tr>
 							<td>Transaction count</td>
-							<td>{transactionsInfo.length}</td>
+							<td>{transactions.length}</td>
 						</tr>
 						<tr>
 							<td>UTXO count</td>
@@ -194,18 +194,13 @@ const AddressPage = () => {
 
 			<h1 className="title is-size-5 is-size-4-tablet">Transactions</h1>
 			<div className="mb-6">
-				{transactionsInfo.length ? (
-					transactionsInfo
-						.sort((a, b) => b.transaction.timestamp - a.transaction.timestamp)
-						.map(({ transaction, inputs, outputs, confirmations }) => (
+				{transactions.length ? (
+					transactions
+						.sort((a, b) => b.timestamp - a.timestamp)
+						.map(transaction => (
 							<div key={transaction.hash} className="card mb-3">
 								<div className="card-content">
-									<Transaction
-										transaction={transaction}
-										inputs={inputs}
-										outputs={outputs}
-										confirmations={confirmations}
-									/>
+									<Transaction transaction={transaction} />
 								</div>
 							</div>
 						))

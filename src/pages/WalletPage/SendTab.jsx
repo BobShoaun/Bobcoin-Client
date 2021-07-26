@@ -111,7 +111,7 @@ const SendTab = () => {
 		setConfirmModal(true);
 	};
 
-	const { utxos, transactionsInfo } = walletInfo;
+	const { utxos } = walletInfo;
 	const balance = utxos.reduce((total, utxo) => total + utxo.amount, 0);
 
 	return (

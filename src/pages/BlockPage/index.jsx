@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { useParams, Link } from "react-router-dom";
 
 import { useParams as useConsensus } from "../../hooks/useParams";
+import { useHeadBlock } from "../../hooks/useHeadBlock";
 
 import Transaction from "../../components/Transaction";
 
@@ -18,6 +19,7 @@ const BlockPage = () => {
 	const api = useSelector(state => state.network.api);
 
 	const [loading, params] = useConsensus();
+	const [, headBlock] = useHeadBlock();
 
 	const [blockInfo, setBlockInfo] = useState(null);
 
@@ -27,7 +29,7 @@ const BlockPage = () => {
 		setBlockInfo(result.data);
 	}, [api, hash]);
 
-	if (!blockInfo || loading)
+	if (!blockInfo || loading || !headBlock)
 		return (
 			<div style={{ height: "70vh" }}>
 				<Loading />
@@ -36,26 +38,27 @@ const BlockPage = () => {
 
 	const statusColor = status => {
 		switch (status) {
-			case "Confirmed":
+			case "confirmed":
 				return "has-background-success";
-			case "Unconfirmed":
+			case "unconfirmed":
 				return "has-background-warning";
-			case "Orphaned":
+			case "orphaned":
 				return "has-background-danger";
 			default:
 				return "has-background-primary";
 		}
 	};
 
-	const { block, transactionsInfo, confirmations, status } = blockInfo;
+	const { block, transactions, status } = blockInfo;
 
-	const totalInput = transactionsInfo
+	const confirmations = headBlock.height - block.height + 1;
+	const totalInput = transactions
 		.slice(1)
 		.reduce(
 			(total, info) => total + info.inputs.reduce((total, input) => total + input.amount, 0),
 			0
 		);
-	const totalOutput = transactionsInfo
+	const totalOutput = transactions
 		.slice(1)
 		.reduce(
 			(total, info) => total + info.outputs.reduce((total, output) => total + output.amount, 0),
@@ -68,7 +71,7 @@ const BlockPage = () => {
 				<h1 className="title is-size-4 is-size-2-tablet mb-0">Block #{block.height}</h1>
 				<div className="has-text-right ml-auto">
 					{block.previousHash && (
-						<Link className="button is-link fmr-3" to={`/block/${block.previousHash}`}>
+						<Link className="button is-link" to={`/block/${block.previousHash}`}>
 							Previous Block
 						</Link>
 					)}
@@ -97,7 +100,7 @@ const BlockPage = () => {
 						<td>
 							<span
 								style={{ borderRadius: "0.3em" }}
-								className={`title is-7 py-1 px-2 has-background-success has-text-white ${statusColor(
+								className={`title is-7 py-1 px-2 has-background-success has-text-white capitalize ${statusColor(
 									status
 								)}`}
 							>
@@ -107,17 +110,17 @@ const BlockPage = () => {
 					</tr>
 					<tr>
 						<td>Confirmations</td>
-						<td>{status === "Orphaned" ? "-" : confirmations}</td>
+						<td>{status === "orphaned" ? "-" : confirmations}</td>
 					</tr>
 					<tr>
 						<td>Miner</td>
 						<td style={{ wordBreak: "break-all" }}>
 							<div className="is-flex">
-								<Link to={`/address/${block.transactions[0].outputs[0].address}`}>
-									{block.transactions[0].outputs[0].address}
+								<Link to={`/address/${transactions[0].outputs[0].address}`}>
+									{transactions[0].outputs[0].address}
 								</Link>
 								<span
-									onClick={() => copyToClipboard(block.transactions[0].outputs[0].address)}
+									onClick={() => copyToClipboard(transactions[0].outputs[0].address)}
 									className="material-icons-outlined md-18 my-auto ml-2 is-clickable"
 									style={{ color: "lightgray" }}
 								>
@@ -182,19 +185,11 @@ const BlockPage = () => {
 			</table>
 			<h2 className="title is-4">Transactions in this block</h2>
 			<div className="mb-5">
-				{transactionsInfo.length &&
-					transactionsInfo.map(({ transaction, inputs, outputs }, index) => (
+				{transactions.length &&
+					transactions.map(transaction => (
 						<div key={transaction.hash} className="card mb-3">
 							<div className="card-content">
-								<Transaction
-									isCoinbase={index === 0}
-									confirmations={confirmations}
-									transaction={transaction}
-									inputs={inputs}
-									outputs={outputs}
-									block={block}
-									status={status}
-								></Transaction>
+								<Transaction transaction={transaction}></Transaction>
 							</div>
 						</div>
 					))}

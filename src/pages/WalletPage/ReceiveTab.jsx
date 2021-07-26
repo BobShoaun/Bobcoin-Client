@@ -105,7 +105,7 @@ const ReceiveTab = () => {
 											</td>
 											<td>{`m/${params.derivPurpose}'/${params.derivCoinType}'/0'/0/${index}`}</td>
 											<td>
-												{walletInfo.transactionsInfo.some(({ outputs }) =>
+												{walletInfo.transactions.some(({ outputs }) =>
 													outputs.some(output => output.address === addr)
 												)
 													? "Used"

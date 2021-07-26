@@ -19,28 +19,27 @@ const TransactionPage = () => {
 
 	const blockHash = new URLSearchParams(location.search).get("block");
 
-	const [transactionInfo, setTransactionInfo] = useState(null);
+	const [transaction, setTransaction] = useState(null);
 
 	useEffect(async () => {
-		setTransactionInfo(null);
-		const result = await axios.get(`${api}/transaction/info/${hash}?block=${blockHash}`);
-		setTransactionInfo(result.data);
-		console.log(result.data);
+		setTransaction(null);
+		const result = blockHash
+			? await axios.get(`${api}/transaction/info/${hash}?block=${blockHash}`)
+			: await axios.get(`${api}/transaction/info/${hash}`);
+		setTransaction(result.data);
 	}, [api, hash, blockHash]);
 
-	if (!transactionInfo || loading)
+	if (!transaction || loading)
 		return (
 			<div style={{ height: "70vh" }}>
 				<Loading />
 			</div>
 		);
 
-	const { transaction, block, inputs, outputs, status, confirmations } = transactionInfo;
-
-	const totalInput = inputs.reduce((total, input) => total + input.amount, 0);
-	const totalOutput = outputs.reduce((total, output) => total + output.amount, 0);
+	const totalInput = transaction.inputs.reduce((total, input) => total + input.amount, 0);
+	const totalOutput = transaction.outputs.reduce((total, output) => total + output.amount, 0);
 	const fee = totalInput - totalOutput;
-	const isCoinbase = !transaction.inputs.length;
+	const isCoinbase = !transaction.inputs.length && transaction.outputs.length === 1;
 
 	return (
 		<section className="section">
@@ -53,14 +52,7 @@ const TransactionPage = () => {
 			<h1 className="title is-4">Summary</h1>
 
 			<div className="card card-content has-background-white">
-				<Transaction
-					transaction={transaction}
-					inputs={inputs}
-					outputs={outputs}
-					block={block}
-					status={status}
-					confirmations={confirmations}
-				/>
+				<Transaction transaction={transaction} />
 			</div>
 			<hr />
 
@@ -74,20 +66,24 @@ const TransactionPage = () => {
 					</tr>
 					<tr>
 						<td>Status</td>
-						<td>{status}</td>
+						<td className="capitalize">{transaction.status}</td>
 					</tr>
 					<tr>
 						<td>Confirmations</td>
-						<td>{status === "Orphaned" ? "-" : confirmations}</td>
+						<td>{transaction.status === "orphaned" ? "-" : 0}</td>
 					</tr>
 					<tr>
 						<td>Block Height</td>
-						<td>{block ? block.height : "-"}</td>
+						<td>{transaction.blockHeight ?? "-"}</td>
 					</tr>
 					<tr>
 						<td>Block Hash</td>
 						<td style={{ wordBreak: "break-all" }}>
-							{block ? <Link to={`../block/${block.hash}`}>{block.hash}</Link> : "-"}
+							{transaction.blockHash ? (
+								<Link to={`../block/${transaction.blockHash}`}>{transaction.blockHash}</Link>
+							) : (
+								"-"
+							)}
 						</td>
 					</tr>
 					<tr>

@@ -31,28 +31,24 @@ const SummaryTab = () => {
 			</div>
 		);
 
-	const { utxos, transactionsInfo } = walletInfo;
+	const { utxos, transactions } = walletInfo;
 	const balance = utxos.reduce((total, utxo) => total + utxo.amount, 0);
-	const totalReceived = transactionsInfo.reduce(
+	const totalReceived = transactions.reduce(
 		(total, { outputs }) =>
 			total +
 			outputs
-				.filter(
-					output =>
-						externalKeys.some(keys => keys.addr === output.address) ||
-						internalKeys.some(keys => keys.addr === output.address)
+				.filter(output =>
+					[...externalKeys, ...internalKeys].some(keys => keys.addr === output.address)
 				)
 				.reduce((total, output) => total + output.amount, 0),
 		0
 	);
-	const totalSent = transactionsInfo.reduce(
+	const totalSent = transactions.reduce(
 		(total, { inputs }) =>
 			total +
 			inputs
-				.filter(
-					input =>
-						externalKeys.some(keys => keys.addr === input.address) ||
-						internalKeys.some(keys => keys.addr === input.address)
+				.filter(input =>
+					[...externalKeys, ...internalKeys].some(keys => keys.addr === input.address)
 				)
 				.reduce((total, input) => total + input.amount, 0),
 		0
@@ -60,15 +56,11 @@ const SummaryTab = () => {
 
 	const pending = mempool.filter(
 		({ inputs, outputs }) =>
-			inputs.some(
-				input =>
-					externalKeys.some(keys => keys.addr === input.address) ||
-					internalKeys.some(keys => keys.addr === input.address)
+			inputs.some(input =>
+				[...externalKeys, ...internalKeys].some(keys => keys.addr === input.address)
 			) ||
-			outputs.some(
-				output =>
-					externalKeys.some(keys => keys.addr === output.address) ||
-					internalKeys.some(keys => keys.addr === output.address)
+			outputs.some(output =>
+				[...externalKeys, ...internalKeys].some(keys => keys.addr === output.address)
 			)
 	);
 
@@ -111,7 +103,7 @@ const SummaryTab = () => {
 						<p className="subtitle is-spaced has-text-weight-medium is-6 mb-0">{utxos.length}</p>
 						<h3 className="title is-spaced is-6 mb-0">Transactions: </h3>
 						<p className="subtitle is-spaced has-text-weight-medium is-6 mb-0">
-							{transactionsInfo.length}
+							{transactions.length}
 						</p>
 						<h3 className="title is-spaced is-6 mb-0">Pending transactions:</h3>
 						<p className="subtitle is-spaced has-text-weight-medium is-6 mb-0">{pending.length}</p>
@@ -121,15 +113,10 @@ const SummaryTab = () => {
 			<h1 className="title is-size-5 is-size-4-tablet mb-3">Pending transactions</h1>
 			<div className="mb-6">
 				{pending.length ? (
-					pending.map(({ transaction, inputs, outputs }) => (
+					pending.map(transaction => (
 						<div key={transaction.hash} className="card mb-3">
 							<div className="card-content">
-								<Transaction
-									transaction={transaction}
-									inputs={inputs}
-									outputs={outputs}
-									confirmations={0}
-								/>
+								<Transaction transaction={transaction} />
 							</div>
 						</div>
 					))
@@ -148,18 +135,13 @@ const SummaryTab = () => {
 
 			<h1 className="title is-size-5 is-size-4-tablet mb-3">Transactions</h1>
 			<div className="mb-6">
-				{transactionsInfo.length ? (
-					transactionsInfo
-						.sort((a, b) => b.transaction.timestamp - a.transaction.timestamp)
-						.map(({ transaction, inputs, outputs, confirmations }) => (
+				{transactions.length ? (
+					transactions
+						.sort((a, b) => b.timestamp - a.timestamp)
+						.map(transaction => (
 							<div key={transaction.hash} className="card mb-3">
 								<div className="card-content">
-									<Transaction
-										transaction={transaction}
-										inputs={inputs}
-										outputs={outputs}
-										confirmations={confirmations}
-									/>
+									<Transaction transaction={transaction} />
 								</div>
 							</div>
 						))

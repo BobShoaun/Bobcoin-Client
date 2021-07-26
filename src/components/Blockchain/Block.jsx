@@ -20,7 +20,7 @@ const Block = ({ block, status, selected }) => {
 					</h1>
 					{selected && (
 						<span
-							className="has-background-primary has-text-white has-text-weight-medium px-2 ml-2"
+							className="has-background-link has-text-white has-text-weight-medium px-2 ml-2"
 							style={{ fontSize: ".75rem", borderRadius: "2rem" }}
 						>
 							Head

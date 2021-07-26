@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import { useParams } from "../hooks/useParams";
+import { useHeadBlock } from "../hooks/useHeadBlock";
 
 import ReactTooltip from "react-tooltip";
 import { format } from "date-fns";
@@ -9,13 +10,18 @@ import { useWindowDimensions } from "../hooks/useWindowDimensions";
 
 import { getMaxDecimalPlaces } from "../helpers";
 
-const Transaction = ({ transaction, confirmations, inputs, outputs, block, status }) => {
-	const [loading, params] = useParams();
+const Transaction = ({ transaction }) => {
+	const [, params] = useParams();
+	const [, headBlock] = useHeadBlock();
 
-	const totalInput = inputs.reduce((total, input) => total + input.amount, 0);
-	const totalOutput = outputs.reduce((total, output) => total + output.amount, 0);
+	const totalInput = transaction.inputs.reduce((total, input) => total + input.amount, 0);
+	const totalOutput = transaction.outputs.reduce((total, output) => total + output.amount, 0);
 	const isCoinbase = transaction.inputs.length === 0 && transaction.outputs.length === 1;
 	const fee = totalInput - totalOutput;
+	const confirmations =
+		transaction.status === "mempool" || transaction.status === "orphaned"
+			? 0
+			: headBlock?.height - transaction.blockHeight + 1;
 
 	const getConfirmationColor = confirmations => {
 		if (confirmations > params.blkMaturity) return "confirmations-8";
@@ -31,8 +37,8 @@ const Transaction = ({ transaction, confirmations, inputs, outputs, block, statu
 				totalInput / params.coin,
 				totalOutput / params.coin,
 				fee / params.coin,
-				...inputs.map(input => input.amount / params.coin),
-				...outputs.map(output => output.amount / params.coin),
+				...transaction.inputs.map(input => input.amount / params.coin),
+				...transaction.outputs.map(output => output.amount / params.coin),
 		  ]) + 1;
 
 	return (
@@ -45,8 +51,8 @@ const Transaction = ({ transaction, confirmations, inputs, outputs, block, statu
 					<Link
 						className="is-block truncated"
 						to={
-							block
-								? `/transaction/${transaction.hash}?block=${block.hash}`
+							transaction.blockHash
+								? `/transaction/${transaction.hash}?block=${transaction.blockHash}`
 								: `/transaction/${transaction.hash}`
 						}
 					>
@@ -65,7 +71,7 @@ const Transaction = ({ transaction, confirmations, inputs, outputs, block, statu
 				) : (
 					<div className="is-flex truncated" style={{ flex: "1" }}>
 						<div className="truncated">
-							{inputs.map((input, index) => (
+							{transaction.inputs.map((input, index) => (
 								<Link key={index} className="is-block truncated" to={`/address/${input.address}`}>
 									{input.address}
 								</Link>
@@ -73,7 +79,7 @@ const Transaction = ({ transaction, confirmations, inputs, outputs, block, statu
 						</div>
 
 						<div className="ml-auto pl-2" style={{ whiteSpace: "nowrap" }}>
-							{inputs.map((input, index) => (
+							{transaction.inputs.map((input, index) => (
 								<div
 									key={index}
 									className="is-flex is-align-items-center is-justify-content-flex-end"
@@ -105,14 +111,14 @@ const Transaction = ({ transaction, confirmations, inputs, outputs, block, statu
 
 				<div className="is-flex  truncated" style={{ flex: "1" }}>
 					<div className="truncated">
-						{outputs.map((output, index) => (
+						{transaction.outputs.map((output, index) => (
 							<Link key={index} className="is-block truncated" to={`/address/${output.address}`}>
 								{output.address}
 							</Link>
 						))}
 					</div>
 					<div className="ml-auto pl-2" style={{ whiteSpace: "nowrap" }}>
-						{outputs.map((output, index) => (
+						{transaction.outputs.map((output, index) => (
 							<div
 								key={index}
 								className="is-flex is-align-items-center is-justify-content-flex-end"
@@ -120,24 +126,27 @@ const Transaction = ({ transaction, confirmations, inputs, outputs, block, statu
 								<p className="has-text-weight-medium has-text-right">
 									{(output.amount / params.coin).toFixed(decimalPlaces)} {params.symbol}
 								</p>
-								{status === "Orphaned" ? (
-									<a data-tip data-for="spent" className="is-block ml-3">
+								{transaction.status === "orphaned" ? (
+									<div data-tip data-for="spent" className="is-block ml-3">
 										<span className="has-text-grey material-icons-outlined md-18 is-block my-auto">
 											credit_card
 										</span>
 										<ReactTooltip id="spent" type="dark" effect="solid">
 											<span>Unspendable Output</span>
 										</ReactTooltip>
-									</a>
-								) : output.spent ? (
-									<a data-tip data-for="spent" className="is-block ml-3">
-										<span className="has-text-danger material-icons-outlined md-18 is-block my-auto">
-											credit_card_off
-										</span>
+									</div>
+								) : output.txHash ? (
+									<div data-tip data-for="spent" className="is-block ml-3">
+										<Link className="is-block truncated" to={`/transaction/${output.txHash}`}>
+											<span className="has-text-danger material-icons-outlined md-18 is-block my-auto">
+												credit_card_off
+											</span>
+										</Link>
+
 										<ReactTooltip id="spent" type="error" effect="solid">
 											<span>Spent output</span>
 										</ReactTooltip>
-									</a>
+									</div>
 								) : (
 									<a data-tip data-for="unspent" className="ml-3 is-block">
 										<span className="has-text-success material-icons-outlined md-18 is-block my-auto">
@@ -161,7 +170,7 @@ const Transaction = ({ transaction, confirmations, inputs, outputs, block, statu
 						)}`}
 						style={{ borderRadius: "0.3em" }}
 					>
-						{status === "Orphaned" ? status : `${confirmations} Confirmations`}
+						{transaction.status === "orphaned" ? "Orphaned" : `${confirmations} Confirmations`}
 					</span>
 				</div>
 				<div className="has-text-right ml-auto">

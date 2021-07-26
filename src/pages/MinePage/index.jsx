@@ -44,7 +44,7 @@ const MinePage = () => {
 		};
 	}, []);
 
-	const loading = headBlockLoading || paramsLoading;
+	const loading = headBlockLoading || paramsLoading || !headBlock;
 
 	if (loading)
 		return (

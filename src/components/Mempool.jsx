@@ -30,15 +30,10 @@ const Mempool = () => {
 		);
 	return (
 		<main>
-			{mempool.map(({ transaction, inputs, outputs }) => (
+			{mempool.map(transaction => (
 				<div key={transaction.hash} className="card mb-2">
 					<div className="card-content">
-						<Transaction
-							confirmations={0}
-							transaction={transaction}
-							inputs={inputs}
-							outputs={outputs}
-						/>
+						<Transaction transaction={transaction} />
 					</div>
 				</div>
 			))}
