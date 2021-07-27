@@ -178,7 +178,7 @@ const TransactionPage = () => {
 									<td className="is-flex pl-3" style={{ wordBreak: "break-all" }}>
 										<Link to={`/address/${output.address}`}>{output.address}</Link>
 										<span
-											onClick={() => copyToClipboard(output.address)}
+											onClick={() => copyToClipboard(output.address, "Address copied")}
 											className="material-icons-outlined md-18 my-auto ml-2 is-clickable is-dark"
 										>
 											content_copy

@@ -15,6 +15,8 @@ import { initializeSocket } from "./socket/socket";
 import { reset as resetBlockchain } from "./store/blockchainSlice";
 import { reset as resetParams } from "./store/consensusSlice";
 
+import toast, { Toaster } from "react-hot-toast";
+
 const OverviewPage = lazy(() => import("./pages/OverviewPage"));
 const GenerateKeysPage = lazy(() => import("./pages/GenerateKeysPage"));
 const MinePage = lazy(() => import("./pages/MinePage"));
@@ -62,6 +64,7 @@ const App = () => {
 								<Route path="/receive" component={ReceivePage} />
 								<Route path="/mine" component={MinePage} />
 								<Route path="/blockchain" component={BlockchainPage} />
+								<Route path="/block/height/:height" component={BlockPage}></Route>
 								<Route path="/block/:hash" component={BlockPage}></Route>
 								<Route path="/transaction/create" component={NewTransactionPage}></Route>
 								<Route path="/transaction/:hash" component={TransactionPage}></Route>
@@ -83,6 +86,7 @@ const App = () => {
 						</div>
 					</Suspense>
 					<Footer />
+					<Toaster />
 				</main>
 			</Router>
 		</SocketContext.Provider>

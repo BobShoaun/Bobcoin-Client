@@ -1,6 +1,8 @@
-export async function copyToClipboard(text) {
+import toast from "react-hot-toast";
+
+export async function copyToClipboard(text, prompt) {
 	await navigator.clipboard.writeText(text);
-	alert(`copied ${text} to clipboard!`);
+	toast.success(prompt);
 }
 
 export const getMaxDecimalPlaces = numbers =>

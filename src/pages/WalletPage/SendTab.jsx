@@ -17,6 +17,7 @@ import { WalletContext } from "./WalletContext";
 import TransactionFailureModal from "../NewTransactionPage/TransactionFailureModal";
 import TransactionSuccessModal from "../NewTransactionPage/TransactionSuccessModal";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const SendTab = () => {
 	const dispatch = useDispatch();
@@ -130,7 +131,10 @@ const SendTab = () => {
 					</div>
 					<p className="control">
 						<button
-							onClick={async () => setRecipientAddr(await navigator.clipboard.readText())}
+							onClick={async () => {
+								setRecipientAddr(await navigator.clipboard.readText());
+								toast.success("Address pasted");
+							}}
 							className="button"
 						>
 							<i className="material-icons md-18">content_paste</i>

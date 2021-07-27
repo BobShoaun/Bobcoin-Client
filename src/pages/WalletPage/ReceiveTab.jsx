@@ -55,7 +55,7 @@ const ReceiveTab = () => {
 							<input className="input" type="text" value={address} readOnly />
 						</div>
 						<p className="control">
-							<button className="button" onClick={() => copyToClipboard(address)}>
+							<button className="button" onClick={() => copyToClipboard(address, "Address copied")}>
 								<i className="material-icons md-18">content_copy</i>
 							</button>
 						</p>
@@ -100,7 +100,12 @@ const ReceiveTab = () => {
 											<td>
 												<div className="is-flex is-align-items-center">
 													<p>{addr}</p>
-													<i className="material-icons md-14 ml-2">content_copy</i>
+													<i
+														className="material-icons md-14 ml-2"
+														onClick={() => copyToClipboard(addr, "Address copied")}
+													>
+														content_copy
+													</i>
 												</div>
 											</td>
 											<td>{`m/${params.derivPurpose}'/${params.derivCoinType}'/0'/0/${index}`}</td>

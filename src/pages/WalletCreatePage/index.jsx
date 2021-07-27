@@ -124,7 +124,7 @@ const WalletCreatePage = () => {
 
 									<div className="has-text-right py-3">
 										<button
-											onClick={() => copyToClipboard(hdKeys.mnemonic)}
+											onClick={() => copyToClipboard(hdKeys.mnemonic, "Mnemonic copied")}
 											className="button is-small"
 										>
 											<span className="material-icons-outlined md-18 mr-2">content_copy</span>Copy

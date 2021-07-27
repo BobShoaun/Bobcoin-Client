@@ -1,8 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { useParams, useHistory, useLocation } from "react-router-dom";
-
-import { useParams as useConsensus } from "../../hooks/useParams";
+import { useParams, useHistory } from "react-router-dom";
 
 import QRCode from "qrcode";
 import { copyToClipboard } from "../../helpers";
@@ -22,8 +20,7 @@ const AddressPage = () => {
 	const [addressQR, setAddressQR] = useState("");
 
 	const api = useSelector(state => state.network.api);
-
-	const [loading, params] = useConsensus();
+	const { params, fetched: paramsFetched } = useSelector(state => state.consensus);
 
 	const [addressInfo, setAddressInfo] = useState(null);
 
@@ -42,7 +39,7 @@ const AddressPage = () => {
 		history.push(`./${searchInput.current.value}`);
 	};
 
-	if (!addressInfo)
+	if (!addressInfo || !paramsFetched)
 		return (
 			<div style={{ height: "70vh" }}>
 				<Loading />
@@ -108,7 +105,7 @@ const AddressPage = () => {
 								<div className="is-flex" style={{ wordBreak: "break-all" }}>
 									{address}
 									<span
-										onClick={() => copyToClipboard(address)}
+										onClick={() => copyToClipboard(address, "Address copied")}
 										className="material-icons-outlined md-18 my-auto ml-2 is-clickable"
 										style={{ color: "lightgrey" }}
 									>

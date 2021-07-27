@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { useParams, Link } from "react-router-dom";
-
-import { useParams as useConsensus } from "../../hooks/useParams";
-import { useHeadBlock } from "../../hooks/useHeadBlock";
+import { useParams, Link, useHistory } from "react-router-dom";
 
 import Transaction from "../../components/Transaction";
 
@@ -15,21 +12,29 @@ import { bigIntToHex64, calculateHashTarget, calculateBlockReward } from "blockc
 import axios from "axios";
 
 const BlockPage = () => {
-	const { hash } = useParams();
+	const { hash, height } = useParams();
+	const history = useHistory();
 	const api = useSelector(state => state.network.api);
-
-	const [loading, params] = useConsensus();
-	const [, headBlock] = useHeadBlock();
+	const { params, fetched: paramsFetched } = useSelector(state => state.consensus);
+	const { headBlock, headBlockFetched } = useSelector(state => state.blockchain);
 
 	const [blockInfo, setBlockInfo] = useState(null);
 
 	useEffect(async () => {
+		if (!hash) return;
 		setBlockInfo(null);
 		const result = await axios.get(`${api}/block/info/${hash}`);
 		setBlockInfo(result.data);
 	}, [api, hash]);
 
-	if (!blockInfo || loading || !headBlock)
+	useEffect(async () => {
+		if (!height) return;
+		setBlockInfo(null);
+		const result = await axios.get(`${api}/block/info/height/${height}`);
+		setBlockInfo(result.data);
+	}, [api, height]);
+
+	if (!blockInfo || !paramsFetched || !headBlockFetched)
 		return (
 			<div style={{ height: "70vh" }}>
 				<Loading />
@@ -70,12 +75,20 @@ const BlockPage = () => {
 			<div className="is-flex is-align-items-center mb-5">
 				<h1 className="title is-size-4 is-size-2-tablet mb-0">Block #{block.height}</h1>
 				<div className="has-text-right ml-auto">
-					{block.previousHash && (
-						<Link className="button is-link" to={`/block/${block.previousHash}`}>
-							Previous Block
-						</Link>
-					)}
-					{/* <button className="button is-link">Next Block</button> */}
+					<button
+						className="button is-link"
+						onClick={() => history.push(`/block/${block.previousHash}`)}
+						disabled={!block.previousHash}
+					>
+						<span className="material-icons-two-tone">arrow_back</span>
+					</button>
+					<button
+						onClick={() => history.push(`/block/height/${block.height + 1}`)}
+						className="button is-link ml-3"
+						disabled={block.height >= headBlock.height}
+					>
+						<span className="material-icons-two-tone">arrow_forward</span>
+					</button>
 				</div>
 			</div>
 
@@ -120,7 +133,9 @@ const BlockPage = () => {
 									{transactions[0].outputs[0].address}
 								</Link>
 								<span
-									onClick={() => copyToClipboard(transactions[0].outputs[0].address)}
+									onClick={() =>
+										copyToClipboard(transactions[0].outputs[0].address, "Address copied")
+									}
 									className="material-icons-outlined md-18 my-auto ml-2 is-clickable"
 									style={{ color: "lightgray" }}
 								>

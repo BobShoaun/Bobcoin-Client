@@ -17,6 +17,7 @@ import TransactionFailureModal from "./TransactionFailureModal";
 import TransactionSuccessModal from "./TransactionSuccessModal";
 
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const NewTransactionPage = () => {
 	const dispatch = useDispatch();
@@ -202,7 +203,10 @@ const NewTransactionPage = () => {
 					</div>
 					<p className="control">
 						<button
-							onClick={async () => setRecipientAdd(await navigator.clipboard.readText())}
+							onClick={async () => {
+								setRecipientAdd(await navigator.clipboard.readText());
+								toast.success("Address pasted");
+							}}
 							className="button"
 						>
 							<i className="material-icons md-18">content_paste</i>

@@ -17,6 +17,7 @@ import Loading from "../../components/Loading";
 
 import "./mine.css";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const MinePage = () => {
 	const [paramsLoading, params] = useParams();
@@ -211,7 +212,10 @@ const MinePage = () => {
 							</div>
 							<p className="control">
 								<button
-									onClick={async () => setMiner(await navigator.clipboard.readText())}
+									onClick={async () => {
+										setMiner(await navigator.clipboard.readText());
+										toast.success("Address pasted");
+									}}
 									className="button"
 								>
 									<i className="material-icons md-18">content_paste</i>
