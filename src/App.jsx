@@ -37,60 +37,60 @@ const WalletImportPage = lazy(() => import("./pages/WalletImportPage"));
 const WalletCreatePage = lazy(() => import("./pages/WalletCreatePage"));
 
 const App = () => {
-	const dispatch = useDispatch();
-	const api = useSelector(state => state.network.api);
-	const [socket, setSocket] = useState(null);
+  const dispatch = useDispatch();
+  const api = useSelector(state => state.network.api);
+  const [socket, setSocket] = useState(null);
 
-	useEffect(() => {
-		socket?.disconnect();
-		const soc = io(api);
+  useEffect(() => {
+    socket?.disconnect();
+    const soc = io(api);
 
-		dispatch(resetBlockchain());
-		dispatch(resetParams());
+    dispatch(resetBlockchain());
+    dispatch(resetParams());
 
-		initializeSocket(soc);
-		setSocket(soc);
-	}, [api]);
+    initializeSocket(soc);
+    setSocket(soc);
+  }, [api]);
 
-	return (
-		<SocketContext.Provider value={{ socket, setSocket }}>
-			<Router>
-				<main className="is-flex is-flex-direction-column" style={{ minHeight: "100vh" }}>
-					<Navbar />
-					<Suspense fallback={<Loading />}>
-						<div className="container" style={{ width: "100%", height: "100%" }}>
-							<Switch>
-								<Route path="/generate-key" component={GenerateKeysPage} />
-								<Route path="/receive" component={ReceivePage} />
-								<Route path="/mine" component={MinePage} />
-								<Route path="/blockchain" component={BlockchainPage} />
-								<Route path="/block/height/:height" component={BlockPage}></Route>
-								<Route path="/block/:hash" component={BlockPage}></Route>
-								<Route path="/transaction/create" component={NewTransactionPage}></Route>
-								<Route path="/transaction/:hash" component={TransactionPage}></Route>
-								<Route path="/address/:address" component={AddressPage}></Route>
-								<Route path="/settings" component={SettingsPage} />
-								<Route path="/parameters" component={ParametersPage} />
-								<Route path="/overview" component={OverviewPage} />
-								<Route path="/faucet" component={FaucetPage} />
-								<Route path="/node" component={NodePage} />
-								<Route path="/developer" component={DeveloperPage} />
-								<Route path="/wallet/import" component={WalletImportPage} />
-								<Route path="/wallet/create" component={WalletCreatePage} />
-								<Route path="/wallet" component={WalletPage} />
-								<Route path="/" component={LandingPage} />
-							</Switch>
-						</div>
-						<div className="is-hidden is-block-desktop">
-							<NewTransactionAction />
-						</div>
-					</Suspense>
-					<Footer />
-					<Toaster />
-				</main>
-			</Router>
-		</SocketContext.Provider>
-	);
+  return (
+    <SocketContext.Provider value={{ socket, setSocket }}>
+      <Router>
+        <main className="is-flex is-flex-direction-column" style={{ minHeight: "100vh" }}>
+          <Navbar />
+          <Suspense fallback={<Loading />}>
+            <div className="container" style={{ width: "100%", height: "100%" }}>
+              <Switch>
+                <Route path="/generate-keys" component={GenerateKeysPage} />
+                <Route path="/receive" component={ReceivePage} />
+                <Route path="/mine" component={MinePage} />
+                <Route path="/blockchain" component={BlockchainPage} />
+                <Route path="/block/height/:height" component={BlockPage}></Route>
+                <Route path="/block/:hash" component={BlockPage}></Route>
+                <Route path="/transaction/create" component={NewTransactionPage}></Route>
+                <Route path="/transaction/:hash" component={TransactionPage}></Route>
+                <Route path="/address/:address" component={AddressPage}></Route>
+                <Route path="/settings" component={SettingsPage} />
+                <Route path="/parameters" component={ParametersPage} />
+                <Route path="/overview" component={OverviewPage} />
+                <Route path="/faucet" component={FaucetPage} />
+                <Route path="/node" component={NodePage} />
+                <Route path="/developer" component={DeveloperPage} />
+                <Route path="/wallet/import" component={WalletImportPage} />
+                <Route path="/wallet/create" component={WalletCreatePage} />
+                <Route path="/wallet" component={WalletPage} />
+                <Route path="/" component={LandingPage} />
+              </Switch>
+            </div>
+            <div className="is-hidden is-block-desktop">
+              <NewTransactionAction />
+            </div>
+          </Suspense>
+          <Footer />
+          <Toaster />
+        </main>
+      </Router>
+    </SocketContext.Provider>
+  );
 };
 
 export default App;
