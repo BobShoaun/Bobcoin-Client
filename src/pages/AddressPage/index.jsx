@@ -25,14 +25,13 @@ const AddressPage = () => {
   const [addressInfo, setAddressInfo] = useState(null);
   const [transactions, setTransactions] = useState([]);
   const [page, setPage] = useState(0); // 0 indexed page
-  const transactionsPerPage = 5;
+  const transactionsPerPage = 10;
   const numFirstPages = 10;
   const numLastPages = 2;
 
   const getAddressInfo = async () => {
     setAddressInfo(null);
     const results = await axios.get(`${api}/address/info/${address}`);
-    console.log(results);
     setAddressInfo(results.data);
   };
 
