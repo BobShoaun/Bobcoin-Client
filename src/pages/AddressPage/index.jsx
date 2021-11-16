@@ -7,6 +7,7 @@ import { copyToClipboard } from "../../helpers";
 
 import Transaction from "../../components/Transaction";
 import Loading from "../../components/Loading";
+import Pagination from "../../components/Pagination";
 
 import { isAddressValid } from "blockcrypto";
 import axios from "axios";
@@ -203,47 +204,13 @@ const AddressPage = ({ match }) => {
           </div>
         )}
       </div>
-
-      <nav className="pagination" role="navigation" aria-label="pagination">
-        <button onClick={() => gotoPage(page => Math.max(page - 1, 0))} className="button pagination-previous">
-          Prev
-        </button>
-        <button onClick={() => gotoPage(page => Math.min(page + 1, numPages - 1))} className="button pagination-next">
-          Next
-        </button>
-        <ul className="pagination-list">
-          {/* first pages */}
-
-          {[...Array(numPages).keys()].slice(0, numFirstPages).map(_page => (
-            <li key={_page} onClick={() => gotoPage(_page)}>
-              <a
-                className={`pagination-link ${page === _page ? "is-current" : ""}`}
-                aria-label={`Goto page ${_page + 1}`}
-              >
-                {_page + 1}
-              </a>
-            </li>
-          ))}
-
-          <li>
-            <span className="pagination-ellipsis">&hellip;</span>
-          </li>
-
-          {/* last pages */}
-
-          {numPages > numFirstPages &&
-            [...Array(numPages).keys()].slice(-numLastPages).map(_page => (
-              <li key={_page} onClick={() => gotoPage(_page)}>
-                <a
-                  className={`pagination-link ${page === _page ? "is-current" : ""}`}
-                  aria-label={`Goto page ${_page + 1}`}
-                >
-                  {_page + 1}
-                </a>
-              </li>
-            ))}
-        </ul>
-      </nav>
+      <Pagination
+        page={page}
+        setPage={gotoPage}
+        numPages={numPages}
+        numFirstPages={numFirstPages}
+        numLastPages={numLastPages}
+      />
     </section>
   );
 };
