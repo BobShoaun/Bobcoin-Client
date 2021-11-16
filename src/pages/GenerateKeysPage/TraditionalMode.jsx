@@ -69,7 +69,7 @@ const TraditionalMode = () => {
           </div>
 
           <div className="field">
-            <label className="label">Private / Secret key</label>
+            <label className="label">Private / Secret key (base58)</label>
             <div className="field has-addons mb-0">
               <div className="control is-expanded">
                 <input
