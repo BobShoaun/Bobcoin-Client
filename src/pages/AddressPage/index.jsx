@@ -204,13 +204,7 @@ const AddressPage = ({ match }) => {
           </div>
         )}
       </div>
-      <Pagination
-        page={page}
-        setPage={gotoPage}
-        numPages={numPages}
-        numFirstPages={numFirstPages}
-        numLastPages={numLastPages}
-      />
+      <Pagination currentPage={page} onPageChange={gotoPage} numPages={numPages} />
     </section>
   );
 };

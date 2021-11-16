@@ -125,13 +125,9 @@ const OverviewPage = () => {
         )}
       </div>
 
-      <Pagination
-        page={page}
-        setPage={gotoPage}
-        numPages={numPages}
-        numFirstPages={numFirstPages}
-        numLastPages={numLastPages}
-      />
+      <div className="mb-6">
+        <Pagination currentPage={page} onPageChange={gotoPage} numPages={numPages} />
+      </div>
     </section>
   );
 };

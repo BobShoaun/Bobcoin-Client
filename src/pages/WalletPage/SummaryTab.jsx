@@ -147,13 +147,7 @@ const SummaryTab = () => {
         )}
       </div>
 
-      <Pagination
-        page={page}
-        setPage={gotoPage}
-        numPages={numPages}
-        numFirstPages={numFirstPages}
-        numLastPages={numLastPages}
-      />
+      <Pagination currentPage={page} onPageChange={gotoPage} numPages={numPages} />
     </main>
   );
 };

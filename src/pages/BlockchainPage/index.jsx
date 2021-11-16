@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 import Loading from "../../components/Loading";
+import Pagination from "../../components/Pagination";
 
 import { formatDistanceToNow } from "date-fns";
 import "./blockchain.css";
@@ -14,35 +15,38 @@ const BlockchainPage = () => {
   const api = useSelector(state => state.network.api);
   const headBlock = useSelector(state => state.blockchain.headBlock);
 
-  const [blockchain, setBlockchain] = useState([]);
-  const [currentHeight, setCurrentHeight] = useState(0);
-
   const [blocks, setBlocks] = useState([]);
   const [page, setPage] = useState(0); // 0 indexed page
-  const transactionsSection = useRef(null);
-  const transactionsPerPage = 10;
+  const blockchainSection = useRef(null);
+  const heightsPerPage = 20;
   const numFirstPages = 10;
   const numLastPages = 2;
 
-  const limit = 10;
-
-  const loadBlockchain = async height => {
-    const result = await axios.get(`${api}/blockchain/blocks?height=${height}&limit=${limit}`);
-    setBlockchain(blockchain => [...blockchain, ...result.data]);
-    setCurrentHeight(height);
+  const getBlocks = async () => {
+    const results = await axios.get(
+      `${api}/blockchain/blocks?height=${headBlock.height - page * heightsPerPage}&limit=${heightsPerPage}`
+    );
+    setBlocks(results.data);
   };
 
   useEffect(() => {
     if (!headBlock) return;
-    loadBlockchain(headBlock.height);
-  }, [api, headBlock]);
+    getBlocks();
+  }, [api, headBlock, page]);
 
-  if (!blockchain.length)
+  const gotoPage = page => {
+    blockchainSection.current?.scrollIntoView({ behavior: "smooth" });
+    setPage(page);
+  };
+
+  if (!blocks.length)
     return (
       <div style={{ height: "70vh" }}>
         <Loading />
       </div>
     );
+
+  const numPages = Math.ceil(headBlock.height / heightsPerPage);
 
   const statusColor = status => {
     switch (status) {
@@ -58,7 +62,7 @@ const BlockchainPage = () => {
   };
 
   return (
-    <section className="section">
+    <section ref={blockchainSection} className="section">
       <h1 className="title is-size-4 is-size-2-tablet">Blockchain</h1>
       <p className="subtitle is-size-6 is-size-5-tablet mb-5">Explore the entire chain up to the genesis block.</p>
 
@@ -85,7 +89,7 @@ const BlockchainPage = () => {
         <hr className="my-0" />
         <hr className="my-0" />
 
-        {blockchain.map(({ block, status }) => (
+        {blocks.map(({ block, status }) => (
           <React.Fragment key={block.hash}>
             <p
               className="subtitle mb-0 has-text-centered"
@@ -118,15 +122,8 @@ const BlockchainPage = () => {
           </React.Fragment>
         ))}
       </div>
-      <div className="has-text-centered">
-        <button
-          onClick={() => loadBlockchain(currentHeight - limit)}
-          disabled={currentHeight < limit}
-          className="button"
-        >
-          Load more
-        </button>
-      </div>
+
+      <Pagination currentPage={page} onPageChange={gotoPage} numPages={numPages} />
     </section>
   );
 };
