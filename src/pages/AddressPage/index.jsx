@@ -12,7 +12,7 @@ import { isAddressValid } from "blockcrypto";
 import axios from "axios";
 import ReactTooltip from "react-tooltip";
 
-const AddressPage = () => {
+const AddressPage = ({ match }) => {
   const { address } = useParams();
   const history = useHistory();
   const searchInput = useRef();
@@ -21,10 +21,10 @@ const AddressPage = () => {
   const api = useSelector(state => state.network.api);
   const { params, fetched: paramsFetched } = useSelector(state => state.consensus);
 
-  const transactionsSection = useRef(null);
   const [addressInfo, setAddressInfo] = useState(null);
   const [transactions, setTransactions] = useState([]);
   const [page, setPage] = useState(0); // 0 indexed page
+  const transactionsSection = useRef(null);
   const transactionsPerPage = 10;
   const numFirstPages = 10;
   const numLastPages = 2;
@@ -43,6 +43,7 @@ const AddressPage = () => {
     setTransactions(results.data);
   };
 
+  useEffect(() => setPage(0), [match.params.address]);
   useEffect(getAddressInfo, [api, address]);
   useEffect(getAddressTransactions, [api, address, page]);
 
