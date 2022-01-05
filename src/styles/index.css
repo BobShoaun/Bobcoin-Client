@@ -2,139 +2,143 @@
 @import "./padding.css";
 
 body {
-	/* font-family: "Poppins", sans-serif; */
-	/* font-family: Arial, Helvetica, sans-serif, sans-serif; */
-	/* font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+  /* font-family: "Poppins", sans-serif; */
+  /* font-family: Arial, Helvetica, sans-serif, sans-serif; */
+  /* font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
 		"Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif; */
-	/* -webkit-font-smoothing: antialiased; */
-	/* -moz-osx-font-smoothing: grayscale; */
-	height: 100%;
-	/* font-size: clamp(0.1rem, 1rem, 2rem); */
+  /* -webkit-font-smoothing: antialiased; */
+  /* -moz-osx-font-smoothing: grayscale; */
+  height: 100%;
+  /* font-size: clamp(0.1rem, 1rem, 2rem); */
 }
 
 code {
-	font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+.section {
+  margin-top: 3.5em;
 }
 
 /* Rules for sizing the icon. */
 .md-14 {
-	font-size: 14px;
+  font-size: 14px;
 }
 .md-18 {
-	font-size: 18px;
+  font-size: 18px;
 }
 .md-20 {
-	font-size: 20px;
+  font-size: 20px;
 }
 .md-24 {
-	font-size: 24px;
+  font-size: 24px;
 }
 .md-28 {
-	font-size: 28px;
+  font-size: 28px;
 }
 .md-36 {
-	font-size: 36px;
+  font-size: 36px;
 }
 .md-48 {
-	font-size: 48px;
+  font-size: 48px;
 }
 
 /* Rules for using icons as black on a light background. */
 .material-icons.md-dark {
-	color: rgba(0, 0, 0, 0.54);
+  color: rgba(0, 0, 0, 0.54);
 }
 .material-icons.md-dark.md-inactive {
-	color: rgba(0, 0, 0, 0.26);
+  color: rgba(0, 0, 0, 0.26);
 }
 
 /* Rules for using icons as white on a dark background. */
 .material-icons.md-light {
-	color: rgba(255, 255, 255, 1);
+  color: rgba(255, 255, 255, 1);
 }
 .material-icons.md-light.md-inactive {
-	color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.3);
 }
 
 .mt-auto {
-	margin-top: auto;
+  margin-top: auto;
 }
 .mr-auto {
-	margin-right: auto;
+  margin-right: auto;
 }
 .mb-auto {
-	margin-bottom: auto;
+  margin-bottom: auto;
 }
 .ml-auto {
-	margin-left: auto;
+  margin-left: auto;
 }
 .m-auto {
-	margin: auto;
+  margin: auto;
 }
 .mx-auto {
-	margin-left: auto;
-	margin-right: auto;
+  margin-left: auto;
+  margin-right: auto;
 }
 .my-auto {
-	margin-top: auto;
-	margin-bottom: auto;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .h-100 {
-	height: 100%;
+  height: 100%;
 }
 
 .confirmations-0 {
-	background-color: #d84846;
+  background-color: #d84846;
 }
 
 .confirmations-1 {
-	background-color: #d16b45;
+  background-color: #d16b45;
 }
 
 .confirmations-2 {
-	background-color: #cb8a45;
+  background-color: #cb8a45;
 }
 
 .confirmations-3 {
-	background-color: #c4a644;
+  background-color: #c4a644;
 }
 
 .confirmations-4 {
-	background-color: #c1b344;
+  background-color: #c1b344;
 }
 
 .confirmations-5 {
-	background-color: #bbbd43;
+  background-color: #bbbd43;
 }
 
 .confirmations-6 {
-	background-color: #97b742;
+  background-color: #97b742;
 }
 
 .confirmations-7 {
-	background-color: #86b342;
+  background-color: #86b342;
 }
 
 .confirmations-8 {
-	background-color: #76b041;
+  background-color: #76b041;
 }
 
 .spinner {
-	animation: spin 1s ease-in-out infinite;
+  animation: spin 1s ease-in-out infinite;
 }
 
 @keyframes spin {
-	100% {
-		transform: rotate(-360deg);
-	}
+  100% {
+    transform: rotate(-360deg);
+  }
 }
 
 .truncated {
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .capitalize {
-	text-transform: capitalize;
+  text-transform: capitalize;
 }

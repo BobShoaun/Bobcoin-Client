@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Link } from "react-router-dom";
 import { useParams } from "../../hooks/useParams";
 
@@ -9,8 +7,8 @@ const LandingPage = () => {
   const [status, params] = useParams();
 
   return (
-    <section className="section">
-      <div className="has-text-centered mb-7 mt-6" style={{ fmargin: "6em 0" }}>
+    <main className="section">
+      <div className="has-text-centered mb-7 mt-6">
         <h1 className="title is-size-2 is-size-1-tablet is-spaced mb-4">Welcome to {params.name ?? "Bobcoin"}</h1>
         <p className="subtitle is-size-5 is-size-4-tablet is-spaced mb-6 mx-auto" style={{ maxWidth: "35em" }}>
           an open source, decentralized, peer to peer, blockchain, proof of work, digital currency that will take us to
@@ -32,7 +30,7 @@ const LandingPage = () => {
       <img className="rocket" src="images/rocket.jpg" alt="rocket" />
       <div className="-has-background-primary has-text-centered" style={{ margin: "5em 0 10em 0" }}>
         <h3 className="subtitle is-size-5 is-size-4-tablet" style={{ marginBottom: "4em" }}>
-          Bobcoin boast many properties that makes it safe and sustainable:
+          Bobcoin has many properties that makes it safe and sustainable:
         </h3>
         <div className="qualities-grid mx-7-tablet">
           <div className="-has-background-info has-text-white">
@@ -72,7 +70,7 @@ const LandingPage = () => {
 
       <div className="has-text-centered mb-6">
         <h1 className="title is-size-5 is-size-4-tablet mb-2 is-spaced">What are you waiting for?</h1>
-        <p className="subtitle is-size-6 is-size-5-tablet">Get started by investing in {params.name}</p>
+        <p className="subtitle is-size-6 is-size-5-tablet">Get started by investing and hodling {params.name}</p>
         <hr />
       </div>
       <ol className="subtitle is-5 pl-3 px-6-tablet" style={{ marginBottom: "5em" }}>
@@ -116,7 +114,7 @@ const LandingPage = () => {
           </div>
         </li>
       </ol>
-    </section>
+    </main>
   );
 };
 
