@@ -75,7 +75,7 @@ const OverviewPage = () => {
           </p>
         </div>
       </div>
-      <hr className="mb-6 mt-3" />
+      <hr className="mb-6 mt-3 has-background-grey-light" />
 
       <div className="is-flex is-flex-wrap-wrap mb-3" style={{ gap: ".5em" }}>
         <div>

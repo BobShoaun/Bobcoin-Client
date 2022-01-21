@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useParams, Link, useHistory } from "react-router-dom";
 
@@ -70,6 +70,7 @@ const BlockPage = () => {
         <h1 className="title is-size-4 is-size-2-tablet mb-0">Block #{block.height}</h1>
         <div className="has-text-right ml-auto">
           <button
+            title="Previous block"
             className="button is-link"
             onClick={() => history.push(`/block/${block.previousHash}`)}
             disabled={!block.previousHash}
@@ -77,6 +78,7 @@ const BlockPage = () => {
             <span className="material-icons-two-tone">arrow_back</span>
           </button>
           <button
+            title="Next block"
             onClick={() => history.push(`/block/height/${block.height + 1}`)}
             className="button is-link ml-3"
             disabled={block.height >= headBlock.height}

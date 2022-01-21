@@ -17,7 +17,7 @@ const LandingPage = () => {
 
         <div className="dropdown is-hoverable mr-2">
           <div className="dropdown-trigger">
-            <button className="button" aria-haspopup="true" aria-controls="dropdown-menu4">
+            <button className="button has-text-weight-semibold" aria-haspopup="true" aria-controls="dropdown-menu4">
               <span className="material-icons-outlined mr-2">code</span>
               Source
             </button>
@@ -28,29 +28,32 @@ const LandingPage = () => {
             role="menu"
             style={{ left: "50%", transform: "translateX(-50%)" }}
           >
-            <div className="dropdown-content">
+            <div className="dropdown-content has-text-weight-semibold">
               <a
                 href="https://github.com/BobShoaun/Bobcoin-Node"
                 target="_blank"
-                className="dropdown-item"
-                style={{ paddingInline: 0 }}
+                className="dropdown-item is-flex is-align-items-center is-justify-content-center"
+                style={{ paddingInline: 0, gap: ".5em" }}
               >
+                <span className="material-icons-two-tone is-size-6">api</span>
                 Bobcoin-Node
               </a>
               <a
                 href="https://github.com/BobShoaun/Bobcoin-Client"
                 target="_blank"
-                className="dropdown-item"
-                style={{ paddingInline: 0 }}
+                className="dropdown-item is-flex is-align-items-center is-justify-content-center"
+                style={{ paddingInline: 0, gap: ".5em" }}
               >
+                <span className="material-icons-two-tone is-size-6">terminal</span>
                 Bobcoin-Client
               </a>
               <a
                 href="https://github.com/BobShoaun/Blockchain-Crypto"
                 target="_blank"
-                className="dropdown-item"
-                style={{ paddingInline: 0 }}
+                className="dropdown-item is-flex is-align-items-center is-justify-content-center"
+                style={{ paddingInline: 0, gap: ".5em" }}
               >
+                <span className="material-icons-two-tone is-size-6">inventory_2</span>
                 Blockcrypto
               </a>
             </div>
