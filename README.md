@@ -1,6 +1,23 @@
-# The Bobcoin cryptocurrency client
+# The Bobcoin Client
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a web client for the Bobcoin cryptocurrency.
+It is made using React and is deployed at [bobcoin.cash](https://bobcoin.cash/).
+
+This webapp is alot of things at once - A block explorer, a wallet software, a mining client, a landing/marketing page, and documentations for using Bobcoin.
+
+In the webapp, you can:
+
+- Generate Bobcoin keypairs
+- Create and manage BIP compliant wallets for storing Bobcoins
+- Make transactions thru your wallet or directly from a secret key.
+- Mine blocks and earn Bobcoins as a block reward.
+- Obtain small amounts of Bobcoins from the faucet
+- Explore the entire Bobcoin Blockchain; All blocks, transactions, and addresses.
+  - Even data from orphaned blocks are kept
+  - Look at set consensus rules for the blockchain.
+- Switch between the mainnet and testnet.
+
+# For developers
 
 ## Available Scripts
 

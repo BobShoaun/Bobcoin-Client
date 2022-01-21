@@ -14,14 +14,57 @@ const LandingPage = () => {
           an open source, decentralized, peer to peer, blockchain, proof of work, digital currency that will take us to
           Mars.
         </p>
-        <a
+
+        <div className="dropdown is-hoverable mr-2">
+          <div className="dropdown-trigger">
+            <button className="button" aria-haspopup="true" aria-controls="dropdown-menu4">
+              <span className="material-icons-outlined mr-2">code</span>
+              Source
+            </button>
+          </div>
+          <div
+            className="dropdown-menu"
+            id="dropdown-menu4"
+            role="menu"
+            style={{ left: "50%", transform: "translateX(-50%)" }}
+          >
+            <div className="dropdown-content">
+              <a
+                href="https://github.com/BobShoaun/Bobcoin-Node"
+                target="_blank"
+                className="dropdown-item"
+                style={{ paddingInline: 0 }}
+              >
+                Bobcoin-Node
+              </a>
+              <a
+                href="https://github.com/BobShoaun/Bobcoin-Client"
+                target="_blank"
+                className="dropdown-item"
+                style={{ paddingInline: 0 }}
+              >
+                Bobcoin-Client
+              </a>
+              <a
+                href="https://github.com/BobShoaun/Blockchain-Crypto"
+                target="_blank"
+                className="dropdown-item"
+                style={{ paddingInline: 0 }}
+              >
+                Blockcrypto
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* <a
           href="https://github.com/BobShoaun/Bobcoin-Node"
           target="_blank"
           className="button mr-3 has-text-weight-semibold"
         >
           <span className="material-icons-outlined mr-2">code</span>
           Source
-        </a>
+        </a> */}
         <Link to="overview" className="button is-primary has-text-weight-semibold">
           <span className="material-icons-outlined mr-2">explore</span>
           Explore
