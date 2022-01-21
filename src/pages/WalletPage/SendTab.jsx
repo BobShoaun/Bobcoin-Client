@@ -67,6 +67,12 @@ const SendTab = () => {
     const _amount = Math.trunc(amount * params.coin);
     const _fee = Math.trunc(fee * params.coin);
 
+    if (walletInfo.balance >= _amount && walletInfo.balance < _amount + _fee) {
+      console.log("unsafe transaction: will pass Node validation, but fees will be different");
+      // TODO: display error prompt
+      return;
+    }
+
     // pick utxos from front to back.
     let inputAmount = 0;
     const inputs = [];
