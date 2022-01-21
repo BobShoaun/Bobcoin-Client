@@ -1,0 +1,4 @@
+This is a Brave Rewards publisher verification file.
+
+Domain: bobcoin.cash
+Token: 4734a2c17f6a70486c74843a03e317191566d4616314041036310c0af04182b4
