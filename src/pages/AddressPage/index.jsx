@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { useParams, useHistory } from "react-router-dom";
 
 import QRCode from "qrcode";
-import { copyToClipboard } from "../../helpers";
+import { copyToClipboard, numberWithCommas } from "../../helpers";
 
 import Transaction from "../../components/Transaction";
 import Loading from "../../components/Loading";
@@ -155,7 +155,7 @@ const AddressPage = ({ match }) => {
                 </div>
               </td>
               <td>
-                {(totalReceived / params.coin).toFixed(8)} {params.symbol}
+                {numberWithCommas((totalReceived / params.coin).toFixed(8))} {params.symbol}
               </td>
             </tr>
             <tr>
@@ -171,13 +171,13 @@ const AddressPage = ({ match }) => {
                 </div>
               </td>
               <td>
-                {(totalSent / params.coin).toFixed(8)} {params.symbol}
+                {numberWithCommas((totalSent / params.coin).toFixed(8))} {params.symbol}
               </td>
             </tr>
             <tr>
               <td>Final Balance</td>
               <td className="has-text-weight-semibold">
-                {(balance / params.coin).toFixed(8)} {params.symbol}
+                {numberWithCommas((balance / params.coin).toFixed(8))} {params.symbol}
               </td>
             </tr>
           </tbody>

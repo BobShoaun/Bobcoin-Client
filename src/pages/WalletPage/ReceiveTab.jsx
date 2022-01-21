@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useContext } from "react";
+import { useState, useEffect, useMemo, useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { copyToClipboard } from "../../helpers";
@@ -77,9 +77,11 @@ const ReceiveTab = () => {
               <table className="table is-fullwidth is-hoverable">
                 <thead>
                   <tr>
+                    <th></th>
+                    <th></th>
                     <th>Your addresses</th>
                     <th>Derivation path</th>
-                    <th></th>
+                    <th>Status</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -90,15 +92,26 @@ const ReceiveTab = () => {
                       key={index}
                     >
                       <td>
-                        <div className="is-flex is-align-items-center">
-                          <p>{addr}</p>
-                          <i
-                            className="material-icons md-14 ml-2"
-                            onClick={() => copyToClipboard(addr, "Address copied")}
-                          >
-                            content_copy
-                          </i>
-                        </div>
+                        <a
+                          href={`/address/${addr}`}
+                          title="View in block explorer"
+                          className="material-icons md-14 ml-2"
+                          onClick={() => copyToClipboard(addr, "Address copied")}
+                        >
+                          open_in_new
+                        </a>
+                      </td>
+                      <td>
+                        <i
+                          title="copy address to clipboard"
+                          className="material-icons md-14"
+                          onClick={() => copyToClipboard(addr, "Address copied")}
+                        >
+                          content_copy
+                        </i>
+                      </td>
+                      <td>
+                        <p>{addr}</p>
                       </td>
                       <td>{`m/${params.derivPurpose}'/${params.derivCoinType}'/0'/0/${index}`}</td>
                       <td>{walletInfo.numAddressTransactions[addr] > 0 ? "Used" : "Unused"}</td>

@@ -5,7 +5,7 @@ import { useParams, Link, useLocation } from "react-router-dom";
 import { useParams as useConsensus } from "../../hooks/useParams";
 
 import Transaction from "../../components/Transaction";
-import { copyToClipboard } from "../../helpers";
+import { copyToClipboard, numberWithCommas } from "../../helpers";
 import Loading from "../../components/Loading";
 
 import axios from "axios";
@@ -72,7 +72,7 @@ const TransactionPage = () => {
           </tr>
           <tr>
             <td>Block Height</td>
-            <td>{transaction.blockHeight ?? "-"}</td>
+            <td>{transaction.blockHeight ? transaction.blockHeight.toLocaleString() : "-"}</td>
           </tr>
           <tr>
             <td>Block Hash</td>
@@ -97,18 +97,18 @@ const TransactionPage = () => {
           <tr>
             <td>Total Input Amount</td>
             <td>
-              {(totalInput / params.coin).toFixed(8)} {params.symbol}
+              {numberWithCommas((totalInput / params.coin).toFixed(8))} {params.symbol}
             </td>
           </tr>
           <tr>
             <td>Total Output Amount</td>
             <td>
-              {(totalOutput / params.coin).toFixed(8)} {params.symbol}
+              {numberWithCommas((totalOutput / params.coin).toFixed(8))} {params.symbol}
             </td>
           </tr>
           <tr>
             <td>Fee</td>
-            <td>{isCoinbase ? "-" : (fee / params.coin).toFixed(8) + " " + params.symbol}</td>
+            <td>{isCoinbase ? "-" : numberWithCommas((fee / params.coin).toFixed(8)) + " " + params.symbol}</td>
           </tr>
         </tbody>
       </table>

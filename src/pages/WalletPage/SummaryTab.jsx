@@ -12,7 +12,7 @@ import Pagination from "../../components/Pagination";
 
 import { WalletContext } from "./WalletContext";
 
-import { getMaxDecimalPlaces } from "../../helpers";
+import { getMaxDecimalPlaces, numberWithCommas } from "../../helpers";
 import axios from "axios";
 
 const SummaryTab = () => {
@@ -86,16 +86,16 @@ const SummaryTab = () => {
           >
             <h3 className="title is-spaced is-6 mb-0">Balance: </h3>
             <p className="subtitle is-spaced is-size-3-tablet mb-0">
-              {(balance / params.coin).toFixed(decimalPlaces)}
+              {numberWithCommas((balance / params.coin).toFixed(decimalPlaces))}
               <span className="is-size-4-tablet"> {params.symbol}</span>
             </p>
             <h3 className="title is-spaced is-6 mb-0">Total received: </h3>
             <p className="subtitle is-spaced has-text-weight-medium is-6 mb-0">
-              {(totalReceived / params.coin).toFixed(decimalPlaces)} {params.symbol}
+              {numberWithCommas((totalReceived / params.coin).toFixed(decimalPlaces))} {params.symbol}
             </p>
             <h3 className="title is-spaced is-6 mb-0">Total sent: </h3>
             <p className="subtitle is-spaced has-text-weight-medium is-6 mb-0">
-              {(totalSent / params.coin).toFixed(decimalPlaces)} {params.symbol}
+              {numberWithCommas((totalSent / params.coin).toFixed(decimalPlaces))} {params.symbol}
             </p>
             <h3 className="title is-spaced is-6 mb-0">UTXOs: </h3>
             <p className="subtitle is-spaced has-text-weight-medium is-6 mb-0">{numUtxos}</p>

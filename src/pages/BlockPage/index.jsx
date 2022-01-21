@@ -4,7 +4,7 @@ import { useParams, Link, useHistory } from "react-router-dom";
 
 import Transaction from "../../components/Transaction";
 
-import { copyToClipboard } from "../../helpers";
+import { copyToClipboard, numberWithCommas } from "../../helpers";
 import Loading from "../../components/Loading";
 
 import { bigIntToHex64, calculateHashTarget, calculateBlockReward } from "blockcrypto";
@@ -95,7 +95,7 @@ const BlockPage = () => {
           <tr>
             <td>Height</td>
             <td>
-              {block.height} {block.height === 0 && "(Genesis)"}
+              {numberWithCommas(block.height)} {block.height === 0 && "(Genesis)"}
             </td>
           </tr>
           <tr>
@@ -149,7 +149,7 @@ const BlockPage = () => {
           </tr>
           <tr>
             <td>Nonce</td>
-            <td>{block.nonce}</td>
+            <td>{numberWithCommas(block.nonce)}</td>
           </tr>
           <tr>
             <td>Previous block</td>
@@ -168,19 +168,19 @@ const BlockPage = () => {
           <tr>
             <td>Total transacted amount</td>
             <td>
-              {(totalInput / params.coin).toFixed(8)} {params.symbol}
+              {numberWithCommas((totalInput / params.coin).toFixed(8))} {params.symbol}
             </td>
           </tr>
           <tr>
             <td>Block reward</td>
             <td>
-              {(calculateBlockReward(params, block.height) / params.coin).toFixed(8)} {params.symbol}
+              {numberWithCommas((calculateBlockReward(params, block.height) / params.coin).toFixed(8))} {params.symbol}
             </td>
           </tr>
           <tr>
             <td>Total Fees</td>
             <td>
-              {((totalInput - totalOutput) / params.coin).toFixed(8)} {params.symbol}
+              {numberWithCommas(((totalInput - totalOutput) / params.coin).toFixed(8))} {params.symbol}
             </td>
           </tr>
         </tbody>

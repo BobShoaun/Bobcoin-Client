@@ -18,9 +18,11 @@ import TransactionFailureModal from "../NewTransactionPage/TransactionFailureMod
 import TransactionSuccessModal from "../NewTransactionPage/TransactionSuccessModal";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { numberWithCommas } from "../../helpers";
 
 const SendTab = () => {
   const dispatch = useDispatch();
+
   const api = useSelector(state => state.network.api);
   const { walletInfo, params, externalKeys, internalKeys, xprv } = useContext(WalletContext);
   const [recipientAddr, setRecipientAddr] = useState("");
@@ -198,13 +200,13 @@ const SendTab = () => {
       <div className="mb-2">
         <span className="title is-6">Current balance:</span>
         <span className="ml-3">
-          {(balance / params.coin).toFixed(8)} {params.symbol}
+          {numberWithCommas((balance / params.coin).toFixed(8))} {params.symbol}
         </span>
       </div>
       <div className="mb-6">
         <span className="title is-6">Balance after:</span>
         <span className="ml-3">
-          {(balance / params.coin - amount - fee).toFixed(8)} {params.symbol}
+          {numberWithCommas((balance / params.coin - amount - fee).toFixed(8))} {params.symbol}
         </span>
       </div>
 
