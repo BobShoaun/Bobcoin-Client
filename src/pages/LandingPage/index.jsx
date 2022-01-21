@@ -11,7 +11,7 @@ const LandingPage = () => {
       <div className="has-text-centered mb-7 mt-6">
         <h1 className="title is-size-2 is-size-1-tablet is-spaced mb-4">Welcome to {params.name ?? "Bobcoin"}</h1>
         <p className="subtitle is-size-5 is-size-4-tablet is-spaced mb-6 mx-auto" style={{ maxWidth: "35em" }}>
-          an open source, decentralized, peer to peer, blockchain, proof of work, digital currency that will take us to
+          An open source, decentralized, peer to peer, blockchain, proof of work, digital currency that will take us to
           Mars.
         </p>
 
