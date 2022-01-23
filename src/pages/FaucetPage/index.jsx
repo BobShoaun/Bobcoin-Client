@@ -41,19 +41,7 @@ const FaucetPage = () => {
       await axios.post(`${api}/faucet/request`, { address, recaptchaResponse });
       setModalOpen(true);
     } catch (e) {
-      switch (e.response.status) {
-        case 400:
-          setErrorMessage("Invalid address");
-          break;
-        case 401:
-          setErrorMessage("Invalid recaptcha");
-          break;
-        case 403:
-          setErrorMessage("Please wait for the cooldown period");
-          break;
-        default:
-          setErrorMessage("Something went wrong");
-      }
+      setErrorMessage(e.response.data);
     }
     recaptchaRef.current.reset();
   };
@@ -103,7 +91,7 @@ const FaucetPage = () => {
 
         <div className="is-flex is-flex-wrap-wrap is-align-items-center" style={{ gap: "1.5em" }}>
           <button type="submit" className="button is-info">
-            Give me 100 {params.symbol}
+            Give me {faucetInfo.donationAmount / params.coin} {params.symbol}
           </button>
 
           {errorMessage && <p className="has-text-danger is-size-6">*{errorMessage}</p>}
@@ -124,7 +112,7 @@ const FaucetPage = () => {
         </span>
       </h4>
 
-      <p>Consider donating to the address to keep the faucet running.</p>
+      <p>Consider donating to the address to keep the faucet dripping.</p>
 
       <div className={`modal ${modalOpen ? "is-active" : ""}`}>
         <div className="modal-background"></div>

@@ -85,7 +85,7 @@ const SummaryTab = () => {
             }}
           >
             <h3 className="title is-spaced is-6 mb-0">Balance: </h3>
-            <p className="subtitle is-spaced is-size-3-tablet mb-0">
+            <p className="subtitle is-spaced is-size-2-tablet mb-0 has-text-weight-medium">
               {numberWithCommas((balance / params.coin).toFixed(decimalPlaces))}
               <span className="is-size-4-tablet"> {params.symbol}</span>
             </p>

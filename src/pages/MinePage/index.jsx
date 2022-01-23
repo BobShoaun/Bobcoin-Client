@@ -23,13 +23,11 @@ const MinePage = () => {
   const [paramsLoading, params] = useParams();
   const [headBlockLoading, headBlock] = useHeadBlock();
 
-  const keys = useSelector((state) => state.wallet.keys);
-  const { externalKeys } = useSelector((state) => state.wallet);
-  const api = useSelector((state) => state.network.api);
+  const keys = useSelector(state => state.wallet.keys);
+  const { externalKeys } = useSelector(state => state.wallet);
+  const api = useSelector(state => state.network.api);
 
-  const [miner, setMiner] = useState(
-    externalKeys[externalKeys.length - 1]?.addr ?? keys.address ?? ""
-  );
+  const [miner, setMiner] = useState(externalKeys[externalKeys.length - 1]?.addr ?? keys.address ?? "");
   const [terminalLog, setTerminalLog] = useState([]);
   const [successModal, setSuccessModal] = useState(false);
   const [errorModal, setErrorModal] = useState(false);
@@ -56,22 +54,19 @@ const MinePage = () => {
 
   const startMining = async () => {
     if (activeWorker.current) {
-      setTerminalLog((log) => [
+      setTerminalLog(log => [
         ...log,
         `\nAnother mining process is currently running, to terminate it type 'mine stop'.`,
       ]);
       return;
     }
 
-    setTerminalLog((log) => [
-      ...log,
-      "\nForming and verifying candidate block...",
-    ]);
+    setTerminalLog(log => [...log, "\nForming and verifying candidate block..."]);
 
     const { block, validation, target } = (
       await axios.post(`${api}/mine/candidate-block`, {
         previousBlock: headBlock,
-        transactions: selectedTxs,
+        transactions: selectedTxs.sort((a, b) => a.timestamp - b.timestamp),
         miner,
       })
     ).data;
@@ -83,10 +78,7 @@ const MinePage = () => {
       return;
     }
 
-    setTerminalLog((log) => [
-      ...log,
-      `Mining started...\nprevious block: ${headBlock.hash}\ntarget hash: ${target}\n `,
-    ]);
+    setTerminalLog(log => [...log, `Mining started...\nprevious block: ${headBlock.hash}\ntarget hash: ${target}\n `]);
 
     const worker = new Miner();
     worker.postMessage({ block, target: hexToBigInt(target) });
@@ -95,22 +87,17 @@ const MinePage = () => {
     worker.addEventListener("message", async ({ data }) => {
       switch (data.message) {
         case "nonce":
-          setTerminalLog((log) => [
-            ...log,
-            `nonce reached: ${data.block.nonce}`,
-          ]);
+          setTerminalLog(log => [...log, `nonce reached: ${data.block.nonce}`]);
           break;
 
         case "success":
-          setTerminalLog((log) => [
+          setTerminalLog(log => [
             ...log,
             `\nMining successful! New block mined with...\nhash: ${data.block.hash}\nnonce: ${data.block.nonce}`,
           ]);
           activeWorker.current = null;
 
-          const validation = (
-            await axios.post(`${api}/block`, { block: data.block })
-          ).data;
+          const validation = (await axios.post(`${api}/block`, { block: data.block })).data;
 
           if (validation.code !== RESULT.VALID) {
             console.error("Block is invalid", block);
@@ -144,13 +131,13 @@ const MinePage = () => {
     if (activeWorker.current) {
       activeWorker.current.terminate();
       activeWorker.current = null;
-      setTerminalLog((log) => [...log, `\nMining operation stopped.`]);
+      setTerminalLog(log => [...log, `\nMining operation stopped.`]);
       return;
     }
-    setTerminalLog((log) => [...log, `\nNo mining processes running.`]);
+    setTerminalLog(log => [...log, `\nNo mining processes running.`]);
   };
 
-  const submitCommand = (event) => {
+  const submitCommand = event => {
     event.preventDefault();
     const command = event.target.command.value;
     event.target.command.value = "";
@@ -162,16 +149,13 @@ const MinePage = () => {
         stopMining();
         break;
       case "help":
-        setTerminalLog((log) => [
+        setTerminalLog(log => [
           ...log,
           `\nCrappy ${params.name} mining terminal v1.0.0-beta\n\nList of commands:\nmine start\nmine stop\nhelp`,
         ]);
         break;
       default:
-        setTerminalLog((log) => [
-          ...log,
-          `\nunknown command: ${command}, type 'help' for help.`,
-        ]);
+        setTerminalLog(log => [...log, `\nunknown command: ${command}, type 'help' for help.`]);
     }
   };
 
@@ -179,8 +163,7 @@ const MinePage = () => {
     <section className="section">
       <h1 className="title is-size-4 is-size-2-tablet">Mining Dashboard</h1>
       <p className="subtitle is-size-6 is-size-5-tablet">
-        Mine from the comfort of your browser! No need for unnecessary mining
-        clients.
+        Mine from the comfort of your browser! No need for unnecessary mining clients.
       </p>
 
       <div className="mb-6">
@@ -197,11 +180,7 @@ const MinePage = () => {
             ))}
             <div className="is-flex is-align-items-center">
               <span className="mr-2 has-text-weight-bold">&gt;</span>
-              <form
-                onSubmit={submitCommand}
-                className="is-block"
-                style={{ width: "100%" }}
-              >
+              <form onSubmit={submitCommand} className="is-block" style={{ width: "100%" }}>
                 <input
                   className="terminal-input"
                   name="command"
@@ -238,9 +217,7 @@ const MinePage = () => {
                 </button>
               </p>
             </div>
-            <p className="help">
-              The address of the miner, where to send block reward and fees.
-            </p>
+            <p className="help">The address of the miner, where to send block reward and fees.</p>
           </div>
 
           <div className="field mb-5">
@@ -261,10 +238,7 @@ const MinePage = () => {
 						)} */}
           </div>
 
-          <button
-            onClick={activeWorker.current ? stopMining : startMining}
-            className="button mb-0"
-          >
+          <button onClick={activeWorker.current ? stopMining : startMining} className="button mb-0">
             <i className="material-icons mr-2">memory</i>
             {activeWorker.current ? "Stop mining" : "Start mining"}
           </button>
@@ -274,35 +248,25 @@ const MinePage = () => {
       <div className="is-flex is-align-items-center mb-5">
         <div>
           <h3 className="title is-4">Mempool</h3>
-          <p className="subtitle is-6 ">
-            Select transactions to include from the mempool.
-          </p>
+          <p className="subtitle is-6 ">Select transactions to include from the mempool.</p>
         </div>
         {/* <button className="button ml-auto">
 					<span className="material-icons-outlined md-18 mr-2">refresh</span>Refresh
 				</button> */}
       </div>
       <MineMempool
-        addTransaction={(tx) => setSelectedTxs((txs) => [...txs, tx])}
-        removeTransaction={(tx) =>
-          setSelectedTxs((txs) => txs.filter((tx2) => tx2.hash !== tx.hash))
-        }
+        addTransaction={tx => setSelectedTxs(txs => [...txs, tx])}
+        removeTransaction={tx => setSelectedTxs(txs => txs.filter(tx2 => tx2.hash !== tx.hash))}
       />
 
       <MineSuccessModal
         isOpen={successModal}
         close={() => setSuccessModal(false)}
         params={params}
-        blockReward={(
-          calculateBlockReward(params, headBlock.height) / params.coin
-        ).toFixed(8)}
+        blockReward={(calculateBlockReward(params, headBlock.height) / params.coin).toFixed(8)}
       />
 
-      <MineFailureModal
-        isOpen={errorModal}
-        close={() => setErrorModal(false)}
-        error={error}
-      />
+      <MineFailureModal isOpen={errorModal} close={() => setErrorModal(false)} error={error} />
     </section>
   );
 };
