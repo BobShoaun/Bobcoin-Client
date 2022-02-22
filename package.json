@@ -35,7 +35,7 @@
   },
   "scripts": {
     "start": "react-app-rewired start",
-    "dev": "concurrently --kill-others \"npm start\" \"npm run css-watch\"",
+    "dev": "concurrently \"npm start\" \"npm run css-watch\"",
     "build": "react-app-rewired build",
     "deploy": "npm run build && firebase deploy",
     "css-build": "node-sass --omit-source-map-url src/styles/bulma.scss public/css/bulma.css",
