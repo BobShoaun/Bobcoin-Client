@@ -79,7 +79,7 @@ const LandingPage = () => {
           Bobcoin is safe, secure, sustainable, and simply great:
         </h3>
         <p style={{ marginBottom: "4em", fontSize: "1.15rem" }} className="has-text-centered">
-          Read more about thought process behind this project{" "}
+          Read more about the thought process behind this project{" "}
           <a
             href="https://www.bobng.me/articles/how-i-made-my-own-cryptocurrency"
             target="_blank"
