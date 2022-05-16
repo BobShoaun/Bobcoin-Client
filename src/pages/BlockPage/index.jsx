@@ -87,7 +87,9 @@ const BlockPage = () => {
         <tbody>
           <tr>
             <td>Hash</td>
-            <td style={{ wordBreak: "break-all" }}>{block.hash}</td>
+            <td fclassName="is-family-monospace" style={{ wordBreak: "break-all" }}>
+              {block.hash}
+            </td>
           </tr>
           <tr>
             <td>Height</td>
@@ -142,7 +144,9 @@ const BlockPage = () => {
           </tr>
           <tr>
             <td>Target Hash</td>
-            <td style={{ wordBreak: "break-all" }}>{bigIntToHex64(calculateHashTarget(params, block))}</td>
+            <td fclassName="is-family-monospace" style={{ wordBreak: "break-all" }}>
+              {bigIntToHex64(calculateHashTarget(params, block))}
+            </td>
           </tr>
           <tr>
             <td>Nonce</td>
@@ -160,7 +164,9 @@ const BlockPage = () => {
           </tr>
           <tr>
             <td>Merkle Root</td>
-            <td style={{ wordBreak: "break-all" }}>{block.merkleRoot}</td>
+            <td fclassName="is-family-monospace" style={{ wordBreak: "break-all" }}>
+              {block.merkleRoot}
+            </td>
           </tr>
           <tr>
             <td>Total transacted amount</td>

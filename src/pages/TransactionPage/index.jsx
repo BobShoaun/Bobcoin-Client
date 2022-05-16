@@ -13,23 +13,31 @@ import axios from "axios";
 const TransactionPage = () => {
   const { hash } = useParams();
   const location = useLocation();
-  const api = useSelector(state => state.network.api);
 
   const [loading, params] = useConsensus();
+  const [transaction, setTransaction] = useState(null);
+  const { headBlock, headBlockFetched } = useSelector(state => state.blockchain);
 
   const blockHash = new URLSearchParams(location.search).get("block");
 
-  const [transaction, setTransaction] = useState(null);
-
-  useEffect(async () => {
+  const getTransaction = async () => {
     setTransaction(null);
-    const result = blockHash
-      ? await axios.get(`${api}/transaction/info/${hash}?block=${blockHash}`)
-      : await axios.get(`${api}/transaction/info/${hash}`);
-    setTransaction(result.data);
-  }, [api, hash, blockHash]);
+    const { data } = blockHash
+      ? await axios.get(`/transaction/${hash}?block=${blockHash}`)
+      : await axios.get(`/transaction/${hash}`);
+    setTransaction(data);
+  };
 
-  if (!transaction || loading)
+  useEffect(getTransaction, [hash, blockHash]);
+
+  const getStatus = tx => {
+    // TODO: common code in blockpage
+    if (tx.blockHeight >= headBlock.height - 6) return { type: "Unconfirmed", color: "has-background-warning" };
+    if (!tx.blockValid) return { type: "Orphaned", color: "has-background-danger" };
+    return { type: "Confirmed", color: "has-background-success" };
+  };
+
+  if (!transaction || loading || !headBlockFetched)
     return (
       <div style={{ height: "70vh" }}>
         <Loading />
@@ -40,6 +48,8 @@ const TransactionPage = () => {
   const totalOutput = transaction.outputs.reduce((total, output) => total + output.amount, 0);
   const fee = totalInput - totalOutput;
   const isCoinbase = !transaction.inputs.length && transaction.outputs.length === 1;
+  const status = getStatus(transaction);
+  const confirmations = headBlock.height - transaction.blockHeight + 1;
 
   return (
     <section className="section">
@@ -64,11 +74,18 @@ const TransactionPage = () => {
           </tr>
           <tr>
             <td>Status</td>
-            <td className="capitalize">{transaction.status}</td>
+            <td>
+              <span
+                style={{ borderRadius: "0.3em" }}
+                className={`title is-7 py-1 px-2 has-background-success has-text-white capitalize ${status.color}`}
+              >
+                {status.type}
+              </span>
+            </td>
           </tr>
           <tr>
             <td>Confirmations</td>
-            <td>{transaction.status === "orphaned" ? "-" : 0}</td>
+            <td>{transaction.blockValid ? confirmations : "-"}</td>
           </tr>
           <tr>
             <td>Block Height</td>
