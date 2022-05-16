@@ -14,55 +14,50 @@ import axios from "axios";
 const BlockPage = () => {
   const { hash, height } = useParams();
   const history = useHistory();
-  const api = useSelector(state => state.network.api);
   const { params, fetched: paramsFetched } = useSelector(state => state.consensus);
   const { headBlock, headBlockFetched } = useSelector(state => state.blockchain);
 
-  const [blockInfo, setBlockInfo] = useState(null);
+  const [block, setBlock] = useState(null);
 
-  useEffect(async () => {
+  const getBlockByHash = async () => {
     if (!hash) return;
-    setBlockInfo(null);
-    const result = await axios.get(`${api}/block/info/${hash}`);
-    setBlockInfo(result.data);
-  }, [api, hash]);
+    setBlock(null);
+    const { data } = await axios.get(`/block/${hash}`);
+    setBlock(data);
+  };
+  useEffect(getBlockByHash, [hash]);
 
-  useEffect(async () => {
+  const getBlocksByHeight = async () => {
     if (!height) return;
-    setBlockInfo(null);
-    const result = await axios.get(`${api}/block/info/height/${height}`);
-    setBlockInfo(result.data);
-  }, [api, height]);
+    setBlock(null);
+    const { data } = await axios.get(`/blocks/height/${height}`);
+    setBlock(data[0]);
+  };
+  useEffect(getBlocksByHeight, [height]);
 
-  if (!blockInfo || !paramsFetched || !headBlockFetched)
+  if (!block || !paramsFetched || !headBlockFetched)
     return (
       <div style={{ height: "70vh" }}>
         <Loading />
       </div>
     );
 
-  const statusColor = status => {
-    switch (status) {
-      case "confirmed":
-        return "has-background-success";
-      case "unconfirmed":
-        return "has-background-warning";
-      case "orphaned":
-        return "has-background-danger";
-      default:
-        return "has-background-primary";
-    }
+  const getStatus = block => {
+    // TODO: common code in blockpage
+    if (block.height >= headBlock.height - 6) return { type: "Unconfirmed", color: "has-background-warning" };
+    if (!block.valid) return { type: "Orphaned", color: "has-background-danger" };
+    return { type: "Confirmed", color: "has-background-success" };
   };
 
-  const { block, transactions, status } = blockInfo;
-
   const confirmations = headBlock.height - block.height + 1;
-  const totalInput = transactions
+  const totalInput = block.transactions
     .slice(1)
     .reduce((total, info) => total + info.inputs.reduce((total, input) => total + input.amount, 0), 0);
-  const totalOutput = transactions
+  const totalOutput = block.transactions
     .slice(1)
     .reduce((total, info) => total + info.outputs.reduce((total, output) => total + output.amount, 0), 0);
+
+  const status = getStatus(block);
 
   return (
     <section className="section">
@@ -109,11 +104,9 @@ const BlockPage = () => {
             <td>
               <span
                 style={{ borderRadius: "0.3em" }}
-                className={`title is-7 py-1 px-2 has-background-success has-text-white capitalize ${statusColor(
-                  status
-                )}`}
+                className={`title is-7 py-1 px-2 has-background-success has-text-white capitalize ${status.color}`}
               >
-                {status}
+                {status.type}
               </span>
             </td>
           </tr>
@@ -123,15 +116,17 @@ const BlockPage = () => {
           </tr>
           <tr>
             <td>Confirmations</td>
-            <td>{status === "orphaned" ? "-" : confirmations}</td>
+            <td>{block.valid ? confirmations : "-"}</td>
           </tr>
           <tr>
             <td>Miner</td>
             <td style={{ wordBreak: "break-all" }}>
               <div className="is-flex">
-                <Link to={`/address/${transactions[0].outputs[0].address}`}>{transactions[0].outputs[0].address}</Link>
+                <Link to={`/address/${block.transactions[0].outputs[0].address}`}>
+                  {block.transactions[0].outputs[0].address}
+                </Link>
                 <span
-                  onClick={() => copyToClipboard(transactions[0].outputs[0].address, "Address copied")}
+                  onClick={() => copyToClipboard(block.transactions[0].outputs[0].address, "Address copied")}
                   className="material-icons-outlined md-18 my-auto ml-2 is-clickable"
                   style={{ color: "lightgray" }}
                 >
@@ -189,8 +184,8 @@ const BlockPage = () => {
       </table>
       <h2 className="title is-4">Transactions in this block</h2>
       <div className="mb-5">
-        {transactions.length &&
-          transactions.map(transaction => (
+        {block.transactions.length &&
+          block.transactions.map(transaction => (
             <div key={transaction.hash} className="card mb-3">
               <div className="card-content">
                 <Transaction transaction={transaction}></Transaction>

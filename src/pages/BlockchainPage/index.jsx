@@ -64,6 +64,7 @@ const BlockchainPage = () => {
   // };
 
   const getStatus = block => {
+    // TODO: common code in blockpage
     if (block.height >= headBlock.height - 6) return { type: "Unconfirmed", color: "has-background-warning" };
     if (!block.valid) return { type: "Orphaned", color: "has-background-danger" };
     return { type: "Confirmed", color: "has-background-success" };
