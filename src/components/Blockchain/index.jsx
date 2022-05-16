@@ -1,28 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useWindowDimensions } from "../../hooks/useWindowDimensions";
 import { useUnconfirmedBlocks } from "../../hooks/useUnconfirmedBlocks";
 import { useHeadBlock } from "../../hooks/useHeadBlock";
 
 import Block from "./Block";
+import axios from "axios";
 
 const Blockchain = ({ showHead }) => {
-	const [headBlockLoading, headBlock] = useHeadBlock();
-	const [unconfirmedBlocksLoading, unconfirmedBlocks] = useUnconfirmedBlocks();
+  const [headBlockLoading, headBlock] = useHeadBlock();
+  const [unconfirmedBlocksLoading, unconfirmedBlocks] = useUnconfirmedBlocks();
 
-	const [page, setPage] = useState(0);
+  const [blocks, setBlocks] = useState([]);
+  const [page, setPage] = useState(0);
 
-	const { width } = useWindowDimensions();
+  const { width } = useWindowDimensions();
 
-	const isTablet = width > 769;
-	const isDesktop = width > 1024;
-	const blocksPerPage = isDesktop ? 5 : 3;
+  const isTablet = width > 769;
+  const isDesktop = width > 1024;
+  const blocksPerPage = isDesktop ? 5 : 3;
 
-	const loading = headBlockLoading || unconfirmedBlocksLoading;
-	if (loading) return null;
+  const getBlocks = async () => {
+    if (!headBlock) return;
+    setBlocks([]);
+    const results = await axios.get(`/blocks?limit=6&height=${headBlock.height}`);
+    console.log(results.data);
+    setBlocks(results.data);
+  };
 
-	return (
-		<div className="is-flex-tablet h-100">
-			{/* {isTablet ? (
+  useEffect(() => getBlocks(), [headBlock]);
+
+  const loading = headBlockLoading || unconfirmedBlocksLoading;
+  if (loading) return null;
+
+  return (
+    <div className="is-flex-tablet h-100">
+      {/* {isTablet ? (
 				<button
 					className="button py-6 px-1 mr-3 my-auto"
 					// disabled={page === 0}
@@ -41,21 +53,17 @@ const Blockchain = ({ showHead }) => {
 					</button>
 				</div>
 			)} */}
-			{unconfirmedBlocks.slice(0, blocksPerPage).map(block => (
-				<div
-					onClick={() => {}}
-					key={block.hash}
-					className="my-3 mx-2 -is-clickable"
-					style={{ flex: "1 1 auto", minWidth: 0 }}
-				>
-					<Block
-						block={block}
-						status="Unconfirmed"
-						selected={showHead && headBlock.hash === block.hash}
-					/>
-				</div>
-			))}
-			{/* 
+      {blocks.slice(0, blocksPerPage).map(block => (
+        <div
+          onClick={() => {}}
+          key={block.hash}
+          className="my-3 mx-2 -is-clickable"
+          style={{ flex: "1 1 auto", minWidth: 0 }}
+        >
+          <Block block={block} status="Unconfirmed" selected={showHead && headBlock.hash === block.hash} />
+        </div>
+      ))}
+      {/* 
 			{isTablet ? (
 				<button
 					className="button py-6 px-1 ml-3 my-auto"
@@ -75,8 +83,8 @@ const Blockchain = ({ showHead }) => {
 					</button>
 				</div>
 			)} */}
-		</div>
-	);
+    </div>
+  );
 };
 
 export default Blockchain;

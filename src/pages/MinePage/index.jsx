@@ -63,13 +63,13 @@ const MinePage = () => {
 
     setTerminalLog(log => [...log, "\nForming and verifying candidate block..."]);
 
-    const { block, validation, target } = (
-      await axios.post(`${api}/mine/candidate-block`, {
-        previousBlock: headBlock,
-        transactions: selectedTxs.sort((a, b) => a.timestamp - b.timestamp),
-        miner,
-      })
-    ).data;
+    const results = await axios.post(`/mine/candidate-block`, {
+      previousBlock: headBlock,
+      transactions: selectedTxs.sort((a, b) => a.timestamp - b.timestamp),
+      miner,
+    });
+
+    const { block, validation, target } = results.data;
 
     if (validation.code !== RESULT.VALID) {
       console.error("Candidate block is invalid, not mining: ", block);
@@ -97,10 +97,10 @@ const MinePage = () => {
           ]);
           activeWorker.current = null;
 
-          const validation = (await axios.post(`${api}/block`, { block: data.block })).data;
+          const { validation, blockInfo } = (await axios.post(`${api}/block`, data.block)).data;
 
           if (validation.code !== RESULT.VALID) {
-            console.error("Block is invalid", block);
+            console.error("Block is invalid", blockInfo);
             setError(validation);
             setErrorModal(true);
             break;

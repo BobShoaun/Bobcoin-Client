@@ -12,7 +12,7 @@ import "./blockchain.css";
 import axios from "axios";
 
 const BlockchainPage = () => {
-  const api = useSelector(state => state.network.api);
+  // const api = useSelector(state => state.network.api);
   const headBlock = useSelector(state => state.blockchain.headBlock);
 
   const [blocks, setBlocks] = useState([]);
@@ -24,7 +24,7 @@ const BlockchainPage = () => {
 
   const getBlocks = async () => {
     const results = await axios.get(
-      `${api}/blockchain/blocks?height=${headBlock.height - page * heightsPerPage}&limit=${heightsPerPage}`
+      `/blocks?height=${headBlock.height - page * heightsPerPage}&limit=${heightsPerPage}`
     );
     setBlocks(results.data);
   };
@@ -32,7 +32,7 @@ const BlockchainPage = () => {
   useEffect(() => {
     if (!headBlock) return;
     getBlocks();
-  }, [api, headBlock, page]);
+  }, [headBlock, page]);
 
   const gotoPage = page => {
     blockchainSection.current?.scrollIntoView({ behavior: "smooth" });
@@ -48,17 +48,25 @@ const BlockchainPage = () => {
 
   const numPages = Math.ceil(headBlock.height / heightsPerPage);
 
-  const statusColor = status => {
-    switch (status) {
-      case "Confirmed":
-        return "has-background-success";
-      case "Unconfirmed":
-        return "has-background-warning";
-      case "Orphaned":
-        return "has-background-danger";
-      default:
-        return "has-background-primary";
-    }
+  // const statusColor = block => {
+  //   if (block.height >= headBlock.height - 6)
+  //     return "has-background-warning";
+  //   switch (status) {
+  //     case "Confirmed":
+  //       return "has-background-success";
+  //     case "Unconfirmed":
+  //       return "has-background-warning";
+  //     case "Orphaned":
+  //       return "has-background-danger";
+  //     default:
+  //       return "has-background-primary";
+  //   }
+  // };
+
+  const getStatus = block => {
+    if (block.height >= headBlock.height - 6) return { type: "Unconfirmed", color: "has-background-warning" };
+    if (!block.valid) return { type: "Orphaned", color: "has-background-danger" };
+    return { type: "Confirmed", color: "has-background-success" };
   };
 
   return (
@@ -89,38 +97,50 @@ const BlockchainPage = () => {
         <hr className="my-0" />
         <hr className="my-0" />
 
-        {blocks.map(({ block, status }) => (
-          <React.Fragment key={block.hash}>
-            <p
-              className="subtitle mb-0 has-text-centered"
-              style={{
-                fontSize: ".87rem",
-                textDecoration: status === "Orphaned" ? "line-through" : "none",
-              }}
-            >
-              {block.height}
-            </p>
-            <p className="subtitle mb-0 truncated" style={{ fontSize: ".87rem" }}>
-              <Link to={`/block/${block.hash}`}>{block.hash}</Link>
-            </p>
-            <p className="subtitle mb-0" style={{ fontSize: ".87rem" }}>
-              {formatDistanceToNow(block.timestamp, { addSuffix: true, includeSeconds: true })}
-            </p>
-            <p className="subtitle mb-0 truncated" style={{ fontSize: ".87rem" }}>
-              <Link to={`/address/${block.transactions[0].outputs[0].address}`}>
-                {block.transactions[0].outputs[0].address ?? "-"}
-              </Link>
-            </p>
-            <p className="mb-0 has-text-centered">
-              <span
-                style={{ borderRadius: "0.3em" }}
-                className={`title is-7 py-1 px-2 has-background-success has-text-white ${statusColor(status)}`}
+        {blocks.map(block => {
+          const status = getStatus(block);
+          return (
+            <React.Fragment key={block.hash}>
+              <p
+                className="subtitle mb-0 has-text-centered"
+                style={{
+                  fontSize: ".87rem",
+                  textDecoration: status.type === "Orphaned" ? "line-through" : "none",
+                }}
               >
-                {status}
-              </span>
-            </p>
-          </React.Fragment>
-        ))}
+                {block.height}
+              </p>
+              <p
+                className="subtitle mb-0 truncated"
+                style={{ fontSize: ".87rem", textDecoration: status.type === "Orphaned" ? "line-through" : "none" }}
+              >
+                <Link to={`/block/${block.hash}`}>{block.hash}</Link>
+              </p>
+              <p
+                className="subtitle mb-0"
+                style={{ fontSize: ".87rem", textDecoration: status.type === "Orphaned" ? "line-through" : "none" }}
+              >
+                {formatDistanceToNow(block.timestamp, { addSuffix: true, includeSeconds: true })}
+              </p>
+              <p
+                className="subtitle mb-0 truncated"
+                style={{ fontSize: ".87rem", textDecoration: status.type === "Orphaned" ? "line-through" : "none" }}
+              >
+                <Link to={`/address/${block.transactions[0].outputs[0].address}`}>
+                  {block.transactions[0].outputs[0].address ?? "-"}
+                </Link>
+              </p>
+              <p className="mb-0 has-text-centered">
+                <span
+                  style={{ borderRadius: "0.3em" }}
+                  className={`title is-7 py-1 px-2 has-background-success has-text-white ${status.color}`}
+                >
+                  {status.type}
+                </span>
+              </p>
+            </React.Fragment>
+          );
+        })}
       </div>
 
       <Pagination currentPage={page} onPageChange={gotoPage} numPages={numPages} />

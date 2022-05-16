@@ -16,6 +16,7 @@ import { reset as resetBlockchain } from "./store/blockchainSlice";
 import { reset as resetParams } from "./store/consensusSlice";
 
 import toast, { Toaster } from "react-hot-toast";
+import axios from "axios";
 
 const OverviewPage = lazy(() => import("./pages/OverviewPage"));
 const GenerateKeysPage = lazy(() => import("./pages/GenerateKeysPage"));
@@ -44,12 +45,13 @@ const App = () => {
   useEffect(() => {
     socket?.disconnect();
     const soc = io(api);
-
     dispatch(resetBlockchain());
     dispatch(resetParams());
-
     initializeSocket(soc);
     setSocket(soc);
+
+    // set axios apiUrl
+    axios.defaults.baseURL = api;
   }, [api]);
 
   return (

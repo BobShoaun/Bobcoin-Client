@@ -27,15 +27,14 @@ const OverviewPage = () => {
   const numLastPages = 2;
 
   const getTransactionCount = async () => {
-    const results = await axios.get(`${api}/transaction/count`);
-    setNumPages(Math.ceil(results.data.count / transactionsPerPage));
+    // const results = await axios.get(`${api}/transaction/count`);
+    // setNumPages(Math.ceil(results.data.count / transactionsPerPage));
+    setNumPages(1);
   };
 
   const getTransactions = async () => {
     setTransactions([]);
-    const results = await axios.get(
-      `${api}/transaction?limit=${transactionsPerPage}&offset=${page * transactionsPerPage}`
-    );
+    const results = await axios.get(`/transactions?limit=${transactionsPerPage}&offset=${page * transactionsPerPage}`);
     setTransactions(results.data);
   };
 
@@ -101,9 +100,7 @@ const OverviewPage = () => {
           <span>Make Transaction</span>
         </Link>
       </div>
-      <div className="mb-6">
-        <Mempool />
-      </div>
+      <div className="mb-6">{/* <Mempool /> */}</div>
 
       <div ref={transactionsSection} className="mb-4" style={{ gap: ".5em" }}>
         <h2 className="title is-size-5 is-size-4-tablet">Confirmed Transactions</h2>
