@@ -16,26 +16,24 @@ import axios from "axios";
 
 const WalletPage = () => {
   const mnemonic = useSelector(state => state.wallet.mnemonic);
-  const api = useSelector(state => state.network.api);
   const { externalKeys, internalKeys, xprv } = useSelector(state => state.wallet);
   const [loadingParams, params] = useConsensus();
 
   const [walletInfo, setWalletInfo] = useState(null);
+  const [tab, setTab] = useState("summary");
 
   const getWalletInfo = async () => {
-    const results = await axios.post(`${api}/address/info`, {
-      addresses: [...externalKeys, ...internalKeys].map(key => key.addr),
-    });
-    console.log(results.data);
+    const addresses = [...externalKeys, ...internalKeys].map(key => key.addr);
+    if (!addresses.length) return;
+    const results = await axios.post(`/address/info`, addresses);
     setWalletInfo(results.data);
   };
 
-  useEffect(getWalletInfo, [api, externalKeys, internalKeys]);
+  useEffect(getWalletInfo, [externalKeys, internalKeys]);
 
-  const [tab, setTab] = useState("summary");
+  if (!mnemonic) return <Onboarding />;
 
   const loading = !walletInfo || loadingParams;
-
   if (loading)
     return (
       <div style={{ height: "70vh" }}>
@@ -48,45 +46,39 @@ const WalletPage = () => {
       <main className="section">
         <h1 className="title is-size-4 is-size-2-tablet">Wallet</h1>
         <p className="subtitle is-size-6 is-size-5-tablet">Your wallet containing all the keys to your coins.</p>
-        {mnemonic ? (
-          <>
-            <div className="tabs is-toggle is-fullwidth mb-6">
-              <ul>
-                <li onClick={() => setTab("summary")} className={tab === "summary" ? "is-active" : ""}>
-                  <a>
-                    <div className="material-icons-two-tone mr-2">bar_chart</div>
-                    <span>Summary</span>
-                  </a>
-                </li>
-                <li onClick={() => setTab("send")} className={tab === "send" ? "is-active" : ""}>
-                  <a>
-                    <div className="material-icons-outlined md-18 mr-2">send</div>
-                    <span>Send</span>
-                  </a>
-                </li>
-                <li onClick={() => setTab("receive")} className={tab === "receive" ? "is-active" : ""}>
-                  <a>
-                    <div className="material-icons-outlined md-18 mr-2">call_received</div>
-                    <span>Receive</span>
-                  </a>
-                </li>
-                <li onClick={() => setTab("more")} className={tab === "more" ? "is-active" : ""}>
-                  <a>
-                    <div className="material-icons-outlined md-18 mr-2">info</div>
-                    <span>Info</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
+        <div className="tabs is-toggle is-fullwidth mb-6">
+          <ul>
+            <li onClick={() => setTab("summary")} className={tab === "summary" ? "is-active" : ""}>
+              <a>
+                <div className="material-icons-two-tone mr-2">bar_chart</div>
+                <span>Summary</span>
+              </a>
+            </li>
+            <li onClick={() => setTab("send")} className={tab === "send" ? "is-active" : ""}>
+              <a>
+                <div className="material-icons-outlined md-18 mr-2">send</div>
+                <span>Send</span>
+              </a>
+            </li>
+            <li onClick={() => setTab("receive")} className={tab === "receive" ? "is-active" : ""}>
+              <a>
+                <div className="material-icons-outlined md-18 mr-2">call_received</div>
+                <span>Receive</span>
+              </a>
+            </li>
+            <li onClick={() => setTab("more")} className={tab === "more" ? "is-active" : ""}>
+              <a>
+                <div className="material-icons-outlined md-18 mr-2">info</div>
+                <span>Info</span>
+              </a>
+            </li>
+          </ul>
+        </div>
 
-            {tab === "summary" && <SummaryTab />}
-            {tab === "send" && <SendTab />}
-            {tab === "receive" && <ReceiveTab />}
-            {tab === "more" && <MoreTab />}
-          </>
-        ) : (
-          <Onboarding></Onboarding>
-        )}
+        {tab === "summary" && <SummaryTab />}
+        {tab === "send" && <SendTab />}
+        {tab === "receive" && <ReceiveTab />}
+        {tab === "more" && <MoreTab />}
       </main>
     </WalletContext.Provider>
   );

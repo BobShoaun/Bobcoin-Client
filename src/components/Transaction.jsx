@@ -18,10 +18,12 @@ const Transaction = ({ transaction }) => {
   const totalOutput = transaction.outputs.reduce((total, output) => total + output.amount, 0);
   const isCoinbase = transaction.inputs.length === 0 && transaction.outputs.length === 1;
   const fee = totalInput - totalOutput;
-  const confirmations =
-    transaction.status === "mempool" || transaction.status === "orphaned"
-      ? 0
-      : headBlock?.height - transaction.blockHeight + 1;
+  const confirmations = transaction.block.valid ? headBlock?.height - transaction.block.height + 1 : 0;
+
+  // const confirmations =
+  //   transaction.status === "mempool" || transaction.status === "orphaned"
+  //     ? 0
+  //     : headBlock?.height - transaction.blockHeight + 1;
 
   const getConfirmationColor = confirmations => {
     if (confirmations > params.blkMaturity) return "confirmations-8";
@@ -51,8 +53,8 @@ const Transaction = ({ transaction }) => {
           <Link
             className="is-block truncated"
             to={
-              transaction.blockHash
-                ? `/transaction/${transaction.hash}?block=${transaction.blockHash}`
+              transaction.block?.hash
+                ? `/transaction/${transaction.hash}?block=${transaction.block.hash}`
                 : `/transaction/${transaction.hash}`
             }
           >
@@ -118,7 +120,7 @@ const Transaction = ({ transaction }) => {
                 <p className="has-text-weight-medium has-text-right">
                   {numberWithCommas((output.amount / params.coin).toFixed(decimalPlaces))} {params.symbol}
                 </p>
-                {transaction.status === "orphaned" ? (
+                {!transaction.block.valid ? (
                   <div data-tip data-for="spent" className="is-block ml-3">
                     <span className="has-text-grey material-icons-outlined md-18 is-block my-auto">credit_card</span>
                     <ReactTooltip id="spent" type="dark" effect="solid">

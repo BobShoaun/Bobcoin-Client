@@ -1,10 +1,9 @@
-import { useContext, useState, useRef, useEffect } from "react";
+import { useContext, useState, useRef, useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 
 import Loading from "../../components/Loading";
 import "./index.css";
 
-import { useMempool } from "../../hooks/useMempool";
 import { useWindowDimensions } from "../../hooks/useWindowDimensions";
 
 import Transaction from "../../components/Transaction";
@@ -16,14 +15,11 @@ import { getMaxDecimalPlaces, numberWithCommas } from "../../helpers";
 import axios from "axios";
 
 const SummaryTab = () => {
-  const [loadingMempool, mempool] = useMempool();
-
   const { externalKeys, internalKeys } = useSelector(state => state.wallet);
-  const api = useSelector(state => state.network.api);
-
   const { walletInfo, params } = useContext(WalletContext);
 
   const [transactions, setTransactions] = useState([]);
+  const [mempoolTxs, setMempoolTxs] = useState([]);
   const [page, setPage] = useState(0); // 0 indexed page
   const transactionsSection = useRef(null);
   const transactionsPerPage = 10;
@@ -32,37 +28,43 @@ const SummaryTab = () => {
 
   const { width } = useWindowDimensions();
   const isTablet = width > 769;
+  const addresses = useMemo(
+    () => [...externalKeys, ...internalKeys].map(key => key.addr),
+    [externalKeys, internalKeys]
+  );
 
   const getWalletTransactions = async () => {
+    if (!addresses.length) return;
     setTransactions([]);
     const results = await axios.post(
-      `${api}/address/transactions?limit=${transactionsPerPage}&offset=${page * transactionsPerPage}`,
-      { addresses: [...externalKeys, ...internalKeys].map(key => key.addr) }
+      `/address/transactions?limit=${transactionsPerPage}&offset=${page * transactionsPerPage}`,
+      addresses
     );
     setTransactions(results.data);
   };
+  useEffect(getWalletTransactions, [addresses, page]);
 
-  useEffect(getWalletTransactions, [api, externalKeys, internalKeys, page]);
+  const getMempoolTransactions = async () => {
+    if (!addresses.length) return;
+    setMempoolTxs([]);
+    const results = await axios.post(`/mempool/address`, addresses);
+    setMempoolTxs(results.data);
+  };
+  useEffect(getMempoolTransactions, [addresses, page]);
 
   const gotoPage = page => {
     transactionsSection.current?.scrollIntoView({ behavior: "smooth" });
     setPage(page);
   };
 
-  if (loadingMempool)
-    return (
-      <div style={{ height: "70vh" }}>
-        <Loading />
-      </div>
-    );
+  // if (loadingMempool)
+  //   return (
+  //     <div style={{ height: "70vh" }}>
+  //       <Loading />
+  //     </div>
+  //   );
 
   const { balance, totalReceived, totalSent, numUtxos, numTransactions, numBlocksMined } = walletInfo;
-
-  const pending = mempool.filter(
-    ({ inputs, outputs }) =>
-      inputs.some(input => [...externalKeys, ...internalKeys].some(keys => keys.addr === input.address)) ||
-      outputs.some(output => [...externalKeys, ...internalKeys].some(keys => keys.addr === output.address))
-  );
 
   const decimalPlaces = isTablet
     ? 8
@@ -104,14 +106,14 @@ const SummaryTab = () => {
             <h3 className="title is-spaced is-6 mb-0">Blocks mined: </h3>
             <p className="subtitle is-spaced has-text-weight-medium is-6 mb-0">{numBlocksMined}</p>
             <h3 className="title is-spaced is-6 mb-0">Pending transactions:</h3>
-            <p className="subtitle is-spaced has-text-weight-medium is-6 mb-0">{pending.length}</p>
+            <p className="subtitle is-spaced has-text-weight-medium is-6 mb-0">{mempoolTxs.length}</p>
           </div>
         </div>
       </div>
       <h1 className="title is-size-5 is-size-4-tablet mb-3">Pending transactions</h1>
       <div className="mb-6">
-        {pending.length ? (
-          pending.map(transaction => (
+        {mempoolTxs.length ? (
+          mempoolTxs.map(transaction => (
             <div key={transaction.hash} className="card mb-3">
               <div className="card-content">
                 <Transaction transaction={transaction} />

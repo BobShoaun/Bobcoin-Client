@@ -46,22 +46,7 @@ const BlockchainPage = () => {
       </div>
     );
 
-  const numPages = Math.ceil(headBlock.height / heightsPerPage);
-
-  // const statusColor = block => {
-  //   if (block.height >= headBlock.height - 6)
-  //     return "has-background-warning";
-  //   switch (status) {
-  //     case "Confirmed":
-  //       return "has-background-success";
-  //     case "Unconfirmed":
-  //       return "has-background-warning";
-  //     case "Orphaned":
-  //       return "has-background-danger";
-  //     default:
-  //       return "has-background-primary";
-  //   }
-  // };
+  const numPages = Math.ceil((headBlock.height + 1) / heightsPerPage);
 
   const getStatus = block => {
     // TODO: common code in blockpage

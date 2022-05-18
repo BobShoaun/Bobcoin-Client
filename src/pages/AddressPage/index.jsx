@@ -32,14 +32,14 @@ const AddressPage = ({ match }) => {
 
   const getAddressInfo = async () => {
     setAddressInfo(null);
-    const results = await axios.get(`${api}/address/info/${address}`);
+    const results = await axios.get(`/address/${address}/info`);
     setAddressInfo(results.data);
   };
 
   const getAddressTransactions = async () => {
     setTransactions([]);
     const results = await axios.get(
-      `${api}/address/transactions/${address}?limit=${transactionsPerPage}&offset=${page * transactionsPerPage}`
+      `${api}/address/${address}/transactions?limit=${transactionsPerPage}&offset=${page * transactionsPerPage}`
     );
     setTransactions(results.data);
   };
@@ -187,6 +187,7 @@ const AddressPage = ({ match }) => {
       <h1 ref={transactionsSection} className="title is-size-5 is-size-4-tablet">
         Transactions
       </h1>
+      <p className="subtitle is-size-6">Confirmed transactions this address is involved.</p>
       <div className="mb-6">
         {transactions.length ? (
           transactions.map(transaction => (

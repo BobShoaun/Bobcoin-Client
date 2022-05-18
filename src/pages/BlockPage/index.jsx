@@ -191,13 +191,16 @@ const BlockPage = () => {
       <h2 className="title is-4">Transactions in this block</h2>
       <div className="mb-5">
         {block.transactions.length &&
-          block.transactions.map(transaction => (
-            <div key={transaction.hash} className="card mb-3">
-              <div className="card-content">
-                <Transaction transaction={transaction}></Transaction>
+          block.transactions.map(transaction => {
+            transaction.block = { height: block.height, hash: block.hash, valid: block.valid };
+            return (
+              <div key={transaction.hash} className="card mb-3">
+                <div className="card-content">
+                  <Transaction transaction={transaction}></Transaction>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
       </div>
     </section>
   );

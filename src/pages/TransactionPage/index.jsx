@@ -32,8 +32,8 @@ const TransactionPage = () => {
 
   const getStatus = tx => {
     // TODO: common code in blockpage
-    if (tx.blockHeight >= headBlock.height - 6) return { type: "Unconfirmed", color: "has-background-warning" };
-    if (!tx.blockValid) return { type: "Orphaned", color: "has-background-danger" };
+    if (tx.block.height >= headBlock.height - 6) return { type: "Unconfirmed", color: "has-background-warning" };
+    if (!tx.block.valid) return { type: "Orphaned", color: "has-background-danger" };
     return { type: "Confirmed", color: "has-background-success" };
   };
 
@@ -49,7 +49,7 @@ const TransactionPage = () => {
   const fee = totalInput - totalOutput;
   const isCoinbase = !transaction.inputs.length && transaction.outputs.length === 1;
   const status = getStatus(transaction);
-  const confirmations = headBlock.height - transaction.blockHeight + 1;
+  const confirmations = headBlock.height - transaction.block.height + 1;
 
   return (
     <section className="section">
@@ -85,17 +85,17 @@ const TransactionPage = () => {
           </tr>
           <tr>
             <td>Confirmations</td>
-            <td>{transaction.blockValid ? confirmations : "-"}</td>
+            <td>{transaction.block.valid ? confirmations : "-"}</td>
           </tr>
           <tr>
             <td>Block Height</td>
-            <td>{transaction.blockHeight ? transaction.blockHeight.toLocaleString() : "-"}</td>
+            <td>{transaction.block.height ? transaction.block.height.toLocaleString() : "-"}</td>
           </tr>
           <tr>
             <td>Block Hash</td>
             <td style={{ wordBreak: "break-all" }}>
-              {transaction.blockHash ? (
-                <Link to={`../block/${transaction.blockHash}`}>{transaction.blockHash}</Link>
+              {transaction.block.hash ? (
+                <Link to={`../block/${transaction.block.hash}`}>{transaction.block.hash}</Link>
               ) : (
                 "-"
               )}
