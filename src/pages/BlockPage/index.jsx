@@ -14,8 +14,8 @@ import axios from "axios";
 const BlockPage = () => {
   const { hash, height } = useParams();
   const history = useHistory();
-  const { params, fetched: paramsFetched } = useSelector(state => state.consensus);
-  const { headBlock, headBlockFetched } = useSelector(state => state.blockchain);
+  const { params, paramsLoaded } = useSelector(state => state.consensus);
+  const { headBlock, headBlockLoaded } = useSelector(state => state.blockchain);
 
   const [block, setBlock] = useState(null);
 
@@ -35,7 +35,7 @@ const BlockPage = () => {
   };
   useEffect(getBlocksByHeight, [height]);
 
-  if (!block || !paramsFetched || !headBlockFetched)
+  if (!block || !paramsLoaded || !headBlockLoaded)
     return (
       <div style={{ height: "70vh" }}>
         <Loading />

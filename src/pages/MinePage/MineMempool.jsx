@@ -1,28 +1,31 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 import Transaction from "../../components/Transaction";
 import { useMempool } from "../../hooks/useMempool";
 
 const MineMempool = ({ addTransaction, removeTransaction }) => {
   // const [mempoolLoading, mempool] = useMempool();
-  const [mempool, setMempool] = useState(null);
+  // const [mempool, setMempool] = useState(null);
+
+  const { mempool, mempoolLoaded } = useSelector(state => state.blockchain);
 
   const toggleSelected = (value, tx) => {
     if (value) addTransaction(tx);
     else removeTransaction(tx);
   };
 
-  const getMempool = async () => {
-    const results = await axios.get("/mempool");
-    setMempool(results.data);
-  };
+  // const getMempool = async () => {
+  //   const results = await axios.get("/mempool");
+  //   setMempool(results.data);
+  // };
 
-  useEffect(() => {
-    getMempool();
-  }, []);
+  // useEffect(() => {
+  //   getMempool();
+  // }, []);
 
-  if (!mempool)
+  if (!mempoolLoaded)
     return (
       <main className="has-background-white mb-6 is-flex is-justify-content-center" style={{ padding: "2.5em" }}>
         <span className="material-icons-outlined mr-3 md-18">sync</span>

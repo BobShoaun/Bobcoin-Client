@@ -1,16 +1,14 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { useWindowDimensions } from "../../hooks/useWindowDimensions";
-import { useUnconfirmedBlocks } from "../../hooks/useUnconfirmedBlocks";
-import { useHeadBlock } from "../../hooks/useHeadBlock";
 
 import Block from "./Block";
 import axios from "axios";
 
 const Blockchain = ({ showHead }) => {
-  const [headBlockLoading, headBlock] = useHeadBlock();
-  const [unconfirmedBlocksLoading, unconfirmedBlocks] = useUnconfirmedBlocks();
+  const { headBlock, headBlockLoaded, recentBlocks, recentBlocksLoaded } = useSelector(state => state.blockchain);
 
-  const [blocks, setBlocks] = useState([]);
+  //   const [blocks, setBlocks] = useState([]);
   const [page, setPage] = useState(0);
 
   const { width } = useWindowDimensions();
@@ -19,18 +17,18 @@ const Blockchain = ({ showHead }) => {
   const isDesktop = width > 1024;
   const blocksPerPage = isDesktop ? 5 : 3;
 
-  const getBlocks = async () => {
-    if (!headBlock) return;
-    setBlocks([]);
-    const results = await axios.get(`/blocks?limit=6&height=${headBlock.height}`);
-    console.log(results.data);
-    setBlocks(results.data);
-  };
+  //   const getBlocks = async () => {
+  //     if (!headBlock) return;
+  //     setBlocks([]);
+  //     const results = await axios.get(`/blocks?limit=6&height=${headBlock.height}`);
+  //     console.log(results.data);
+  //     setBlocks(results.data);
+  //   };
 
-  useEffect(() => getBlocks(), [headBlock]);
+  //   useEffect(() => getBlocks(), [headBlock]);
 
-  const loading = headBlockLoading || unconfirmedBlocksLoading;
-  if (loading) return null;
+  const loading = !headBlockLoaded || !recentBlocksLoaded;
+  if (loading) return <p>Please wait...</p>;
 
   return (
     <div className="is-flex-tablet h-100">
@@ -53,7 +51,7 @@ const Blockchain = ({ showHead }) => {
 					</button>
 				</div>
 			)} */}
-      {blocks.slice(0, blocksPerPage).map(block => (
+      {recentBlocks.slice(0, blocksPerPage).map(block => (
         <div
           onClick={() => {}}
           key={block.hash}

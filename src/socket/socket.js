@@ -1,21 +1,21 @@
-import { setUnconfirmedBlocks, setMempool, setHeadBlock } from "../store/blockchainSlice";
+import {  setMempool, setHeadBlock, setRecentBlocks } from "../store/blockchainSlice";
 import { setParams } from "../store/consensusSlice";
 
 import store from "../store";
 
 export const initializeSocket = socket => {
-  socket.on("block", ({ headBlock, unconfirmedBlocks, mempool }) => {
+  socket.on("block", ({ headBlock, recentBlocks, mempool }) => {
     store.dispatch(setHeadBlock(headBlock));
-    store.dispatch(setUnconfirmedBlocks(unconfirmedBlocks));
+    store.dispatch(setRecentBlocks(recentBlocks));
     store.dispatch(setMempool(mempool));
-    console.log("block", headBlock, unconfirmedBlocks);
+    console.log("block", { headBlock, recentBlocks, mempool });
   });
-  socket.on("initialize", ({ params, headBlock, unconfirmedBlocks, mempool }) => {
+  socket.on("initialize", ({ params, headBlock, recentBlocks, mempool }) => {
     store.dispatch(setParams(params));
     store.dispatch(setHeadBlock(headBlock));
-    store.dispatch(setUnconfirmedBlocks(unconfirmedBlocks));
+    store.dispatch(setRecentBlocks(recentBlocks));
     store.dispatch(setMempool(mempool));
-    console.log("init", params, headBlock, unconfirmedBlocks, mempool);
+    console.log("init", { params, headBlock, recentBlocks, mempool });
   });
   socket.on("mempool", ({ mempool }) => {
     store.dispatch(setMempool(mempool));

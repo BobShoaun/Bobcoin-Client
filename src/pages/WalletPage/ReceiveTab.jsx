@@ -114,7 +114,7 @@ const ReceiveTab = () => {
                         <p>{addr}</p>
                       </td>
                       <td>{`m/${params.derivPurpose}'/${params.derivCoinType}'/0'/0/${index}`}</td>
-                      <td>{walletInfo.numAddressTransactions[addr] > 0 ? "Used" : "Unused"}</td>
+                      <td>{walletInfo?.numAddressTransactions?.[addr] > 0 ? "Used" : "Unused"}</td>
                     </tr>
                   ))}
                 </tbody>

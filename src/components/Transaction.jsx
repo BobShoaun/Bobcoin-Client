@@ -18,7 +18,7 @@ const Transaction = ({ transaction }) => {
   const totalOutput = transaction.outputs.reduce((total, output) => total + output.amount, 0);
   const isCoinbase = transaction.inputs.length === 0 && transaction.outputs.length === 1;
   const fee = totalInput - totalOutput;
-  const confirmations = transaction.block.valid ? headBlock?.height - transaction.block.height + 1 : 0;
+  const confirmations = transaction.block?.valid ? headBlock?.height - transaction.block.height + 1 : 0;
 
   // const confirmations =
   //   transaction.status === "mempool" || transaction.status === "orphaned"
@@ -120,7 +120,7 @@ const Transaction = ({ transaction }) => {
                 <p className="has-text-weight-medium has-text-right">
                   {numberWithCommas((output.amount / params.coin).toFixed(decimalPlaces))} {params.symbol}
                 </p>
-                {!transaction.block.valid ? (
+                {!transaction.block?.valid ? (
                   <div data-tip data-for="spent" className="is-block ml-3">
                     <span className="has-text-grey material-icons-outlined md-18 is-block my-auto">credit_card</span>
                     <ReactTooltip id="spent" type="dark" effect="solid">

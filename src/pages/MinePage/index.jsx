@@ -1,13 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 
 import Blockchain from "../../components/Blockchain/";
 import MineMempool from "./MineMempool";
 import MineSuccessModal from "./MineSuccessModal";
 import MineFailureModal from "./MineFailureModal";
-
-import { useParams } from "../../hooks/useParams";
-import { useHeadBlock } from "../../hooks/useHeadBlock";
 
 import { calculateBlockReward, RESULT, hexToBigInt } from "blockcrypto";
 
@@ -20,12 +17,11 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const MinePage = () => {
-  const [paramsLoading, params] = useParams();
-  const [headBlockLoading, headBlock] = useHeadBlock();
+  const { headBlock, headBlockLoaded } = useSelector(state => state.blockchain);
+  const { params, paramsLoaded } = useSelector(state => state.consensus);
 
   const keys = useSelector(state => state.wallet.keys);
   const { externalKeys } = useSelector(state => state.wallet);
-  const api = useSelector(state => state.network.api);
 
   const [miner, setMiner] = useState(externalKeys[externalKeys.length - 1]?.addr ?? keys.address ?? "");
   const [terminalLog, setTerminalLog] = useState([]);
@@ -35,15 +31,16 @@ const MinePage = () => {
   const [selectedTxs, setSelectedTxs] = useState([]);
   const activeWorker = useRef(null);
 
-  useEffect(() => {
-    return () => {
+  useEffect(
+    () => () => {
       // terminate worker when leaving page / component
       console.log("terminating worker", activeWorker.current);
       activeWorker.current?.terminate();
-    };
-  }, []);
+    },
+    []
+  );
 
-  const loading = headBlockLoading || paramsLoading || !headBlock;
+  const loading = !paramsLoaded || !headBlockLoaded;
 
   if (loading)
     return (
@@ -97,7 +94,7 @@ const MinePage = () => {
           ]);
           activeWorker.current = null;
 
-          const { validation, blockInfo } = (await axios.post(`${api}/block`, data.block)).data;
+          const { validation, blockInfo } = (await axios.post(`/block`, data.block)).data;
 
           if (validation.code !== RESULT.VALID) {
             console.error("Block is invalid", blockInfo);

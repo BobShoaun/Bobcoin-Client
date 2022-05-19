@@ -20,7 +20,7 @@ const AddressPage = ({ match }) => {
   const [addressQR, setAddressQR] = useState("");
 
   const api = useSelector(state => state.network.api);
-  const { params, fetched: paramsFetched } = useSelector(state => state.consensus);
+  const { params, paramsLoaded } = useSelector(state => state.consensus);
 
   const [addressInfo, setAddressInfo] = useState(null);
   const [transactions, setTransactions] = useState([]);
@@ -62,7 +62,7 @@ const AddressPage = ({ match }) => {
     setPage(page);
   };
 
-  if (!addressInfo || !paramsFetched)
+  if (!addressInfo || !paramsLoaded)
     return (
       <div style={{ height: "70vh" }}>
         <Loading />

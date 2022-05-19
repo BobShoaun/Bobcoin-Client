@@ -2,8 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-import { useParams } from "../../hooks/useParams";
-
 import Blockchain from "../../components/Blockchain/";
 import Mempool from "../../components/Mempool";
 import Loading from "../../components/Loading";
@@ -14,39 +12,61 @@ import axios from "axios";
 import "./index.css";
 
 const OverviewPage = () => {
-  const [loading, params] = useParams();
-  const api = useSelector(state => state.network.api);
+  const { params, paramsLoaded } = useSelector(state => state.consensus);
+  const { mempool, mempoolLoaded } = useSelector(state => state.blockchain);
 
   const [transactions, setTransactions] = useState([]);
-  const [numPages, setNumPages] = useState(0);
+  const [numTxPages, setNumTxPages] = useState(0);
+  const [txPage, setTxPage] = useState(0); // 0 indexed page\
 
-  const [page, setPage] = useState(0); // 0 indexed page
   const transactionsSection = useRef(null);
   const transactionsPerPage = 10;
+
+  const [mempoolTxs, setMempoolTxs] = useState([]);
+  const [numMempoolPages, setNumMempoolPages] = useState(0);
+  const [mempoolPage, setMempoolPage] = useState(0);
+  const mempoolTxsPerPage = 10;
+
   const numFirstPages = 10;
   const numLastPages = 2;
 
   const getTransactionCount = async () => {
-    // const results = await axios.get(`${api}/transaction/count`);
-    // setNumPages(Math.ceil(results.data.count / transactionsPerPage));
-    setNumPages(1);
+    const results = await axios.get(`/transactions/count`);
+    setNumTxPages(Math.ceil(results.data.count / transactionsPerPage));
   };
 
   const getTransactions = async () => {
     setTransactions([]);
-    const results = await axios.get(`/transactions?limit=${transactionsPerPage}&offset=${page * transactionsPerPage}`);
+    const results = await axios.get(
+      `/transactions?limit=${transactionsPerPage}&offset=${txPage * transactionsPerPage}`
+    );
     setTransactions(results.data);
   };
 
-  useEffect(getTransactionCount, [api]);
-  useEffect(getTransactions, [api, page]);
+  const getMempoolTxCount = async () => {
+    const results = await axios.get("/mempool/count");
+    setNumMempoolPages(Math.ceil(results.data.count / mempoolTxsPerPage));
+  };
+
+  const getMempoolTxs = async () => {
+    setMempoolTxs([]);
+    const results = await axios.get(
+      `/mempool/all?limit=${mempoolTxsPerPage}&offset=${mempoolPage * mempoolTxsPerPage}`
+    );
+    setMempoolTxs(results.data);
+  };
+
+  useEffect(getTransactionCount, []);
+  useEffect(getTransactions, [txPage]);
+  useEffect(getMempoolTxCount, []);
+  useEffect(getMempoolTxs, [mempoolPage]);
 
   const gotoPage = page => {
     transactionsSection.current?.scrollIntoView({ behavior: "smooth" });
-    setPage(page);
+    setTxPage(page);
   };
 
-  if (loading)
+  if (!paramsLoaded || !mempoolLoaded)
     return (
       <div style={{ height: "70vh" }}>
         <Loading />
@@ -100,7 +120,22 @@ const OverviewPage = () => {
           <span>Make Transaction</span>
         </Link>
       </div>
-      <div className="mb-6">{/* <Mempool /> */}</div>
+      <div className="mb-6">
+        {mempool.length ? (
+          mempool.map(transaction => (
+            <div key={transaction.hash} className="card mb-2">
+              <div className="card-content">
+                <Transaction transaction={transaction} />
+              </div>
+            </div>
+          ))
+        ) : (
+          <main className="has-background-white mb-6 is-flex is-justify-content-center" style={{ padding: "2.5em" }}>
+            <span className="material-icons-outlined mr-3 md-18">pending_actions</span>
+            <p className="subtitle is-6 has-text-centered">There are currently no pending transactions...</p>
+          </main>
+        )}
+      </div>
 
       <div ref={transactionsSection} className="mb-4" style={{ gap: ".5em" }}>
         <h2 className="title is-size-5 is-size-4-tablet">Confirmed Transactions</h2>
@@ -123,7 +158,7 @@ const OverviewPage = () => {
       </div>
 
       <div className="mb-6">
-        <Pagination currentPage={page} onPageChange={gotoPage} numPages={numPages} />
+        <Pagination currentPage={txPage} onPageChange={gotoPage} numPages={numTxPages} />
       </div>
     </section>
   );

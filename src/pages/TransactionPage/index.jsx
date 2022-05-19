@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useParams, Link, useLocation } from "react-router-dom";
 
-import { useParams as useConsensus } from "../../hooks/useParams";
-
 import Transaction from "../../components/Transaction";
 import { copyToClipboard, numberWithCommas } from "../../helpers";
 import Loading from "../../components/Loading";
@@ -14,9 +12,9 @@ const TransactionPage = () => {
   const { hash } = useParams();
   const location = useLocation();
 
-  const [loading, params] = useConsensus();
   const [transaction, setTransaction] = useState(null);
-  const { headBlock, headBlockFetched } = useSelector(state => state.blockchain);
+  const { params, paramsLoaded } = useSelector(state => state.consensus);
+  const { headBlock, headBlockLoaded } = useSelector(state => state.blockchain);
 
   const blockHash = new URLSearchParams(location.search).get("block");
 
@@ -37,7 +35,7 @@ const TransactionPage = () => {
     return { type: "Confirmed", color: "has-background-success" };
   };
 
-  if (!transaction || loading || !headBlockFetched)
+  if (!transaction || !paramsLoaded || !headBlockLoaded)
     return (
       <div style={{ height: "70vh" }}>
         <Loading />
@@ -89,7 +87,7 @@ const TransactionPage = () => {
           </tr>
           <tr>
             <td>Block Height</td>
-            <td>{transaction.block.height ? transaction.block.height.toLocaleString() : "-"}</td>
+            <td>{isNaN(transaction.block.height) ? "-" : transaction.block.height.toLocaleString()}</td>
           </tr>
           <tr>
             <td>Block Hash</td>

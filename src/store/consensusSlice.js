@@ -9,7 +9,7 @@ export const getParams = createAsyncThunk("consensus/getParams", async (payload,
 
 const initialState = {
 	params: {},
-	fetched: false,
+	paramsLoaded: false,
 };
 
 const consensusSlice = createSlice({
@@ -18,7 +18,7 @@ const consensusSlice = createSlice({
 	reducers: {
 		setParams(state, { payload: params }) {
 			state.params = params;
-			state.fetched = true;
+			state.paramsLoaded = true;
 		},
 		reset: () => initialState,
 	},
