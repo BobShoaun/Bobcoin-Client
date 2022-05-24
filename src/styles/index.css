@@ -142,3 +142,14 @@ code {
 .capitalize {
   text-transform: capitalize;
 }
+
+.highlight-button {
+  color: lightgrey;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.highlight-button:is(:hover, :focus) {
+  color: grey;
+}

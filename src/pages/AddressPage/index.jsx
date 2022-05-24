@@ -100,13 +100,12 @@ const AddressPage = ({ match }) => {
               <td>
                 <div className="is-flex" style={{ wordBreak: "break-all" }}>
                   {address}
-                  <span
+                  <button
                     onClick={() => copyToClipboard(address, "Address copied")}
-                    className="material-icons-outlined md-18 my-auto ml-2 is-clickable"
-                    style={{ color: "lightgrey" }}
+                    className="material-icons-outlined md-14 my-auto ml-1 highlight-button py-0"
                   >
                     content_copy
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>

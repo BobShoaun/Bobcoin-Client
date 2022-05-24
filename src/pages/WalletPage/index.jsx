@@ -9,15 +9,13 @@ import SummaryTab from "./SummaryTab";
 import MoreTab from "./MoreTab";
 import ReceiveTab from "./ReceiveTab";
 import SendTab from "./SendTab";
-import { useParams as useConsensus } from "../../hooks/useParams";
 
 import { WalletContext } from "./WalletContext";
 import axios from "axios";
 
 const WalletPage = () => {
-  const mnemonic = useSelector(state => state.wallet.mnemonic);
-  const { externalKeys, internalKeys, xprv } = useSelector(state => state.wallet);
-  const [loadingParams, params] = useConsensus();
+  const { mnemonic, externalKeys, internalKeys, xprv } = useSelector(state => state.wallet);
+  const { params, paramsLoaded } = useSelector(state => state.consensus);
 
   const [walletInfo, setWalletInfo] = useState(null);
   const [tab, setTab] = useState("summary");
@@ -33,7 +31,7 @@ const WalletPage = () => {
 
   if (!mnemonic) return <Onboarding />;
 
-  const loading = !walletInfo || loadingParams;
+  const loading = !walletInfo || !paramsLoaded;
   if (loading)
     return (
       <div style={{ height: "70vh" }}>

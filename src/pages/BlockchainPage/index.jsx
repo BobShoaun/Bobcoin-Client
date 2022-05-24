@@ -12,8 +12,7 @@ import "./blockchain.css";
 import axios from "axios";
 
 const BlockchainPage = () => {
-  // const api = useSelector(state => state.network.api);
-  const headBlock = useSelector(state => state.blockchain.headBlock);
+  const { headBlock, headBlockLoaded } = useSelector(state => state.blockchain);
 
   const [blocks, setBlocks] = useState([]);
   const [page, setPage] = useState(0); // 0 indexed page
@@ -30,7 +29,7 @@ const BlockchainPage = () => {
   };
 
   useEffect(() => {
-    if (!headBlock) return;
+    if (!headBlockLoaded) return;
     getBlocks();
   }, [headBlock, page]);
 
@@ -39,7 +38,7 @@ const BlockchainPage = () => {
     setPage(page);
   };
 
-  if (!blocks.length)
+  if (!blocks.length || !headBlockLoaded)
     return (
       <div style={{ height: "70vh" }}>
         <Loading />

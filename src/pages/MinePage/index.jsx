@@ -24,12 +24,18 @@ const MinePage = () => {
   const { externalKeys } = useSelector(state => state.wallet);
 
   const [miner, setMiner] = useState(externalKeys[externalKeys.length - 1]?.addr ?? keys.address ?? "");
+  const [parentBlockHash, setParentBlockHash] = useState("");
+
   const [terminalLog, setTerminalLog] = useState([]);
   const [successModal, setSuccessModal] = useState(false);
   const [errorModal, setErrorModal] = useState(false);
   const [error, setError] = useState({});
   const [selectedTxs, setSelectedTxs] = useState([]);
   const activeWorker = useRef(null);
+
+  useEffect(() => {
+    if (headBlockLoaded) setParentBlockHash(headBlock.hash);
+  }, [headBlockLoaded]);
 
   useEffect(
     () => () => {
@@ -60,10 +66,10 @@ const MinePage = () => {
 
     setTerminalLog(log => [...log, "\nForming and verifying candidate block..."]);
 
-    const results = await axios.post(`/mine/candidate-block`, {
-      previousBlock: headBlock,
-      transactions: selectedTxs.sort((a, b) => a.timestamp - b.timestamp),
+    const results = await axios.post(`/candidate-block`, {
+      previousBlockHash: parentBlockHash,
       miner,
+      transactions: selectedTxs.sort((a, b) => a.timestamp - b.timestamp),
     });
 
     const { block, validation, target } = results.data;
@@ -75,7 +81,7 @@ const MinePage = () => {
       return;
     }
 
-    setTerminalLog(log => [...log, `Mining started...\nprevious block: ${headBlock.hash}\ntarget hash: ${target}\n `]);
+    setTerminalLog(log => [...log, `Mining started...\nprevious block: ${parentBlockHash}\ntarget hash: ${target}\n `]);
 
     const worker = new Miner();
     worker.postMessage({ block, target: hexToBigInt(target) });
@@ -191,7 +197,7 @@ const MinePage = () => {
         </section>
         <section className="mb-6">
           <div className="field mb-4">
-            <label className="label">Miner's Address</label>
+            <label className="label">Miner's address</label>
             <div className="field has-addons mb-0">
               <div className="control is-expanded">
                 <input
@@ -218,15 +224,17 @@ const MinePage = () => {
           </div>
 
           <div className="field mb-5">
-            <label className="label">Head block</label>
+            <label className="label">Parent block</label>
             <input
-              value={headBlock.hash ?? "-"}
+              value={parentBlockHash}
+              onChange={e => setParentBlockHash(e.target.value)}
+              // value={headBlock.hash ?? "-"}
               className="input"
               type="text"
               placeholder="Enter block hash"
-              readOnly
+              // readOnly
             ></input>
-            <p className="help">Previous block to mine from.</p>
+            <p className="help">Previous block to mine from, usually the head block.</p>
             {/* {prevBlock?.hash !== headBlock?.hash && (
 							<p className="help is-danger is-flex">
 								<span className="material-icons-outlined md-18 mr-2">warning</span>You are no longer

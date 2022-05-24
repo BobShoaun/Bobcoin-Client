@@ -1,8 +1,5 @@
-import React from "react";
 import { Link } from "react-router-dom";
-
-import { useParams } from "../hooks/useParams";
-import { useHeadBlock } from "../hooks/useHeadBlock";
+import { useSelector } from "react-redux";
 
 import ReactTooltip from "react-tooltip";
 import { format } from "date-fns";
@@ -11,8 +8,8 @@ import { useWindowDimensions } from "../hooks/useWindowDimensions";
 import { getMaxDecimalPlaces, numberWithCommas } from "../helpers";
 
 const Transaction = ({ transaction }) => {
-  const [, params] = useParams();
-  const [, headBlock] = useHeadBlock();
+  const { headBlock } = useSelector(state => state.blockchain);
+  const { params } = useSelector(state => state.consensus);
 
   const totalInput = transaction.inputs.reduce((total, input) => total + input.amount, 0);
   const totalOutput = transaction.outputs.reduce((total, output) => total + output.amount, 0);
@@ -155,8 +152,10 @@ const Transaction = ({ transaction }) => {
       <section className="is-flex is-flex-wrap-wrap" style={{ gap: "1em" }}>
         <div className="mt-auto">
           <span
-            className={`subtitle is-6 is-inline-block py-1 px-3 has-text-white ${getConfirmationColor(confirmations)}`}
-            style={{ borderRadius: "0.3em" }}
+            className={`subtitle is-inline-block py-1 px-3 has-text-white has-text-weight-medium ${getConfirmationColor(
+              confirmations
+            )}`}
+            style={{ borderRadius: "0.3em", fontSize: ".9rem" }}
           >
             {transaction.status === "orphaned" ? "Orphaned" : `${confirmations.toLocaleString()} Confirmations`}
           </span>

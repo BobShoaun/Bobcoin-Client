@@ -123,13 +123,13 @@ const SummaryTab = () => {
         ) : (
           <main className="has-background-white is-flex is-justify-content-center" style={{ padding: "1.5em" }}>
             <span className="material-icons-outlined mr-3 md-18">pending_actions</span>
-            <p className="subtitle is-6 has-text-centered">No pending transactions relating to your wallet...</p>
+            <p className="subtitle is-6 has-text-centered">No pending transactions at the moment...</p>
           </main>
         )}
       </div>
 
       <h1 ref={transactionsSection} className="title is-size-5 is-size-4-tablet mb-3">
-        Transactions
+        Confirmed transactions
       </h1>
       <div className="mb-6">
         {transactions.length ? (
@@ -142,9 +142,7 @@ const SummaryTab = () => {
           ))
         ) : (
           <div className="has-background-white py-4">
-            <p className="subtitle is-6 has-text-centered">
-              The address has not sent or received <span className="is-lowercase">{params.name}</span>s.
-            </p>
+            <p className="subtitle is-6 has-text-centered">No confirmed transactions related to your wallet...</p>
           </div>
         )}
       </div>

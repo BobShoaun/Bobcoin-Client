@@ -44,12 +44,12 @@ const BlockPage = () => {
 
   const getStatus = block => {
     // TODO: common code in blockpage
-    if (block.height >= headBlock.height - 6) return { type: "Unconfirmed", color: "has-background-warning" };
     if (!block.valid) return { type: "Orphaned", color: "has-background-danger" };
+    if (block.height >= headBlock.height - 6) return { type: "Unconfirmed", color: "has-background-warning" };
     return { type: "Confirmed", color: "has-background-success" };
   };
 
-  const confirmations = headBlock.height - block.height + 1;
+  const confirmations = block.valid ? headBlock.height - block.height + 1 : 0;
   const totalInput = block.transactions
     .slice(1)
     .reduce((total, info) => total + info.inputs.reduce((total, input) => total + input.amount, 0), 0);
@@ -57,7 +57,7 @@ const BlockPage = () => {
     .slice(1)
     .reduce((total, info) => total + info.outputs.reduce((total, output) => total + output.amount, 0), 0);
 
-  const status = getStatus(block);
+  // const status = getStatus(block);
 
   return (
     <section className="section">
@@ -87,8 +87,14 @@ const BlockPage = () => {
         <tbody>
           <tr>
             <td>Hash</td>
-            <td fclassName="is-family-monospace" style={{ wordBreak: "break-all" }}>
+            <td className="is-flex is-align-items-center" style={{ wordBreak: "break-all" }}>
               {block.hash}
+              <button
+                onClick={() => copyToClipboard(block.hash, "Block hash copied")}
+                className="material-icons-outlined md-14 ml-1 highlight-button py-0"
+              >
+                content_copy
+              </button>
             </td>
           </tr>
           <tr>
@@ -106,9 +112,12 @@ const BlockPage = () => {
             <td>
               <span
                 style={{ borderRadius: "0.3em" }}
-                className={`title is-7 py-1 px-2 has-background-success has-text-white capitalize ${status.color}`}
+                className={`title is-7 py-1 px-2 has-text-white capitalize confirmations-${Math.min(
+                  confirmations,
+                  params.blkMaturity
+                )}`}
               >
-                {status.type}
+                {confirmations > 0 ? `${confirmations.toLocaleString()} Confirmations` : "Orphaned"}
               </span>
             </td>
           </tr>
@@ -116,10 +125,10 @@ const BlockPage = () => {
             <td>Version</td>
             <td>{block.version}</td>
           </tr>
-          <tr>
+          {/* <tr>
             <td>Confirmations</td>
             <td>{block.valid ? confirmations : "-"}</td>
-          </tr>
+          </tr> */}
           <tr>
             <td>Miner</td>
             <td style={{ wordBreak: "break-all" }}>

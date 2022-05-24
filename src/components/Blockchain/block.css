@@ -10,6 +10,34 @@
 	min-width: 0;
 }
 
+.block-hook {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	outline: 2px black solid;
+	outline-offset: 0.1em;
+	z-index: 1;
+	position: relative;
+}
+
+.block-connector {
+	position: absolute;
+    transform: translateX(4px) translateY(2px);
+}
+
+.block-connector > div {
+	height: 4px;
+	background: gray;
+	position: inherit;
+	transform-origin: left center;
+	border-radius: 10em;
+	opacity: 0.5;
+}
+
+.card-header-title {
+	gap: 1em;
+}
+
 .block-selected {
 	border-color: #5d737e;
 }

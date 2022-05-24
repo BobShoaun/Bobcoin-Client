@@ -35,22 +35,18 @@ const initialState = {
 	// orphanedBlocks: [],
 	// orphanedBlocksFetched: false,
 
-	mempool: [],
-	mempoolLoaded: false,
 	headBlock: null,
 	headBlockLoaded: false,
-	recentBlocks: [],
-	recentBlocksLoaded: false,
+	recentValidBlocks: [],
+	recentValidBlocksLoaded: false,
+	mempool: [],
+	mempoolLoaded: false,
 };
 
 const blockchainSlice = createSlice({
 	name: "blockchain",
 	initialState,
 	reducers: {
-		// setUnconfirmedBlocks: (state, { payload: unconfirmedBlocks }) => {
-		// 	state.unconfirmedBlocks = unconfirmedBlocks;
-		// 	state.unconfirmedBlocksFetched = true;
-		// },
 		setMempool: (state, { payload: mempool }) => {
 			state.mempool = mempool;
 			state.mempoolLoaded = true;
@@ -59,9 +55,9 @@ const blockchainSlice = createSlice({
 			state.headBlock = headBlock;
 			state.headBlockLoaded = true;
 		},
-		setRecentBlocks: (state, { payload: recentBlocks }) => {
-			state.recentBlocks = recentBlocks;
-			state.recentBlocksLoaded = true;	
+		setRecentValidBlocks: (state, { payload: recentValidBlocks }) => {
+			state.recentValidBlocks = recentValidBlocks;
+			state.recentValidBlocksLoaded = true;	
 		},
 		reset: () => initialState,
 	},
@@ -89,5 +85,5 @@ const blockchainSlice = createSlice({
 	// },
 });
 
-export const { reset, setMempool, setHeadBlock, setRecentBlocks } = blockchainSlice.actions;
+export const { reset, setMempool, setHeadBlock, setRecentValidBlocks } = blockchainSlice.actions;
 export default blockchainSlice.reducer;
