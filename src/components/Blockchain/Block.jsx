@@ -161,7 +161,7 @@ const Block = ({ block, selected, blockchainRef, onChange, rerender }) => {
             </p>
           </div>
 
-          <div className="dropdown is-hoverable">
+          <div className="dropdown is-hoverable ml-auto">
             <div className="dropdown-trigger">
               <button
                 className="button is-small -is-white has-text-weight-semibold px-1"

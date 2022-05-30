@@ -140,25 +140,67 @@ const MinePage = () => {
     setTerminalLog(log => [...log, `\nNo mining processes running.`]);
   };
 
-  const submitCommand = event => {
-    event.preventDefault();
-    const command = event.target.command.value;
-    event.target.command.value = "";
-    switch (command) {
-      case "mine start":
-        startMining();
-        break;
-      case "mine stop":
-        stopMining();
-        break;
-      case "help":
+  const programs = [
+    {
+      name: "mine",
+      template: "mine <operation>",
+      execute: args => {
+        const operation = args[1];
+        switch (operation) {
+          case "start":
+            return startMining();
+          case "stop":
+            return stopMining();
+          default:
+            throw Error("invalid arguments");
+        }
+      },
+    },
+    {
+      name: "set",
+      template: "set <type> <value>",
+      execute: args => {
+        const type = args[1];
+        const value = args[2];
+        switch (type) {
+          case "miner":
+            return setMiner(value);
+          case "parent":
+            return setParentBlockHash(value);
+          default:
+            throw Error("invalid arguments");
+        }
+      },
+    },
+    {
+      name: "help",
+      template: "help",
+      execute: () => {
         setTerminalLog(log => [
           ...log,
-          `\nCrappy ${params.name} mining terminal v1.0.0-beta\n\nList of commands:\nmine start\nmine stop\nhelp`,
+          `\nCrappy ${params.name} mining terminal v1.1.0\n\nList of commands:\n${programs
+            .map(program => program.template)
+            .join("\n")}`,
         ]);
-        break;
-      default:
-        setTerminalLog(log => [...log, `\nunknown command: ${command}, type 'help' for help.`]);
+      },
+    },
+  ];
+
+  const submitCommand = event => {
+    event.preventDefault();
+    const args = event.target.command.value.split(" ");
+    event.target.command.value = "";
+
+    const program = programs.find(program => program.name === args[0]);
+    if (!program) {
+      setTerminalLog(log => [...log, `\nUnknown command: ${args[0]}, type 'help' for help.`]);
+      return;
+    }
+
+    try {
+      program.execute(args);
+    } catch (e) {
+      setTerminalLog(log => [...log, e.toString()]);
     }
   };
 
@@ -205,7 +247,8 @@ const MinePage = () => {
                   value={miner}
                   className="input"
                   type="text"
-                  placeholder="Input miner's key"
+                  placeholder="Miner's address"
+                  onClick={e => e.target.select()}
                 />
               </div>
               <p className="control">
@@ -226,12 +269,13 @@ const MinePage = () => {
           <div className="field mb-5">
             <label className="label">Parent block</label>
             <input
+              onClick={e => e.target.select()}
               value={parentBlockHash}
               onChange={e => setParentBlockHash(e.target.value)}
               // value={headBlock.hash ?? "-"}
               className="input"
               type="text"
-              placeholder="Enter block hash"
+              placeholder={headBlock.hash}
               // readOnly
             ></input>
             <p className="help">Previous block to mine from, usually the head block.</p>

@@ -6,9 +6,7 @@ import Block from "./Block";
 import axios from "axios";
 
 const Blockchain = ({ showHead }) => {
-  const { headBlock, headBlockLoaded, recentValidBlocks, recentValidBlocksLoaded } = useSelector(
-    state => state.blockchain
-  );
+  const { headBlock, headBlockLoaded, recentValidBlocks } = useSelector(state => state.blockchain);
 
   const [page, setPage] = useState(0);
   const [blockHeights, setBlockHeights] = useState([]);
@@ -39,11 +37,12 @@ const Blockchain = ({ showHead }) => {
 
   useEffect(getBlockHeights, [headBlock, page]);
 
-  useEffect(() => {
-    setPage(0); // reset to first page
-  }, [recentValidBlocks]);
+  useEffect(
+    () => setPage(0), // reset to first page
+    [recentValidBlocks]
+  );
 
-  const loading = !headBlockLoaded || !recentValidBlocksLoaded;
+  const loading = !headBlockLoaded;
   if (loading) return <p>Please wait...</p>;
 
   return (
@@ -54,7 +53,7 @@ const Blockchain = ({ showHead }) => {
         style={{ gap: "2em", overflowX: "clip", overflowY: "visible" }}
       >
         {blockHeights.map(({ height, blocks }) => (
-          <div key={height} style={{ flex: "1 1 20%", minWidth: 0 }}>
+          <div key={height} style={{ flex: "1 1 20%", minWidth: 0, maxWidth: "30%" }}>
             <h2 className="title is-6 mb-2 has-text-centered mr-3">#{height}</h2>
             {blocks
               .sort(b => (b.valid ? -1 : 1))
