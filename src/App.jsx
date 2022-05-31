@@ -36,6 +36,7 @@ const DeveloperPage = lazy(() => import("./pages/DeveloperPage"));
 const WalletPage = lazy(() => import("./pages/WalletPage"));
 const WalletImportPage = lazy(() => import("./pages/WalletImportPage"));
 const WalletCreatePage = lazy(() => import("./pages/WalletCreatePage"));
+const WalletOnboardingPage = lazy(() => import("./pages/WalletOnboardingPage"));
 
 const App = () => {
   const dispatch = useDispatch();
@@ -77,6 +78,7 @@ const App = () => {
                 <Route path="/faucet" component={FaucetPage} />
                 <Route path="/node" component={NodePage} />
                 <Route path="/developer" component={DeveloperPage} />
+                <Route path="/wallet/onboarding" component={WalletOnboardingPage} />
                 <Route path="/wallet/import" component={WalletImportPage} />
                 <Route path="/wallet/create" component={WalletCreatePage} />
                 <Route path="/wallet" component={WalletPage} />

@@ -7,7 +7,7 @@ const Onboarding = () => {
   return (
     <main className="section is-flex-tablet" style={{ fflexWrap: "wrap", gap: "2em" }}>
       <div
-        onClick={() => history.push("wallet/import")}
+        onClick={() => history.push("/wallet/import")}
         className="wallet-card card is-clickable mb-5"
         style={{ flex: "1 1 auto" }}
       >
@@ -22,7 +22,7 @@ const Onboarding = () => {
         </div>
       </div>
       <div
-        onClick={() => history.push("wallet/create")}
+        onClick={() => history.push("/wallet/create")}
         className="wallet-card card is-clickable mb-5"
         style={{ flex: "1 1 auto" }}
       >

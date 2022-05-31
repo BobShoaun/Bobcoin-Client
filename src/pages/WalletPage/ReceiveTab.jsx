@@ -5,9 +5,10 @@ import { copyToClipboard } from "../../helpers";
 
 import { deriveKeys } from "blockcrypto";
 import { addExternalKeys } from "../../store/walletSlice";
-import { WalletContext } from "./WalletContext";
+import { WalletContext } from ".";
 
 import QRCode from "qrcode";
+import axios from "axios";
 
 const ReceiveTab = () => {
   const dispatch = useDispatch();
@@ -16,6 +17,7 @@ const ReceiveTab = () => {
 
   const [addQR, setAddQR] = useState("");
   const [addressIndex, setAddressIndex] = useState(externalKeys.length - 1);
+  const [addrUsage, setAddrUsage] = useState([]);
 
   const generateQRCode = async () => {
     try {
@@ -32,11 +34,18 @@ const ReceiveTab = () => {
     setAddressIndex(index);
   };
 
+  const getAddressUsage = async () => {
+    const results = await axios.post(
+      "/wallet/used",
+      externalKeys.map(key => key.addr)
+    );
+    setAddrUsage(results.data.map(a => a.used));
+  };
+
   const address = useMemo(() => externalKeys[addressIndex]?.addr ?? "", [externalKeys, addressIndex]);
 
-  useEffect(() => {
-    generateQRCode();
-  }, [address]);
+  useEffect(generateQRCode, [address]);
+  useEffect(getAddressUsage, [externalKeys]);
 
   return (
     <main>
@@ -114,7 +123,7 @@ const ReceiveTab = () => {
                         <p>{addr}</p>
                       </td>
                       <td>{`m/${params.derivPurpose}'/${params.derivCoinType}'/0'/0/${index}`}</td>
-                      <td>{walletInfo?.numAddressTransactions?.[addr] > 0 ? "Used" : "Unused"}</td>
+                      <td>{addrUsage[index] ? "Used" : "Unused"}</td>
                     </tr>
                   ))}
                 </tbody>

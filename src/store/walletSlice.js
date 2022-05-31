@@ -11,8 +11,8 @@ const walletSlice = createSlice({
 		mnemonic: localStorage.getItem("mnemonic"),
 		xprv: localStorage.getItem("xprv"),
 		xpub: localStorage.getItem("xpub"),
-		externalKeys: JSON.parse(localStorage.getItem("externalKeys")) ?? [],
-		internalKeys: JSON.parse(localStorage.getItem("internalKeys")) ?? [],
+		externalKeys: JSON.parse(localStorage.getItem("external-keys")) ?? [],
+		internalKeys: JSON.parse(localStorage.getItem("internal-keys")) ?? [],
 	},
 	reducers: {
 		setKeys(state, { payload: keys }) {
@@ -30,19 +30,29 @@ const walletSlice = createSlice({
 			localStorage.setItem("xpub", hdKeys.xpub);
 			state.externalKeys = [];
 			state.internalKeys = [];
-			localStorage.removeItem("externalKeys");
-			localStorage.removeItem("internalKeys");
+			localStorage.removeItem("external-keys");
+			localStorage.removeItem("internal-keys");
 		},
 		addExternalKeys(state, { payload: { sk, pk, addr, index } }) {
 			state.externalKeys.push({ sk, pk, addr, index });
-			localStorage.setItem("externalKeys", JSON.stringify(state.externalKeys));
+			localStorage.setItem("external-keys", JSON.stringify(state.externalKeys));
 		},
 		addInternalKeys(state, { payload: { sk, pk, addr, index } }) {
 			state.internalKeys.push({ sk, pk, addr, index });
-			localStorage.setItem("internalKeys", JSON.stringify(state.internalKeys));
+			localStorage.setItem("internal-keys", JSON.stringify(state.internalKeys));
 		},
+		deleteWallet(state) {
+			localStorage.removeItem("mnemonic");
+			localStorage.removeItem("xprv");
+			localStorage.removeItem("xpub");
+			localStorage.removeItem("external-keys");
+			localStorage.removeItem("internal-keys");
+			state.mnemonic = state.xprv = state.xpub = "";
+			state.externalKeys = [];
+			state.internalKeys = [];
+		}
 	},
 });
 
-export const { setKeys, setHdKeys, addExternalKeys, addInternalKeys } = walletSlice.actions;
+export const { setKeys, setHdKeys, addExternalKeys, addInternalKeys, deleteWallet } = walletSlice.actions;
 export default walletSlice.reducer;

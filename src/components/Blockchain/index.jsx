@@ -6,7 +6,7 @@ import Block from "./Block";
 import axios from "axios";
 
 const Blockchain = ({ showHead }) => {
-  const { headBlock, headBlockLoaded, recentValidBlocks } = useSelector(state => state.blockchain);
+  const { headBlock, headBlockLoaded } = useSelector(state => state.blockchain);
 
   const [page, setPage] = useState(0);
   const [blockHeights, setBlockHeights] = useState([]);
@@ -36,11 +36,7 @@ const Blockchain = ({ showHead }) => {
   };
 
   useEffect(getBlockHeights, [headBlock, page]);
-
-  useEffect(
-    () => setPage(0), // reset to first page
-    [recentValidBlocks]
-  );
+  useEffect(() => setPage(0), [headBlock]);
 
   const loading = !headBlockLoaded;
   if (loading) return <p>Please wait...</p>;

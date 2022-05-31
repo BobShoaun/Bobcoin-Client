@@ -1,21 +1,19 @@
 import { useContext, useState, useRef, useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 
-import Loading from "../../components/Loading";
-import "./index.css";
-
 import { useWindowDimensions } from "../../hooks/useWindowDimensions";
 
 import Transaction from "../../components/Transaction";
 import Pagination from "../../components/Pagination";
 
-import { WalletContext } from "./WalletContext";
+import { WalletContext } from ".";
 
 import { getMaxDecimalPlaces, numberWithCommas } from "../../helpers";
 import axios from "axios";
 
 const SummaryTab = () => {
   const { externalKeys, internalKeys } = useSelector(state => state.wallet);
+  const { mempool } = useSelector(state => state.blockchain);
   const { walletInfo, params } = useContext(WalletContext);
 
   const [transactions, setTransactions] = useState([]);
@@ -37,7 +35,7 @@ const SummaryTab = () => {
     if (!addresses.length) return;
     setTransactions([]);
     const results = await axios.post(
-      `/address/transactions?limit=${transactionsPerPage}&offset=${page * transactionsPerPage}`,
+      `/wallet/transactions?limit=${transactionsPerPage}&offset=${page * transactionsPerPage}`,
       addresses
     );
     setTransactions(results.data);
@@ -47,7 +45,7 @@ const SummaryTab = () => {
   const getMempoolTransactions = async () => {
     if (!addresses.length) return;
     setMempoolTxs([]);
-    const results = await axios.post(`/mempool/address`, addresses);
+    const results = await axios.post(`/wallet/mempool`, addresses);
     setMempoolTxs(results.data);
   };
   useEffect(getMempoolTransactions, [addresses, page]);
@@ -56,13 +54,6 @@ const SummaryTab = () => {
     transactionsSection.current?.scrollIntoView({ behavior: "smooth" });
     setPage(page);
   };
-
-  // if (loadingMempool)
-  //   return (
-  //     <div style={{ height: "70vh" }}>
-  //       <Loading />
-  //     </div>
-  //   );
 
   const { balance, totalReceived, totalSent, numUtxos, numTransactions, numBlocksMined } = walletInfo;
 

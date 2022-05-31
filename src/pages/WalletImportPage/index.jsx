@@ -1,38 +1,78 @@
 import React, { useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
-
-import { useParams } from "../../hooks/useParams";
 
 import Loading from "../../components/Loading";
 import { deriveKeys, validateMnemonic, getHdKey } from "blockcrypto";
-import { setHdKeys as setHdWalletKeys, addExternalKeys } from "../../store/walletSlice";
+import { setHdKeys as setHdWalletKeys, addExternalKeys, addInternalKeys } from "../../store/walletSlice";
+
+import axios from "axios";
 
 const WalletImportPage = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const [loading, params] = useParams();
+  const { params, paramsLoaded } = useSelector(state => state.consensus);
   const wordListSelect = useRef(null);
   const [mnemonic, setMnemonic] = useState("");
+
+  const scanAddresses = async (hdKeys, startIndex, isInternal) => {
+    const discoveryGapLimit = 20;
+    const keys = [];
+    for (let i = startIndex; i < startIndex + discoveryGapLimit; i++) {
+      const key = deriveKeys(params, hdKeys.xprv, 0, isInternal ? 1 : 0, i);
+      key.index = i;
+      keys.push(key);
+    }
+    const results = await axios.post(
+      "/wallet/used",
+      keys.map(key => key.addr)
+    );
+
+    // get last used address index
+    let upper = 0;
+    for (let i = discoveryGapLimit - 1; i >= 0; i--) {
+      if (results.data[i].used) {
+        upper = i + 1;
+        break;
+      }
+    }
+
+    // add keys until last used address index
+    for (let i = 0; i < upper; i++) {
+      const { sk, pk, addr, index } = keys[i];
+      dispatch((isInternal ? addInternalKeys : addExternalKeys)({ sk, pk, addr, index }));
+    }
+
+    if (upper > 0) await scanAddresses(hdKeys, startIndex + upper, isInternal);
+  };
 
   const importWallet = async () => {
     const wordList = wordListSelect.current.value;
     if (wordList === "none") {
       console.error("wordlist not selected!");
+      alert("Please select a word list");
       return;
     }
     if (!validateMnemonic(mnemonic, wordList)) {
       console.error("invalid mnemonic");
+      alert("invalid mnemonic for word list");
       return;
     }
     const hdKeys = await getHdKey(mnemonic, "");
-    const { sk, pk, addr } = deriveKeys(params, hdKeys.xprv, 0, 0, 0); // TODO: scan for addresses with balance.
     dispatch(setHdWalletKeys({ mnemonic, xprv: hdKeys.xprv, xpub: hdKeys.xpub }));
+
+    // setup external keys
+    const { sk, pk, addr } = deriveKeys(params, hdKeys.xprv, 0, 0, 0);
     dispatch(addExternalKeys({ sk, pk, addr, index: 0 }));
-    history.push("./");
+    await scanAddresses(hdKeys, 1, false);
+
+    // setup internal keys
+    await scanAddresses(hdKeys, 0, true);
+
+    history.push("/wallet");
   };
 
-  if (loading)
+  if (!paramsLoaded)
     return (
       <div style={{ height: "70vh" }}>
         <Loading />

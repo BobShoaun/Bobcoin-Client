@@ -34,8 +34,8 @@ const MinePage = () => {
   const activeWorker = useRef(null);
 
   useEffect(() => {
-    if (headBlockLoaded) setParentBlockHash(headBlock.hash);
-  }, [headBlockLoaded]);
+    if (headBlock) setParentBlockHash(headBlock.hash);
+  }, [headBlock]);
 
   useEffect(
     () => () => {

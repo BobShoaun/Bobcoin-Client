@@ -1,22 +1,18 @@
 import { useState, useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router";
-import { useParams } from "../../hooks/useParams";
 
 import Loading from "../../components/Loading";
 import "./index.css";
 
 import { generateHdKey, deriveKeys } from "blockcrypto";
 import { copyToClipboard } from "../../helpers";
-import {
-  setHdKeys as setHdWalletKeys,
-  addExternalKeys,
-} from "../../store/walletSlice";
+import { setHdKeys as setHdWalletKeys, addExternalKeys } from "../../store/walletSlice";
 
 const WalletCreatePage = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const [loading, params] = useParams();
+  const { params, paramsLoaded } = useSelector(state => state.consensus);
 
   const [showBackup, setShowBackup] = useState(false);
   const [hdKeys, setHdKeys] = useState({});
@@ -43,7 +39,7 @@ const WalletCreatePage = () => {
     setModalOpen(true);
   };
 
-  if (loading)
+  if (!paramsLoaded)
     return (
       <div style={{ height: "70vh" }}>
         <Loading />
@@ -64,20 +60,12 @@ const WalletCreatePage = () => {
             <label className="label">Word List</label>
             <div className="control">
               <div className="select">
-                <select
-                  ref={wordListSelect}
-                  required
-                  onChange={() => setShowBackup(false)}
-                >
+                <select ref={wordListSelect} required onChange={() => setShowBackup(false)}>
                   <option value="english">English</option>
                   <option value="spanish">Spanish</option>
                   <option value="french">French</option>
-                  <option value="chinese_simplified">
-                    Chinese (Simplified)
-                  </option>
-                  <option value="chinese_traditional">
-                    Chinese (Traditional)
-                  </option>
+                  <option value="chinese_simplified">Chinese (Simplified)</option>
+                  <option value="chinese_traditional">Chinese (Traditional)</option>
                   <option value="italian">Italian</option>
                   <option value="japanese">Japanese</option>
                   <option value="korean">Korean</option>
@@ -106,9 +94,8 @@ const WalletCreatePage = () => {
             <>
               <h3 className="title is-5">Secret backup phrase</h3>
               <p className="subtitle is-6">
-                Copy or write this down in the same order as it is presented. As
-                the title suggests, you should not share this phrase with
-                others.
+                Copy or write this down in the same order as it is presented. As the title suggests, you should not
+                share this phrase with others.
               </p>
               <div
                 onMouseEnter={() => setHover(true)}
@@ -116,10 +103,7 @@ const WalletCreatePage = () => {
                 className="card mnemonic-card mb-6 is-clickable"
               >
                 <div className="card-content px-6 py-5">
-                  <p
-                    className=" has-text-centered mt-4"
-                    style={{ marginBottom: "2.5em" }}
-                  >
+                  <p className=" has-text-centered mt-4" style={{ marginBottom: "2.5em" }}>
                     Hover/Tap to reveal
                   </p>
 
@@ -127,10 +111,7 @@ const WalletCreatePage = () => {
                     {hdKeys.mnemonic.split(/\s+/).map((value, index) => (
                       <div key={index} className="is-flex">
                         <p>{index + 1}.</p>
-                        <p
-                          className="has-text-centered"
-                          style={{ flexBasis: "100%", whiteSpace: "nowrap" }}
-                        >
+                        <p className="has-text-centered" style={{ flexBasis: "100%", whiteSpace: "nowrap" }}>
                           {hover ? value : "------"}
                         </p>
                       </div>
@@ -139,14 +120,10 @@ const WalletCreatePage = () => {
 
                   <div className="has-text-right py-3">
                     <button
-                      onClick={() =>
-                        copyToClipboard(hdKeys.mnemonic, "Mnemonic copied")
-                      }
+                      onClick={() => copyToClipboard(hdKeys.mnemonic, "Mnemonic copied")}
                       className="button is-small"
                     >
-                      <span className="material-icons-outlined md-18 mr-2">
-                        content_copy
-                      </span>
+                      <span className="material-icons-outlined md-18 mr-2">content_copy</span>
                       Copy
                     </button>
                   </div>
@@ -168,58 +145,38 @@ const WalletCreatePage = () => {
       <div className={`modal ${modalOpen && "is-active"}`}>
         <div className="modal-background"></div>
         <div className="modal-card">
-          <section
-            className="modal-card-body p-6-tablet"
-            style={{ borderRadius: "1em" }}
-          >
+          <section className="modal-card-body p-6-tablet" style={{ borderRadius: "1em" }}>
             <div className="mb-5 is-flex is-align-items-center is-justify-content-center">
-              <i className="material-icons-outlined md-36 mr-3 has-text-black">
-                account_balance_wallet
-              </i>
+              <i className="material-icons-outlined md-36 mr-3 has-text-black">account_balance_wallet</i>
               <h3 className="title is-3">Your wallet is saved</h3>
             </div>
 
             <p className="subtitle is-5 has-text-centered is-spaced mb-5">
-              The keys in your wallet have been stored locally in the browser
-              for your convenience.
+              The keys in your wallet have been stored locally in the browser for your convenience.
             </p>
 
             <p className="title is-spaced is-6 mb-2">Backup phrase:</p>
-            <pre className="subtitle is-spaced is-6 py-2 mb-4">
-              {hdKeys.mnemonic}
-            </pre>
+            <pre className="subtitle is-spaced is-6 py-2 mb-4">{hdKeys.mnemonic}</pre>
 
             <p className="title is-spaced is-6 mb-2">Master private key:</p>
-            <pre className="subtitle is-spaced is-6 py-2 mb-4">
-              {hdKeys.xprv}
-            </pre>
+            <pre className="subtitle is-spaced is-6 py-2 mb-4">{hdKeys.xprv}</pre>
 
             <p className="title is-spaced is-6 mb-2">Master public key:</p>
-            <pre className="subtitle is-spaced is-6 py-2 mb-6">
-              {hdKeys.xpub}
-            </pre>
+            <pre className="subtitle is-spaced is-6 py-2 mb-6">{hdKeys.xpub}</pre>
 
             <p className="help has-text-centered mb-4">
-              *It is your responsiblity to keep your private key and mnemonic
-              safe, clear your browser's local storage and use an offline
-              storage for maximum security.
+              *It is your responsiblity to keep your private key and mnemonic safe, clear your browser's local storage
+              and use an offline storage for maximum security.
             </p>
 
             <div className="has-text-centered">
-              <button
-                onClick={() => history.push("./")}
-                className="button is-dark has-text-weight-semibold"
-              >
+              <button onClick={() => history.push("/wallet")} className="button is-dark has-text-weight-semibold">
                 Okay
               </button>
             </div>
           </section>
         </div>
-        <button
-          onClick={() => history.push("./")}
-          className="modal-close is-large"
-          aria-label="close"
-        ></button>
+        <button onClick={() => history.push("/wallet")} className="modal-close is-large" aria-label="close"></button>
       </div>
     </main>
   );

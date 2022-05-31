@@ -1,19 +1,21 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, createContext } from "react";
 import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 import Loading from "../../components/Loading";
-import Onboarding from "./Onboarding";
-import "./index.css";
+// import "./index.css";
 
 import SummaryTab from "./SummaryTab";
-import MoreTab from "./MoreTab";
+import InfoTab from "./InfoTab";
 import ReceiveTab from "./ReceiveTab";
 import SendTab from "./SendTab";
 
-import { WalletContext } from "./WalletContext";
 import axios from "axios";
 
+export const WalletContext = createContext();
+
 const WalletPage = () => {
+  const history = useHistory();
   const { mnemonic, externalKeys, internalKeys, xprv } = useSelector(state => state.wallet);
   const { params, paramsLoaded } = useSelector(state => state.consensus);
 
@@ -23,13 +25,14 @@ const WalletPage = () => {
   const getWalletInfo = async () => {
     const addresses = [...externalKeys, ...internalKeys].map(key => key.addr);
     if (!addresses.length) return;
-    const results = await axios.post(`/address/info`, addresses);
+    const results = await axios.post(`/wallet/info`, addresses);
     setWalletInfo(results.data);
   };
 
   useEffect(getWalletInfo, [externalKeys, internalKeys]);
-
-  if (!mnemonic) return <Onboarding />;
+  useEffect(() => {
+    if (!mnemonic) history.push("/wallet/onboarding");
+  }, [mnemonic]);
 
   const loading = !walletInfo || !paramsLoaded;
   if (loading)
@@ -76,7 +79,7 @@ const WalletPage = () => {
         {tab === "summary" && <SummaryTab />}
         {tab === "send" && <SendTab />}
         {tab === "receive" && <ReceiveTab />}
-        {tab === "more" && <MoreTab />}
+        {tab === "more" && <InfoTab />}
       </main>
     </WalletContext.Provider>
   );

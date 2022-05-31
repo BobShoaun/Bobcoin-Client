@@ -37,8 +37,8 @@ const initialState = {
 
 	headBlock: null,
 	headBlockLoaded: false,
-	recentValidBlocks: [],
-	recentValidBlocksLoaded: false,
+	// recentValidBlocks: [],
+	// recentValidBlocksLoaded: false,
 	mempool: [],
 	mempoolLoaded: false,
 };
@@ -55,10 +55,10 @@ const blockchainSlice = createSlice({
 			state.headBlock = headBlock;
 			state.headBlockLoaded = true;
 		},
-		setRecentValidBlocks: (state, { payload: recentValidBlocks }) => {
-			state.recentValidBlocks = recentValidBlocks;
-			state.recentValidBlocksLoaded = true;	
-		},
+		// setRecentValidBlocks: (state, { payload: recentValidBlocks }) => {
+		// 	state.recentValidBlocks = recentValidBlocks;
+		// 	state.recentValidBlocksLoaded = true;	
+		// },
 		reset: () => initialState,
 	},
 	// extraReducers: {
@@ -85,5 +85,5 @@ const blockchainSlice = createSlice({
 	// },
 });
 
-export const { reset, setMempool, setHeadBlock, setRecentValidBlocks } = blockchainSlice.actions;
+export const { reset, setMempool, setHeadBlock } = blockchainSlice.actions;
 export default blockchainSlice.reducer;

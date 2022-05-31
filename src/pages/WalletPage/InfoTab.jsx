@@ -1,13 +1,25 @@
-import React, { useState, useContext } from "react";
-import { useSelector } from "react-redux";
+import { useState, useContext } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
-import { WalletContext } from "./WalletContext";
+import { WalletContext } from ".";
+import { deleteWallet } from "../../store/walletSlice";
 
-import "./index.css";
+// import "./index.css";
 
-const MoreTab = () => {
+const InfoTab = () => {
+  const dispatch = useDispatch();
   const { xprv, xpub, mnemonic, externalKeys, internalKeys } = useSelector(state => state.wallet);
   const { params } = useContext(WalletContext);
+
+  const onDeleteWallet = () => {
+    if (
+      !window.confirm(
+        "This action will delete all traces of your wallet from your local storage, you can still reimport your wallet with your 12-word mnemonic phrase."
+      )
+    )
+      return;
+    dispatch(deleteWallet());
+  };
 
   return (
     <main>
@@ -16,7 +28,7 @@ const MoreTab = () => {
 
       <div className="card mb-6">
         <div className="card-content">
-          <table className="table is-fullwidth is-block" style={{ overflowY: "auto" }}>
+          <table className="table is-fullwidth is-block mb-1" style={{ overflowY: "auto" }}>
             <tbody>
               <tr>
                 <th className="has-text-weight-semibold">Mnemonic phrase</th>
@@ -40,6 +52,12 @@ const MoreTab = () => {
               </tr>
             </tbody>
           </table>
+          <section className="has-text-right">
+            <button onClick={onDeleteWallet} className="button is-danger">
+              <span className="material-icons-outlined is-size-5 mr-1">delete</span>
+              Delete wallet
+            </button>
+          </section>
         </div>
       </div>
       <h2 className="title is-5">External Addresses</h2>
@@ -105,4 +123,4 @@ const MoreTab = () => {
   );
 };
 
-export default MoreTab;
+export default InfoTab;

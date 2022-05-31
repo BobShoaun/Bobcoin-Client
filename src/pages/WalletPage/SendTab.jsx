@@ -12,7 +12,7 @@ import {
 } from "blockcrypto";
 import { addInternalKeys } from "../../store/walletSlice";
 
-import { WalletContext } from "./WalletContext";
+import { WalletContext } from ".";
 
 import TransactionFailureModal from "../NewTransactionPage/TransactionFailureModal";
 import TransactionSuccessModal from "../NewTransactionPage/TransactionSuccessModal";
@@ -23,7 +23,6 @@ import { numberWithCommas } from "../../helpers";
 const SendTab = () => {
   const dispatch = useDispatch();
 
-  const api = useSelector(state => state.network.api);
   const { walletInfo, params, externalKeys, internalKeys, xprv } = useContext(WalletContext);
   const [recipientAddr, setRecipientAddr] = useState("");
   const [amount, setAmount] = useState("");
@@ -36,14 +35,15 @@ const SendTab = () => {
   const [utxos, setUtxos] = useState([]);
 
   const getWalletUtxos = async () => {
-    const results = await axios.post(`${api}/address/utxos`, {
-      addresses: [...externalKeys, ...internalKeys].map(key => key.addr),
-    });
+    const results = await axios.post(
+      `/wallet/utxos`,
+      [...externalKeys, ...internalKeys].map(key => key.addr)
+    );
     console.log(results.data);
     setUtxos(results.data);
   };
 
-  useEffect(getWalletUtxos, [api, externalKeys, internalKeys]);
+  useEffect(getWalletUtxos, [externalKeys, internalKeys]);
 
   const resetFields = () => {
     setRecipientAddr("");
@@ -110,9 +110,10 @@ const SendTab = () => {
 
     transaction.hash = calculateTransactionHash(transaction);
 
-    const validation = (await axios.post(`${api}/transaction`, { transaction })).data;
-
-    if (validation.code !== RESULT.VALID) {
+    try {
+      await axios.post(`/transaction`, transaction);
+    } catch (e) {
+      const validation = e.response.data;
       console.error("tx invalid: ", transaction);
       setError(validation);
       setErrorModal(true);
