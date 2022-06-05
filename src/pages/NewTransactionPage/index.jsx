@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-
-import { useParams } from "../../hooks/useParams";
 
 import {
   getKeys,
@@ -22,12 +20,8 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const NewTransactionPage = () => {
-  const dispatch = useDispatch();
-
-  const [status, params] = useParams();
-
   const keys = useSelector(state => state.wallet.keys);
-  const api = useSelector(state => state.network.api);
+  const { params, paramsLoaded } = useSelector(state => state.consensus);
 
   const history = useHistory();
 
@@ -82,7 +76,7 @@ const NewTransactionPage = () => {
     const _amount = Math.trunc(amount * params.coin);
     const _fee = Math.trunc(fee * params.coin);
 
-    const utxos = (await axios(`${api}/utxo/mempool/${sender.address}`)).data;
+    const { data: utxos } = await axios(`/utxos/${sender.address}`);
 
     // pick utxos from front to back.
     let inputAmount = 0;
@@ -109,7 +103,7 @@ const NewTransactionPage = () => {
     transaction.inputs.forEach(input => (input.signature = signature));
     transaction.hash = calculateTransactionHash(transaction);
 
-    const validation = (await axios.post(`${api}/transaction`, { transaction })).data;
+    const { data: validation } = await axios.post(`/transaction`, transaction);
 
     if (validation.code !== RESULT.VALID) {
       console.error("tx invalid: ", transaction);

@@ -15,8 +15,8 @@ export const initializeSocket = socket => {
     store.dispatch(setMempool(mempool));
     console.log("new block", { headBlock, mempool });
   });
-  socket.on("mempool", ({ mempool }) => {
+  socket.on("transaction", ({ mempool }) => {
     store.dispatch(setMempool(mempool));
-    console.log("mempool updated", mempool);
+    console.log("new transaction", mempool);
   });
 };
