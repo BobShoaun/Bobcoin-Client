@@ -70,8 +70,9 @@ const SendTab = () => {
     const _fee = Math.trunc(fee * params.coin);
 
     if (walletInfo.balance >= _amount && walletInfo.balance < _amount + _fee) {
-      console.log("unsafe transaction: will pass Node validation, but fees will be different");
+      console.error("unsafe transaction: will pass Node validation, but fees will be different");
       // TODO: display error prompt
+      setErrorModal(true);
       return;
     }
 

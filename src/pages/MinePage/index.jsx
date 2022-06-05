@@ -66,7 +66,7 @@ const MinePage = () => {
 
     setTerminalLog(log => [...log, "\nForming and verifying candidate block..."]);
 
-    const results = await axios.post(`/candidate-block`, {
+    const results = await axios.post(`/mine/candidate-block`, {
       previousBlockHash: parentBlockHash,
       miner,
       transactions: selectedTxs.sort((a, b) => a.timestamp - b.timestamp),
@@ -268,16 +268,31 @@ const MinePage = () => {
 
           <div className="field mb-5">
             <label className="label">Parent block</label>
-            <input
-              onClick={e => e.target.select()}
-              value={parentBlockHash}
-              onChange={e => setParentBlockHash(e.target.value)}
-              // value={headBlock.hash ?? "-"}
-              className="input"
-              type="text"
-              placeholder={headBlock.hash}
-              // readOnly
-            ></input>
+
+            <div className="field has-addons mb-0">
+              <div className="control is-expanded">
+                <input
+                  onChange={e => setParentBlockHash(e.target.value)}
+                  value={parentBlockHash}
+                  className="input"
+                  type="text"
+                  placeholder={headBlock.hash}
+                  onClick={e => e.target.select()}
+                />
+              </div>
+              <p className="control">
+                <button
+                  onClick={async () => {
+                    setParentBlockHash(await navigator.clipboard.readText());
+                    toast.success("Block hash pasted");
+                  }}
+                  className="button"
+                >
+                  <i className="material-icons md-18">content_paste</i>
+                </button>
+              </p>
+            </div>
+
             <p className="help">Previous block to mine from, usually the head block.</p>
             {/* {prevBlock?.hash !== headBlock?.hash && (
 							<p className="help is-danger is-flex">
