@@ -207,7 +207,7 @@ const MinePage = () => {
   return (
     <section className="section">
       <h1 className="title is-size-4 is-size-2-tablet">Mining Dashboard</h1>
-      <p className="subtitle is-size-6 is-size-5-tablet">
+      <p className="subtitle is-size-6 is-size-5-tablet" style={{ marginBottom: "1.8em" }}>
         Mine from the comfort of your browser! No need for unnecessary mining clients.
       </p>
 

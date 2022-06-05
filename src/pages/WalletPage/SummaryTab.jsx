@@ -64,7 +64,7 @@ const SummaryTab = () => {
   const numPages = Math.ceil(numTransactions / transactionsPerPage);
 
   return (
-    <main>
+    <main id="summary">
       <div className="-is-flex-tablet -is-align-items-start mb-6" style={{ gap: "2em" }}>
         <div className="card">
           <div

@@ -67,7 +67,7 @@ const WalletPage = () => {
                 <span>Receive</span>
               </a>
             </li>
-            <li onClick={() => setTab("more")} className={tab === "more" ? "is-active" : ""}>
+            <li onClick={() => setTab("info")} className={tab === "info" ? "is-active" : ""}>
               <a>
                 <div className="material-icons-outlined md-18 mr-2">info</div>
                 <span>Info</span>
@@ -79,7 +79,7 @@ const WalletPage = () => {
         {tab === "summary" && <SummaryTab />}
         {tab === "send" && <SendTab />}
         {tab === "receive" && <ReceiveTab />}
-        {tab === "more" && <InfoTab />}
+        {tab === "info" && <InfoTab />}
       </main>
     </WalletContext.Provider>
   );

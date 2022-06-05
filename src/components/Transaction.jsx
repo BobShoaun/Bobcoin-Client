@@ -157,7 +157,11 @@ const Transaction = ({ transaction }) => {
             )}`}
             style={{ borderRadius: "0.3em", fontSize: ".9rem" }}
           >
-            {confirmations > 0 ? `${confirmations.toLocaleString()} Confirmations` : "Orphaned"}
+            {confirmations > 0
+              ? `${confirmations.toLocaleString()} Confirmations`
+              : transaction.block
+              ? "Orphaned"
+              : "Mempool"}
           </span>
         </div>
         <div className="has-text-right ml-auto">

@@ -49,8 +49,8 @@ const BlockchainPage = () => {
 
   const getStatus = block => {
     // TODO: common code in blockpage
-    if (block.height >= headBlock.height - 6) return { type: "Unconfirmed", color: "has-background-warning" };
     if (!block.valid) return { type: "Orphaned", color: "has-background-danger" };
+    if (block.height >= headBlock.height - 6) return { type: "Unconfirmed", color: "has-background-grey" };
     return { type: "Confirmed", color: "has-background-success" };
   };
 
@@ -91,6 +91,7 @@ const BlockchainPage = () => {
                 style={{
                   fontSize: ".87rem",
                   textDecoration: status.type === "Orphaned" ? "line-through" : "none",
+                  fontWeight: status.type === "Orphaned" ? "normal" : "600",
                 }}
               >
                 {block.height}

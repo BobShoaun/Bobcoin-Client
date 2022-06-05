@@ -1,4 +1,3 @@
-import { useParams } from "../../hooks/useParams";
 import { useSelector } from "react-redux";
 import { useState, useEffect, useRef } from "react";
 
@@ -10,20 +9,20 @@ import axios from "axios";
 import { numberWithCommas } from "../../helpers";
 
 const FaucetPage = () => {
-  const [loading, params] = useParams();
+  const { params, paramsLoaded } = useSelector(state => state.consensus);
   const [errorMessage, setErrorMessage] = useState("");
   const [faucetInfo, setFaucetInfo] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
 
-  const api = useSelector(state => state.network.api);
   const recaptchaRef = useRef(null);
 
-  useEffect(() => {
-    (async () => {
-      const { data } = await axios.get(`${api}/faucet/info`);
-      setFaucetInfo(data);
-    })();
-  }, [api]);
+  const getFaucetInfo = async () => {
+    setFaucetInfo(null);
+    const { data } = await axios.get(`/faucet/info`);
+    setFaucetInfo(data);
+  };
+
+  useEffect(getFaucetInfo, []);
 
   const send = async e => {
     e.preventDefault();
@@ -38,7 +37,7 @@ const FaucetPage = () => {
     }
 
     try {
-      await axios.post(`${api}/faucet/request`, { address, recaptchaResponse });
+      await axios.post(`/faucet/request`, { address, recaptchaResponse });
       setModalOpen(true);
     } catch (e) {
       setErrorMessage(e.response.data);
@@ -46,7 +45,7 @@ const FaucetPage = () => {
     recaptchaRef.current.reset();
   };
 
-  if (loading || !faucetInfo)
+  if (!paramsLoaded || !faucetInfo)
     return (
       <div style={{ height: "70vh" }}>
         <Loading />
@@ -112,7 +111,7 @@ const FaucetPage = () => {
         </span>
       </h4>
 
-      <p>Consider donating to the address to keep the faucet dripping.</p>
+      <p>Consider donating to the address to keep the faucet running.</p>
 
       <div className={`modal ${modalOpen ? "is-active" : ""}`}>
         <div className="modal-background"></div>

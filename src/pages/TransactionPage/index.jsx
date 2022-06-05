@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, Fragment, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { useParams, Link, useLocation } from "react-router-dom";
 
@@ -18,18 +18,19 @@ const TransactionPage = () => {
 
   const blockHash = new URLSearchParams(location.search).get("block");
 
-  const getTransaction = async () => {
+  const getTransaction = useCallback(async () => {
     setTransaction(null);
     const { data } = blockHash
       ? await axios.get(`/transaction/${hash}?block=${blockHash}`)
       : await axios.get(`/transaction/${hash}`);
     setTransaction(data);
-  };
+  }, [hash, blockHash]);
 
-  useEffect(getTransaction, [hash, blockHash]);
+  useEffect(getTransaction, [getTransaction]);
 
   const getStatus = tx => {
     // TODO: common code in blockpage
+    if (!tx.block) return { type: "Mempool", color: "has-background-grey" };
     if (tx.block.height >= headBlock.height - 6) return { type: "Unconfirmed", color: "has-background-warning" };
     if (!tx.block.valid) return { type: "Orphaned", color: "has-background-danger" };
     return { type: "Confirmed", color: "has-background-success" };
@@ -47,7 +48,7 @@ const TransactionPage = () => {
   const fee = totalInput - totalOutput;
   const isCoinbase = !transaction.inputs.length && transaction.outputs.length === 1;
   const status = getStatus(transaction);
-  const confirmations = headBlock.height - transaction.block.height + 1;
+  const confirmations = transaction.block ? headBlock.height - transaction.block.height + 1 : 0;
 
   return (
     <section className="section">
@@ -83,16 +84,16 @@ const TransactionPage = () => {
           </tr>
           <tr>
             <td>Confirmations</td>
-            <td>{transaction.block.valid ? confirmations : "-"}</td>
+            <td>{transaction.block?.valid ? confirmations : "-"}</td>
           </tr>
           <tr>
             <td>Block Height</td>
-            <td>{isNaN(transaction.block.height) ? "-" : transaction.block.height.toLocaleString()}</td>
+            <td>{isNaN(transaction.block?.height) ? "-" : transaction.block.height.toLocaleString()}</td>
           </tr>
           <tr>
             <td>Block Hash</td>
             <td style={{ wordBreak: "break-all" }}>
-              {transaction.block.hash ? (
+              {transaction.block?.hash ? (
                 <Link to={`../block/${transaction.block.hash}`}>{transaction.block.hash}</Link>
               ) : (
                 "-"
@@ -140,7 +141,7 @@ const TransactionPage = () => {
           </colgroup>
           <tbody>
             {transaction.inputs.map((input, index) => (
-              <React.Fragment key={index}>
+              <Fragment key={index}>
                 <tr>
                   <td>Transaction Hash</td>
                   <td className="pl-3" style={{ wordBreak: "break-all" }}>
@@ -170,7 +171,7 @@ const TransactionPage = () => {
                     {input.signature}
                   </td>
                 </tr>
-              </React.Fragment>
+              </Fragment>
             ))}
           </tbody>
         </table>
@@ -186,7 +187,7 @@ const TransactionPage = () => {
           </colgroup>
           <tbody>
             {transaction.outputs.map((output, index) => (
-              <React.Fragment key={index}>
+              <Fragment key={index}>
                 <tr>
                   <td>Index</td>
                   <td className="pl-3">{index}</td>
@@ -209,7 +210,7 @@ const TransactionPage = () => {
                     {(output.amount / params.coin).toFixed(8)} {params.symbol}
                   </td>
                 </tr>
-              </React.Fragment>
+              </Fragment>
             ))}
           </tbody>
         </table>

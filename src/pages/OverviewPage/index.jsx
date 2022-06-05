@@ -66,6 +66,8 @@ const OverviewPage = () => {
     setTxPage(page);
   };
 
+  console.log(mempool);
+
   if (!paramsLoaded || !mempoolLoaded)
     return (
       <div style={{ height: "70vh" }}>
