@@ -50,7 +50,7 @@ const Blockchain = ({ showHead }) => {
       >
         {blockHeights.map(({ height, blocks }) => (
           <div key={height} style={{ flex: "1 1 20%", minWidth: 0, maxWidth: "30%" }}>
-            <h2 className="title is-6 mb-2 has-text-centered mr-3">#{height}</h2>
+            <h2 className="title is-6 mb-2 has-text-centered mr-3">#{height.toLocaleString()}</h2>
             {blocks
               .sort(b => (b.valid ? -1 : 1))
               .map((block, i) => (

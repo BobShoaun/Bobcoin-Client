@@ -5,7 +5,7 @@ import ReactTooltip from "react-tooltip";
 import { format } from "date-fns";
 import { useWindowDimensions } from "../hooks/useWindowDimensions";
 
-import { getMaxDecimalPlaces, numberWithCommas } from "../helpers";
+import { getMaxDecimalPlaces, numberWithCommas, getTransactionStatus } from "../helpers";
 
 const Transaction = ({ transaction }) => {
   const { headBlock } = useSelector(state => state.blockchain);
@@ -15,17 +15,7 @@ const Transaction = ({ transaction }) => {
   const totalOutput = transaction.outputs.reduce((total, output) => total + output.amount, 0);
   const isCoinbase = transaction.inputs.length === 0 && transaction.outputs.length === 1;
   const fee = totalInput - totalOutput;
-  const confirmations = transaction.block?.valid ? headBlock?.height - transaction.block.height + 1 : 0;
-
-  // const confirmations =
-  //   transaction.status === "mempool" || transaction.status === "orphaned"
-  //     ? 0
-  //     : headBlock?.height - transaction.blockHeight + 1;
-
-  const getConfirmationColor = confirmations => {
-    if (confirmations > params.blkMaturity) return "confirmations-8";
-    return `confirmations-${confirmations}`;
-  };
+  const status = getTransactionStatus(transaction, headBlock, params);
 
   const { width } = useWindowDimensions();
   const isTablet = width > 769;
@@ -152,16 +142,10 @@ const Transaction = ({ transaction }) => {
       <section className="is-flex is-flex-wrap-wrap" style={{ gap: "1em" }}>
         <div className="mt-auto">
           <span
-            className={`subtitle is-inline-block py-1 px-3 has-text-white has-text-weight-medium ${getConfirmationColor(
-              confirmations
-            )}`}
+            className={`subtitle is-inline-block py-1 px-3 has-text-white has-text-weight-medium ${status.colorClass}`}
             style={{ borderRadius: "0.3em", fontSize: ".9rem" }}
           >
-            {confirmations > 0
-              ? `${confirmations.toLocaleString()} Confirmations`
-              : transaction.block
-              ? "Orphaned"
-              : "Mempool"}
+            {status.text}
           </span>
         </div>
         <div className="has-text-right ml-auto">

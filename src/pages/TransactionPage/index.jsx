@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { useParams, Link, useLocation } from "react-router-dom";
 
 import Transaction from "../../components/Transaction";
-import { copyToClipboard, numberWithCommas } from "../../helpers";
+import { copyToClipboard, numberWithCommas, getTransactionStatus } from "../../helpers";
 import Loading from "../../components/Loading";
 
 import axios from "axios";
@@ -28,14 +28,6 @@ const TransactionPage = () => {
 
   useEffect(getTransaction, [getTransaction]);
 
-  const getStatus = tx => {
-    // TODO: common code in blockpage
-    if (!tx.block) return { type: "Mempool", color: "has-background-grey" };
-    if (tx.block.height >= headBlock.height - 6) return { type: "Unconfirmed", color: "has-background-warning" };
-    if (!tx.block.valid) return { type: "Orphaned", color: "has-background-danger" };
-    return { type: "Confirmed", color: "has-background-success" };
-  };
-
   if (!transaction || !paramsLoaded || !headBlockLoaded)
     return (
       <div style={{ height: "70vh" }}>
@@ -47,8 +39,9 @@ const TransactionPage = () => {
   const totalOutput = transaction.outputs.reduce((total, output) => total + output.amount, 0);
   const fee = totalInput - totalOutput;
   const isCoinbase = !transaction.inputs.length && transaction.outputs.length === 1;
-  const status = getStatus(transaction);
   const confirmations = transaction.block ? headBlock.height - transaction.block.height + 1 : 0;
+
+  const status = getTransactionStatus(transaction, headBlock, params);
 
   return (
     <section className="section">
@@ -76,9 +69,9 @@ const TransactionPage = () => {
             <td>
               <span
                 style={{ borderRadius: "0.3em" }}
-                className={`title is-7 py-1 px-2 has-background-success has-text-white capitalize ${status.color}`}
+                className={`title is-7 py-1 px-2 has-background-success has-text-white capitalize ${status.colorClass}`}
               >
-                {status.type}
+                {status.text}
               </span>
             </td>
           </tr>

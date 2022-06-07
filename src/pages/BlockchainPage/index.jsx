@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Fragment } from "react";
 import { useSelector } from "react-redux";
 
 import { Link } from "react-router-dom";
@@ -7,19 +7,19 @@ import Loading from "../../components/Loading";
 import Pagination from "../../components/Pagination";
 
 import { formatDistanceToNow } from "date-fns";
+import { getBlockStatus } from "../../helpers";
 import "./blockchain.css";
 
 import axios from "axios";
 
 const BlockchainPage = () => {
   const { headBlock, headBlockLoaded } = useSelector(state => state.blockchain);
+  const { params, paramsLoaded } = useSelector(state => state.consensus);
 
   const [blocks, setBlocks] = useState([]);
   const [page, setPage] = useState(0); // 0 indexed page
   const blockchainSection = useRef(null);
   const heightsPerPage = 20;
-  const numFirstPages = 10;
-  const numLastPages = 2;
 
   const getBlocks = async () => {
     const results = await axios.get(
@@ -38,7 +38,7 @@ const BlockchainPage = () => {
     setPage(page);
   };
 
-  if (!blocks.length || !headBlockLoaded)
+  if (!blocks.length || !headBlockLoaded || !paramsLoaded)
     return (
       <div style={{ height: "70vh" }}>
         <Loading />
@@ -46,13 +46,6 @@ const BlockchainPage = () => {
     );
 
   const numPages = Math.ceil((headBlock.height + 1) / heightsPerPage);
-
-  const getStatus = block => {
-    // TODO: common code in blockpage
-    if (!block.valid) return { type: "Orphaned", color: "has-background-danger" };
-    if (block.height >= headBlock.height - 6) return { type: "Unconfirmed", color: "has-background-grey" };
-    return { type: "Confirmed", color: "has-background-success" };
-  };
 
   return (
     <section ref={blockchainSection} className="section">
@@ -83,34 +76,34 @@ const BlockchainPage = () => {
         <hr className="my-0" />
 
         {blocks.map(block => {
-          const status = getStatus(block);
+          const status = getBlockStatus(block, headBlock, params);
           return (
-            <React.Fragment key={block.hash}>
+            <Fragment key={block.hash}>
               <p
                 className="subtitle mb-0 has-text-centered"
                 style={{
                   fontSize: ".87rem",
-                  textDecoration: status.type === "Orphaned" ? "line-through" : "none",
-                  fontWeight: status.type === "Orphaned" ? "normal" : "600",
+                  textDecoration: block.valid ? "none" : "line-through",
+                  fontWeight: block.valid ? "600" : "normal",
                 }}
               >
-                {block.height}
+                {block.height.toLocaleString()}
               </p>
               <p
                 className="subtitle mb-0 truncated"
-                style={{ fontSize: ".87rem", textDecoration: status.type === "Orphaned" ? "line-through" : "none" }}
+                style={{ fontSize: ".87rem", textDecoration: block.valid ? "none" : "line-through" }}
               >
                 <Link to={`/block/${block.hash}`}>{block.hash}</Link>
               </p>
               <p
                 className="subtitle mb-0"
-                style={{ fontSize: ".87rem", textDecoration: status.type === "Orphaned" ? "line-through" : "none" }}
+                style={{ fontSize: ".87rem", textDecoration: block.valid ? "none" : "line-through" }}
               >
                 {formatDistanceToNow(block.timestamp, { addSuffix: true, includeSeconds: true })}
               </p>
               <p
                 className="subtitle mb-0 truncated"
-                style={{ fontSize: ".87rem", textDecoration: status.type === "Orphaned" ? "line-through" : "none" }}
+                style={{ fontSize: ".87rem", textDecoration: block.valid ? "none" : "line-through" }}
               >
                 <Link to={`/address/${block.transactions[0].outputs[0].address}`}>
                   {block.transactions[0].outputs[0].address ?? "-"}
@@ -119,12 +112,12 @@ const BlockchainPage = () => {
               <p className="mb-0 has-text-centered">
                 <span
                   style={{ borderRadius: "0.3em" }}
-                  className={`title is-7 py-1 px-2 has-background-success has-text-white ${status.color}`}
+                  className={`title is-7 py-1 px-2 has-text-white ${status.colorClass}`}
                 >
-                  {status.type}
+                  {status.text}
                 </span>
               </p>
-            </React.Fragment>
+            </Fragment>
           );
         })}
       </div>

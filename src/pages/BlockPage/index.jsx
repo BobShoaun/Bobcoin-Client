@@ -4,7 +4,7 @@ import { useParams, Link, useHistory } from "react-router-dom";
 
 import Transaction from "../../components/Transaction";
 
-import { copyToClipboard, numberWithCommas } from "../../helpers";
+import { copyToClipboard, numberWithCommas, getBlockStatus } from "../../helpers";
 import Loading from "../../components/Loading";
 
 import { bigIntToHex64, calculateHashTarget, calculateBlockReward } from "blockcrypto";
@@ -42,14 +42,6 @@ const BlockPage = () => {
       </div>
     );
 
-  const getStatus = block => {
-    // TODO: common code in blockpage
-    if (!block.valid) return { type: "Orphaned", color: "has-background-danger" };
-    if (block.height >= headBlock.height - 6) return { type: "Unconfirmed", color: "has-background-warning" };
-    return { type: "Confirmed", color: "has-background-success" };
-  };
-
-  const confirmations = block.valid ? headBlock.height - block.height + 1 : 0;
   const totalInput = block.transactions
     .slice(1)
     .reduce((total, info) => total + info.inputs.reduce((total, input) => total + input.amount, 0), 0);
@@ -57,7 +49,7 @@ const BlockPage = () => {
     .slice(1)
     .reduce((total, info) => total + info.outputs.reduce((total, output) => total + output.amount, 0), 0);
 
-  // const status = getStatus(block);
+  const status = getBlockStatus(block, headBlock, params);
 
   return (
     <section className="section">
@@ -112,12 +104,9 @@ const BlockPage = () => {
             <td>
               <span
                 style={{ borderRadius: "0.3em" }}
-                className={`title is-7 py-1 px-2 has-text-white capitalize confirmations-${Math.min(
-                  confirmations,
-                  params.blkMaturity
-                )}`}
+                className={`title is-7 py-1 px-2 has-text-white capitalize ${status.colorClass}`}
               >
-                {confirmations > 0 ? `${confirmations.toLocaleString()} Confirmations` : "Orphaned"}
+                {status.text}
               </span>
             </td>
           </tr>
