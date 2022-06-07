@@ -7,6 +7,7 @@ import Transaction from "../../components/Transaction";
 import Pagination from "../../components/Pagination";
 
 import { WalletContext } from ".";
+import useDidUpdateEffect from "../../hooks/useUpdateEffect";
 
 import { getMaxDecimalPlaces, numberWithCommas } from "../../helpers";
 import axios from "axios";
@@ -21,8 +22,6 @@ const SummaryTab = () => {
   const [page, setPage] = useState(0); // 0 indexed page
   const transactionsSection = useRef(null);
   const transactionsPerPage = 10;
-  const numFirstPages = 10;
-  const numLastPages = 2;
 
   const { width } = useWindowDimensions();
   const isTablet = width > 769;
@@ -33,14 +32,22 @@ const SummaryTab = () => {
 
   const getWalletTransactions = async () => {
     if (!addresses.length) return;
-    setTransactions([]);
-    const results = await axios.post(
+    const { data } = await axios.post(
       `/wallet/transactions?limit=${transactionsPerPage}&offset=${page * transactionsPerPage}`,
       addresses
     );
-    setTransactions(results.data);
+    setTransactions(data);
   };
+
   useEffect(getWalletTransactions, [addresses, page]);
+  useDidUpdateEffect(
+    () =>
+      (async () => {
+        await getWalletTransactions();
+        transactionsSection.current?.scrollIntoView({ behavior: "smooth" });
+      })(),
+    [addresses, page]
+  );
 
   const getMempoolTransactions = async () => {
     if (!addresses.length) return;
@@ -49,11 +56,6 @@ const SummaryTab = () => {
     setMempoolTxs(results.data);
   };
   useEffect(getMempoolTransactions, [addresses, page]);
-
-  const gotoPage = page => {
-    transactionsSection.current?.scrollIntoView({ behavior: "smooth" });
-    setPage(page);
-  };
 
   const { balance, totalReceived, totalSent, numUtxos, numTransactions, numBlocksMined } = walletInfo;
 
@@ -64,14 +66,14 @@ const SummaryTab = () => {
   const numPages = Math.ceil(numTransactions / transactionsPerPage);
 
   return (
-    <main id="summary">
+    <main>
       <div className="-is-flex-tablet -is-align-items-start mb-6" style={{ gap: "2em" }}>
         <div className="card">
           <div
             className="card-content"
             style={{
               display: "grid",
-              grid: "auto / auto auto",
+              grid: "auto / 1fr 2fr",
               columnGap: "2em",
               rowGap: "1em",
               alignItems: "center",
@@ -119,7 +121,7 @@ const SummaryTab = () => {
         )}
       </div>
 
-      <h1 ref={transactionsSection} className="title is-size-5 is-size-4-tablet mb-3">
+      <h1 ref={transactionsSection} style={{ scrollMargin: "5rem" }} className="title is-size-5 is-size-4-tablet mb-3">
         Confirmed transactions
       </h1>
       <div className="mb-6">
@@ -138,7 +140,7 @@ const SummaryTab = () => {
         )}
       </div>
 
-      <Pagination currentPage={page} onPageChange={gotoPage} numPages={numPages} />
+      <Pagination currentPage={page} onPageChange={setPage} numPages={numPages} />
     </main>
   );
 };

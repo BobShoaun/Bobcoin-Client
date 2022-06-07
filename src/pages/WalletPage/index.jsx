@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 
 import Loading from "../../components/Loading";
-// import "./index.css";
 
 import SummaryTab from "./SummaryTab";
 import InfoTab from "./InfoTab";
@@ -34,6 +33,11 @@ const WalletPage = () => {
     if (!mnemonic) history.push("/wallet/onboarding");
   }, [mnemonic]);
 
+  useEffect(() => {
+    if (history.location.hash) setTab(history.location.hash.slice(1));
+    else history.push("#summary");
+  }, [history]);
+
   const loading = !walletInfo || !paramsLoaded;
   if (loading)
     return (
@@ -50,25 +54,25 @@ const WalletPage = () => {
         <div className="tabs is-toggle is-fullwidth mb-6">
           <ul>
             <li onClick={() => setTab("summary")} className={tab === "summary" ? "is-active" : ""}>
-              <a>
+              <a href="#summary">
                 <div className="material-icons-two-tone mr-2">bar_chart</div>
                 <span>Summary</span>
               </a>
             </li>
             <li onClick={() => setTab("send")} className={tab === "send" ? "is-active" : ""}>
-              <a>
+              <a href="#send">
                 <div className="material-icons-outlined md-18 mr-2">send</div>
                 <span>Send</span>
               </a>
             </li>
             <li onClick={() => setTab("receive")} className={tab === "receive" ? "is-active" : ""}>
-              <a>
+              <a href="#receive">
                 <div className="material-icons-outlined md-18 mr-2">call_received</div>
                 <span>Receive</span>
               </a>
             </li>
             <li onClick={() => setTab("info")} className={tab === "info" ? "is-active" : ""}>
-              <a>
+              <a href="#info">
                 <div className="material-icons-outlined md-18 mr-2">info</div>
                 <span>Info</span>
               </a>

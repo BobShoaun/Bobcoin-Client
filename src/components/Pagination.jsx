@@ -1,22 +1,20 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useHistory } from "react-router";
 
 const Pagination = ({ currentPage, onPageChange, numPages }) => {
   const history = useHistory();
-  const [page, setPage] = useState(currentPage);
+  const page = currentPage;
 
   useEffect(() => {
     const searchParams = new URLSearchParams(history.location.search);
     const page = (parseInt(searchParams.get("page")) || 1) - 1;
-    setPage(page);
     onPageChange(page);
   }, [history]);
 
   const updatePage = page => {
-    setPage(page);
     onPageChange(page);
     const searchParams = new URLSearchParams({ page: page + 1 });
-    history.push(`?${searchParams}`);
+    history.push({ search: `?${searchParams}`, hash: history.location.hash });
   };
 
   const numFirstPages = 6;

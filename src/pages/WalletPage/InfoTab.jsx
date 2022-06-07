@@ -4,12 +4,14 @@ import { useSelector, useDispatch } from "react-redux";
 import { WalletContext } from ".";
 import { deleteWallet } from "../../store/walletSlice";
 
-// import "./index.css";
-
 const InfoTab = () => {
   const dispatch = useDispatch();
   const { xprv, xpub, mnemonic, externalKeys, internalKeys } = useSelector(state => state.wallet);
   const { params } = useContext(WalletContext);
+
+  const [isMnemonicVisible, setIsMnemonicVisible] = useState(false);
+  const [isMasterSKVisible, setIsMasterSKVisible] = useState(false);
+  const [isMasterPKVisible, setIsMasterPKVisible] = useState(false);
 
   const onDeleteWallet = () => {
     if (
@@ -28,27 +30,63 @@ const InfoTab = () => {
 
       <div className="card mb-6">
         <div className="card-content">
-          <table className="table is-fullwidth is-block mb-1" style={{ overflowY: "auto" }}>
+          <table className="table is-fullwidth mb-1" style={{ overflowY: "auto" }}>
             <tbody>
               <tr>
                 <th className="has-text-weight-semibold">Mnemonic phrase</th>
-                <td>{mnemonic}</td>
+                <td style={{ WebkitTextSecurity: isMnemonicVisible ? "none" : "disc", wordBreak: "break-word" }}>
+                  {mnemonic}
+                </td>
+                <td>
+                  <button
+                    onClick={() => setIsMnemonicVisible(visible => !visible)}
+                    className="button is-small is-white ml-auto"
+                  >
+                    <span className="material-icons-outlined is-size-6">
+                      {isMnemonicVisible ? "visibility_off" : "visibility"}
+                    </span>
+                  </button>
+                </td>
               </tr>
               <tr>
                 <th className="has-text-weight-semibold">Master extended private key</th>
-                <td style={{ wordBreak: "break-all" }}>{xprv}</td>
+                <td style={{ WebkitTextSecurity: isMasterSKVisible ? "none" : "disc", wordBreak: "break-all" }}>
+                  {xprv}
+                </td>
+                <td>
+                  <button
+                    onClick={() => setIsMasterSKVisible(visible => !visible)}
+                    className="button is-small is-white ml-auto"
+                  >
+                    <span className="material-icons-outlined is-size-6">
+                      {isMasterSKVisible ? "visibility_off" : "visibility"}
+                    </span>
+                  </button>
+                </td>
               </tr>
               <tr>
                 <th className="has-text-weight-semibold">Master extended public key</th>
-                <td style={{ wordBreak: "break-all" }}>{xpub}</td>
+                <td style={{ WebkitTextSecurity: isMasterPKVisible ? "none" : "disc", wordBreak: "break-all" }}>
+                  {xpub}
+                </td>
+                <td>
+                  <button
+                    onClick={() => setIsMasterPKVisible(visible => !visible)}
+                    className="button is-small is-white ml-auto"
+                  >
+                    <span className="material-icons-outlined is-size-6">
+                      {isMasterPKVisible ? "visibility_off" : "visibility"}
+                    </span>
+                  </button>
+                </td>
               </tr>
               <tr>
                 <th className="has-text-weight-semibold">Generated addresses</th>
-                <td>{externalKeys.length + internalKeys.length}</td>
+                <td colSpan={2}>{externalKeys.length + internalKeys.length}</td>
               </tr>
               <tr>
                 <th className="has-text-weight-semibold">Account Index</th>
-                <td>0</td>
+                <td colSpan={2}>0</td>
               </tr>
             </tbody>
           </table>
