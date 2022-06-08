@@ -36,11 +36,10 @@ const Block = ({ block, selected, blockchainRef, onChange, rerender }) => {
   return (
     <div className={`card is-flex is-flex-direction-column h-100 block ${selected ? "block-selected" : ""}`}>
       <div className="card-header" style={{ borderRadius: 0 }}>
-        <div className="card-header-title" style={{ position: "relative" }}>
-          <div className="block-hook has-background-info" data-block-hash={block.hash} data-left-hook></div>
+        <div className="card-header-title is-flex is-relative" style={{ width: "100%" }}>
+          <div className="block-hook left has-background-info" data-block-hash={block.hash} data-left-hook></div>
 
-          <h1 className="subtitle mb-0 is-6 truncated is-family-monospace mx-auto" style={{ maxWidth: "14ch" }}>
-            {/* {block.hash} */}
+          <h1 className="subtitle mb-0 is-6 truncated is-family-monospace px-5">
             <Link className="has-text-info" to={`/block/${block.hash}`}>
               {block.hash}
             </Link>
@@ -58,12 +57,12 @@ const Block = ({ block, selected, blockchainRef, onChange, rerender }) => {
               Head
             </span>
           )} */}
-          <div ref={rightHook} className="block-hook has-background-info">
+          <div ref={rightHook} className="block-hook right has-background-info">
             {block.height > 0 && (
               <div className="block-connector">
                 <div
                   style={{
-                    width: connector?.width ?? "3em",
+                    width: connector?.width ?? "2em",
                     transform: `rotate(${connector?.angle ?? 0}rad)`,
                   }}
                 />
@@ -111,7 +110,7 @@ const Block = ({ block, selected, blockchainRef, onChange, rerender }) => {
               View
             </Link>
 
-            <div className="dropdown is-hoverable">
+            <div className="dropdown is-up is-hoverable">
               <div className="dropdown-trigger">
                 <button
                   className="button is-small has-text-weight-semibold px-1"
@@ -161,7 +160,7 @@ const Block = ({ block, selected, blockchainRef, onChange, rerender }) => {
             </p>
           </div>
 
-          <div className="dropdown is-hoverable ml-auto">
+          <div className="dropdown is-up is-hoverable ml-auto">
             <div className="dropdown-trigger">
               <button
                 className="button is-small -is-white has-text-weight-semibold px-1"

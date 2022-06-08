@@ -58,7 +58,7 @@ const TransactionPage = () => {
 
       <h1 className="title is-4">Details</h1>
 
-      <table className="table is-fullwidth mb-6">
+      <table className="table is-fullwidth mb-6 info-table">
         <tbody>
           <tr>
             <td>Hash</td>
@@ -126,7 +126,7 @@ const TransactionPage = () => {
 
       {isCoinbase && <p>No inputs for coinbase transaction</p>}
 
-      <div className="mb-5">
+      <div className="mb-5 ml-2">
         <table className="-table mb-5" style={{ width: "100%", borderSpacing: "10px" }}>
           <colgroup>
             <col span="1" style={{ width: "20%" }} />
@@ -172,8 +172,8 @@ const TransactionPage = () => {
 
       <h1 className="title is-4">Outputs</h1>
 
-      <div className="mb-6">
-        <table className="mb-5" style={{ width: "100%", borderSpacing: "10px" }}>
+      <div className="mb-6 ml-2">
+        <table className="-table mb-5" style={{ width: "100%", borderSpacing: "10px" }}>
           <colgroup>
             <col span="1" style={{ width: "20%" }} />
             <col span="1" style={{ width: "80%" }} />

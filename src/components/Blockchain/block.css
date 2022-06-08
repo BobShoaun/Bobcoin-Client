@@ -17,7 +17,18 @@
 	outline: 2px black solid;
 	outline-offset: 0.1em;
 	z-index: 1;
-	position: relative;
+	/* position: relative; */
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.block-hook.left {
+	left: 1em;
+}
+
+.block-hook.right {
+	right: 1em;
 }
 
 .block-connector {

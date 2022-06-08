@@ -23,6 +23,7 @@ const MinePage = () => {
   const keys = useSelector(state => state.wallet.keys);
   const { externalKeys } = useSelector(state => state.wallet);
 
+  const [mineInfo, setMineInfo] = useState(null);
   const [miner, setMiner] = useState(externalKeys[externalKeys.length - 1]?.addr ?? keys.address ?? "");
   const [parentBlockHash, setParentBlockHash] = useState("");
 
@@ -43,6 +44,15 @@ const MinePage = () => {
       console.log("terminating worker", activeWorker.current);
       activeWorker.current?.terminate();
     },
+    []
+  );
+
+  useEffect(
+    () =>
+      (async () => {
+        const { data } = await axios.get("/mine/info");
+        setMineInfo(data);
+      })(),
     []
   );
 
@@ -143,7 +153,7 @@ const MinePage = () => {
   const programs = [
     {
       name: "mine",
-      template: "mine <operation>",
+      template: "mine [start | stop]",
       execute: args => {
         const operation = args[1];
         switch (operation) {
@@ -158,7 +168,7 @@ const MinePage = () => {
     },
     {
       name: "set",
-      template: "set <type> <value>",
+      template: "set [miner | parent] <value>",
       execute: args => {
         const type = args[1];
         const value = args[2];
@@ -207,12 +217,24 @@ const MinePage = () => {
   return (
     <section className="section">
       <h1 className="title is-size-4 is-size-2-tablet">Mining Dashboard</h1>
-      <p className="subtitle is-size-6 is-size-5-tablet" style={{ marginBottom: "1.8em" }}>
+      <p className="subtitle is-size-6 is-size-5-tablet">
         Mine from the comfort of your browser! No need for unnecessary mining clients.
       </p>
 
+      <hr className="has-background-grey-light" />
+
       <div className="mb-6">
-        <Blockchain showHead />
+        <Blockchain showHead>
+          <div className="mr-auto" style={{ fontSize: ".95em" }}>
+            <p>
+              Current difficulty:{" "}
+              <span className="has-text-weight-semibold">{mineInfo?.difficulty.toFixed(4) ?? "-"}</span>
+            </p>
+            <p>
+              Concurrent users: <span className="has-text-weight-semibold">{mineInfo?.numClients ?? "-"}</span>
+            </p>
+          </div>
+        </Blockchain>
       </div>
 
       <section className="is-flex-tablet mb-5" style={{ gap: "3em" }}>

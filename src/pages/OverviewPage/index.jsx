@@ -97,18 +97,19 @@ const OverviewPage = () => {
       </div>
       <hr className="mb-6 mt-3 has-background-grey-light" />
 
-      <div className="is-flex is-flex-wrap-wrap mb-3" style={{ gap: ".5em" }}>
-        <div>
-          <h2 className="title is-size-5 is-size-4-tablet">Blocks - Recently mined</h2>
-          <p className="subtitle is-size-6">Most recently mined blocks in the blockchain.</p>
-        </div>
-        <Link to="./blockchain" className="button is-secondary ml-auto has-text-weight-semibold">
-          <span className="material-icons mr-2">view_in_ar</span>
-          <span>View all Blocks</span>
-        </Link>
-      </div>
       <div className="mb-6" style={{ overflow: "auto" }}>
-        <Blockchain />
+        <Blockchain>
+          <div className="is-flex is-flex-wrap-wrap mb-1" style={{ gap: ".5em", flexGrow: 1 }}>
+            <div>
+              <h2 className="title is-size-5 is-size-4-tablet">Blocks - Recently mined</h2>
+              <p className="subtitle is-size-6">Most recently mined blocks in the blockchain.</p>
+            </div>
+            <Link to="./blockchain" className="button is-secondary ml-auto has-text-weight-semibold">
+              <span className="material-icons mr-2">view_in_ar</span>
+              <span>View all Blocks</span>
+            </Link>
+          </div>
+        </Blockchain>
       </div>
 
       <div className="is-flex is-flex-wrap-wrap mb-4" style={{ gap: ".5em" }}>

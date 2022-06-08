@@ -21,7 +21,7 @@ const Navbar = () => {
         >
           <div
             tabIndex={0}
-            className="has-text-white nav-mobile p-2 explore-button"
+            className="has-text-white nav-mobile p-2 explore-button is-clickable"
             style={{ flexBasis: "20%", position: "relative" }}
           >
             <span className="material-icons-outlined is-white md-28 mb-0" style={{ color: "white" }}>
@@ -54,7 +54,7 @@ const Navbar = () => {
 
           <div
             tabIndex={0}
-            className="has-text-white nav-mobile p-2 explore-button"
+            className="has-text-white nav-mobile p-2 explore-button is-clickable"
             style={{ flexBasis: "20%", position: "relative" }}
           >
             <span className="material-icons-outlined is-white md-28 mb-0" style={{ color: "white" }}>
@@ -82,11 +82,11 @@ const Navbar = () => {
 
           <div
             tabIndex={0}
-            className="has-text-white nav-mobile p-2 explore-button"
+            className="has-text-white nav-mobile p-2 explore-button is-clickable"
             style={{ flexBasis: "20%", position: "relative" }}
           >
             <span className="material-icons-outlined is-white md-28 mb-0" style={{ color: "white" }}>
-              support
+              hub
             </span>
             <p className="is-size-7">Join</p>
             <div className="explore-dropdown has-background-dark" role="menu">
@@ -103,7 +103,7 @@ const Navbar = () => {
 
           <div
             tabIndex={0}
-            className="has-text-white nav-mobile p-2 more-button"
+            className="has-text-white nav-mobile p-2 more-button is-clickable"
             style={{ flexBasis: "20%", position: "relative" }}
           >
             <span className="material-icons-outlined is-white md-28 mb-0" style={{ color: "white" }}>

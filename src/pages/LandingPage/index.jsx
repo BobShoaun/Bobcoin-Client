@@ -10,10 +10,10 @@ const LandingPage = () => {
     <main className="section">
       <div className="has-text-centered mb-7 mt-6">
         <h1 className="title is-size-2 is-size-1-tablet is-spaced mb-4">Welcome to {params.name ?? "Bobcoin"}</h1>
-        <p className="subtitle is-size-5 is-size-4-tablet is-spaced mb-6 mx-auto" style={{ maxWidth: "35em" }}>
+        <h2 className="subtitle is-size-5 is-size-4-tablet is-spaced mb-6 mx-auto" style={{ maxWidth: "35em" }}>
           An open source, decentralized, peer to peer, proof of work, permissionless, blockchain digital currency that
           will take us to Mars.
-        </p>
+        </h2>
 
         <div className="dropdown is-hoverable mr-2">
           <div className="dropdown-trigger">

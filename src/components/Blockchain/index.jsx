@@ -5,7 +5,7 @@ import { useWindowDimensions } from "../../hooks/useWindowDimensions";
 import Block from "./Block";
 import axios from "axios";
 
-const Blockchain = ({ showHead }) => {
+const Blockchain = ({ showHead, children }) => {
   const { headBlock, headBlockLoaded } = useSelector(state => state.blockchain);
 
   const [page, setPage] = useState(0);
@@ -43,13 +43,31 @@ const Blockchain = ({ showHead }) => {
 
   return (
     <section>
+      <header className="is-flex mb-5" style={{ gap: "1em" }}>
+        {children}
+
+        <div>
+          <button className="button is-link mr-2" style={{ gap: ".5em" }} disabled={page === 0} onClick={nextBlocks}>
+            <i className="material-icons md-18">arrow_back</i>
+          </button>
+          <button
+            className="button is-link"
+            style={{ gap: ".5em" }}
+            onClick={prevBlocks}
+            disabled={page >= Math.floor(headBlock.height / heightsPerPage)}
+          >
+            <i className="material-icons md-18">arrow_forward</i>
+          </button>
+        </div>
+      </header>
+
       <div
         ref={blockchainRef}
-        className="is-flex-tablet h-100 px-3 mb-4"
-        style={{ gap: "2em", overflowX: "clip", overflowY: "visible" }}
+        className="is-flex h-100 px-3"
+        style={{ gap: "1.75em", overflowX: "auto", overflowY: "visible" }}
       >
         {blockHeights.map(({ height, blocks }) => (
-          <div key={height} style={{ flex: "1 1 20%", minWidth: 0, maxWidth: "30%" }}>
+          <div key={height} style={{ flex: "1 1 30%", minWidth: "10em", maxWidth: "30%" }}>
             <h2 className="title is-6 mb-2 has-text-centered mr-3">#{height.toLocaleString()}</h2>
             {blocks
               .sort(b => (b.valid ? -1 : 1))
@@ -66,21 +84,6 @@ const Blockchain = ({ showHead }) => {
               ))}
           </div>
         ))}
-      </div>
-      <div className="has-text-right">
-        <button className="button is-info mr-2 pl-3" style={{ gap: ".5em" }} disabled={page === 0} onClick={nextBlocks}>
-          <i className="material-icons md-18">arrow_back</i>
-          Next
-        </button>
-        <button
-          className="button is-info pr-3"
-          style={{ gap: ".5em" }}
-          onClick={prevBlocks}
-          disabled={page >= Math.floor(headBlock.height / heightsPerPage)}
-        >
-          Prev
-          <i className="material-icons md-18">arrow_forward</i>
-        </button>
       </div>
     </section>
   );

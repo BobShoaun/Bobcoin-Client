@@ -54,25 +54,25 @@ const WalletPage = () => {
         <div className="tabs is-toggle is-fullwidth mb-6">
           <ul>
             <li onClick={() => setTab("summary")} className={tab === "summary" ? "is-active" : ""}>
-              <a href="#summary">
+              <a href="#summary" style={{ borderColor: "grey" }}>
                 <div className="material-icons-two-tone mr-2">bar_chart</div>
                 <span>Summary</span>
               </a>
             </li>
             <li onClick={() => setTab("send")} className={tab === "send" ? "is-active" : ""}>
-              <a href="#send">
+              <a href="#send" style={{ borderColor: "grey" }}>
                 <div className="material-icons-outlined md-18 mr-2">send</div>
                 <span>Send</span>
               </a>
             </li>
             <li onClick={() => setTab("receive")} className={tab === "receive" ? "is-active" : ""}>
-              <a href="#receive">
+              <a href="#receive" style={{ borderColor: "grey" }}>
                 <div className="material-icons-outlined md-18 mr-2">call_received</div>
                 <span>Receive</span>
               </a>
             </li>
             <li onClick={() => setTab("info")} className={tab === "info" ? "is-active" : ""}>
-              <a href="#info">
+              <a href="#info" style={{ borderColor: "grey" }}>
                 <div className="material-icons-outlined md-18 mr-2">info</div>
                 <span>Info</span>
               </a>

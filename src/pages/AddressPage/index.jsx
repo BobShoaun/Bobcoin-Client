@@ -94,7 +94,7 @@ const AddressPage = ({ match }) => {
       </div>
       <div className="is-flex-tablet is-align-items-center mb-6" style={{ gap: "2em" }}>
         <p dangerouslySetInnerHTML={{ __html: addressQR }} className="m-5 box" style={{ flexBasis: "22em" }}></p>
-        <table className="table is-fullwidth">
+        <table className="table is-fullwidth info-table">
           <tbody>
             <tr>
               <td>Address</td>

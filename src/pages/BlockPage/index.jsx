@@ -75,7 +75,7 @@ const BlockPage = () => {
         </div>
       </div>
 
-      <table className="table is-fullwidth mb-6">
+      <table className="table is-fullwidth mb-6 info-table">
         <tbody>
           <tr>
             <td>Hash</td>
@@ -142,9 +142,7 @@ const BlockPage = () => {
           </tr>
           <tr>
             <td>Target Hash</td>
-            <td fclassName="is-family-monospace" style={{ wordBreak: "break-all" }}>
-              {bigIntToHex64(calculateHashTarget(params, block))}
-            </td>
+            <td style={{ wordBreak: "break-all" }}>{bigIntToHex64(calculateHashTarget(params, block))}</td>
           </tr>
           <tr>
             <td>Nonce</td>
@@ -162,9 +160,7 @@ const BlockPage = () => {
           </tr>
           <tr>
             <td>Merkle Root</td>
-            <td fclassName="is-family-monospace" style={{ wordBreak: "break-all" }}>
-              {block.merkleRoot}
-            </td>
+            <td style={{ wordBreak: "break-all" }}>{block.merkleRoot}</td>
           </tr>
           <tr>
             <td>Total transacted amount</td>
