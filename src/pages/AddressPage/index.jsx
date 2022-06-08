@@ -12,6 +12,7 @@ import Pagination from "../../components/Pagination";
 import { isAddressValid } from "blockcrypto";
 import axios from "axios";
 import ReactTooltip from "react-tooltip";
+import useDidUpdateEffect from "../../hooks/useUpdateEffect";
 
 const AddressPage = ({ match }) => {
   const { address } = useParams();
@@ -19,7 +20,6 @@ const AddressPage = ({ match }) => {
   const searchInput = useRef();
   const [addressQR, setAddressQR] = useState("");
 
-  const api = useSelector(state => state.network.api);
   const { params, paramsLoaded } = useSelector(state => state.consensus);
 
   const [addressInfo, setAddressInfo] = useState(null);
@@ -27,8 +27,6 @@ const AddressPage = ({ match }) => {
   const [page, setPage] = useState(0); // 0 indexed page
   const transactionsSection = useRef(null);
   const transactionsPerPage = 10;
-  const numFirstPages = 10;
-  const numLastPages = 2;
 
   const getAddressInfo = async () => {
     setAddressInfo(null);
@@ -37,16 +35,24 @@ const AddressPage = ({ match }) => {
   };
 
   const getAddressTransactions = async () => {
-    setTransactions([]);
-    const results = await axios.get(
-      `${api}/address/${address}/transactions?limit=${transactionsPerPage}&offset=${page * transactionsPerPage}`
+    const { data } = await axios.get(
+      `/address/${address}/transactions?limit=${transactionsPerPage}&offset=${page * transactionsPerPage}`
     );
-    setTransactions(results.data);
+    setTransactions(data);
   };
 
   useEffect(() => setPage(0), [match.params.address]);
-  useEffect(getAddressInfo, [api, address]);
-  useEffect(getAddressTransactions, [api, address, page]);
+  useEffect(getAddressInfo, [address]);
+  useEffect(getAddressTransactions, [address, page]);
+
+  useDidUpdateEffect(
+    () =>
+      (async () => {
+        await getAddressTransactions();
+        transactionsSection.current?.scrollIntoView({ behavior: "smooth" });
+      })(),
+    [page]
+  );
 
   useEffect(() => {
     QRCode.toString(address).then(setAddressQR);
@@ -55,11 +61,6 @@ const AddressPage = ({ match }) => {
   const handleSearch = event => {
     event.preventDefault();
     history.push(`./${searchInput.current.value}`);
-  };
-
-  const gotoPage = page => {
-    transactionsSection.current?.scrollIntoView({ behavior: "smooth" });
-    setPage(page);
   };
 
   if (!addressInfo || !paramsLoaded)
@@ -183,7 +184,7 @@ const AddressPage = ({ match }) => {
         </table>
       </div>
 
-      <h1 ref={transactionsSection} className="title is-size-5 is-size-4-tablet">
+      <h1 ref={transactionsSection} style={{ scrollMargin: "5rem" }} className="title is-size-5 is-size-4-tablet">
         Transactions
       </h1>
       <p className="subtitle is-size-6">Confirmed transactions this address is involved.</p>
@@ -204,7 +205,7 @@ const AddressPage = ({ match }) => {
           </div>
         )}
       </div>
-      <Pagination currentPage={page} onPageChange={gotoPage} numPages={numPages} />
+      <Pagination currentPage={page} onPageChange={setPage} numPages={numPages} />
     </section>
   );
 };

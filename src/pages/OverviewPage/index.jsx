@@ -8,6 +8,7 @@ import Loading from "../../components/Loading";
 import Transaction from "../../components/Transaction";
 import Pagination from "../../components/Pagination";
 import axios from "axios";
+import useDidUpdateEffect from "../../hooks/useUpdateEffect";
 
 import "./index.css";
 
@@ -27,33 +28,29 @@ const OverviewPage = () => {
   const [mempoolPage, setMempoolPage] = useState(0);
   const mempoolTxsPerPage = 10;
 
-  const numFirstPages = 10;
-  const numLastPages = 2;
-
   const getTransactionCount = async () => {
-    const results = await axios.get(`/transactions/count`);
-    setNumTxPages(Math.ceil(results.data.count / transactionsPerPage));
+    const { data } = await axios.get(`/transactions/count`);
+    setNumTxPages(Math.ceil(data.count / transactionsPerPage));
   };
 
   const getTransactions = async () => {
-    setTransactions([]);
-    const results = await axios.get(
+    const { data } = await axios.get(
       `/transactions?limit=${transactionsPerPage}&offset=${txPage * transactionsPerPage}`
     );
-    setTransactions(results.data);
+    setTransactions(data);
   };
 
   const getMempoolTxCount = async () => {
-    const results = await axios.get("/mempool/count");
-    setNumMempoolPages(Math.ceil(results.data.count / mempoolTxsPerPage));
+    const { data } = await axios.get("/mempool/count");
+    setNumMempoolPages(Math.ceil(data.count / mempoolTxsPerPage));
   };
 
   const getMempoolTxs = async () => {
     setMempoolTxs([]);
-    const results = await axios.get(
+    const { data } = await axios.get(
       `/mempool/all?limit=${mempoolTxsPerPage}&offset=${mempoolPage * mempoolTxsPerPage}`
     );
-    setMempoolTxs(results.data);
+    setMempoolTxs(data);
   };
 
   useEffect(getTransactionCount, []);
@@ -61,12 +58,14 @@ const OverviewPage = () => {
   useEffect(getMempoolTxCount, []);
   useEffect(getMempoolTxs, [mempoolPage]);
 
-  const gotoPage = page => {
-    transactionsSection.current?.scrollIntoView({ behavior: "smooth" });
-    setTxPage(page);
-  };
-
-  console.log(mempool);
+  useDidUpdateEffect(
+    () =>
+      (async () => {
+        await getTransactions();
+        transactionsSection.current?.scrollIntoView({ behavior: "smooth" });
+      })(),
+    [txPage]
+  );
 
   if (!paramsLoaded || !mempoolLoaded)
     return (
@@ -139,7 +138,7 @@ const OverviewPage = () => {
         )}
       </div>
 
-      <div ref={transactionsSection} className="mb-4" style={{ gap: ".5em" }}>
+      <div ref={transactionsSection} className="mb-4" style={{ gap: ".5em", scrollMargin: "5rem" }}>
         <h2 className="title is-size-5 is-size-4-tablet">Confirmed Transactions</h2>
         <p className="subtitle is-size-6">All recently confirmed transactions on the blockchain.</p>
       </div>
@@ -160,7 +159,7 @@ const OverviewPage = () => {
       </div>
 
       <div className="mb-6">
-        <Pagination currentPage={txPage} onPageChange={gotoPage} numPages={numTxPages} />
+        <Pagination currentPage={txPage} onPageChange={setTxPage} numPages={numTxPages} />
       </div>
     </section>
   );

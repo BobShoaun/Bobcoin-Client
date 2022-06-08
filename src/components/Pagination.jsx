@@ -1,9 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useHistory } from "react-router";
 
 const Pagination = ({ currentPage, onPageChange, numPages }) => {
   const history = useHistory();
   const page = currentPage;
+
+  const pageInputRef = useRef(null);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(history.location.search);
@@ -15,6 +17,13 @@ const Pagination = ({ currentPage, onPageChange, numPages }) => {
     onPageChange(page);
     const searchParams = new URLSearchParams({ page: page + 1 });
     history.push({ search: `?${searchParams}`, hash: history.location.hash });
+    pageInputRef.current.value = page + 1;
+  };
+
+  const submitPageForm = e => {
+    e.preventDefault();
+    const value = pageInputRef.current.value;
+    if (!isNaN(value)) updatePage(parseInt(value) - 1);
   };
 
   const numFirstPages = 6;
@@ -27,14 +36,8 @@ const Pagination = ({ currentPage, onPageChange, numPages }) => {
   const lastPages = [...Array(numPages).keys()].slice(Math.max(upperBound, numPages - numLastPages));
 
   return (
-    <nav className="pagination" role="navigation" aria-label="pagination">
-      <button onClick={() => updatePage(Math.max(page - 1, 0))} className="button pagination-previous">
-        Prev
-      </button>
-      <button onClick={() => updatePage(Math.min(page + 1, numPages - 1))} className="button pagination-next">
-        Next
-      </button>
-      <ul className="pagination-list">
+    <nav className="is-flex-tablet" role="navigation" aria-label="pagination">
+      <ul className="pagination-list mb-4" style={{ order: "unset" }}>
         {/* first pages */}
 
         {firstPages.map(_page => (
@@ -84,6 +87,28 @@ const Pagination = ({ currentPage, onPageChange, numPages }) => {
           </li>
         ))}
       </ul>
+
+      <div className="is-flex is-justify-content-center" style={{ gap: ".3em" }}>
+        <button onClick={() => updatePage(Math.max(page - 1, 0))} className="button fpagination-previous">
+          Prev
+        </button>
+
+        <form onSubmit={submitPageForm}>
+          <input
+            className="input has-text-centered"
+            type="text"
+            inputMode="numeric"
+            step={1}
+            ref={pageInputRef}
+            defaultValue={page + 1}
+            style={{ maxWidth: "3.5em" }}
+          />
+        </form>
+
+        <button onClick={() => updatePage(Math.min(page + 1, numPages - 1))} className="button fpagination-next">
+          Next
+        </button>
+      </div>
     </nav>
   );
 };

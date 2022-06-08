@@ -8,6 +8,8 @@ import Pagination from "../../components/Pagination";
 
 import { formatDistanceToNow } from "date-fns";
 import { getBlockStatus } from "../../helpers";
+import useDidUpdateEffect from "../../hooks/useUpdateEffect";
+
 import "./blockchain.css";
 
 import axios from "axios";
@@ -19,13 +21,13 @@ const BlockchainPage = () => {
   const [blocks, setBlocks] = useState([]);
   const [page, setPage] = useState(0); // 0 indexed page
   const blockchainSection = useRef(null);
-  const heightsPerPage = 20;
+  const heightsPerPage = 40;
 
   const getBlocks = async () => {
-    const results = await axios.get(
+    const { data } = await axios.get(
       `/blocks?height=${headBlock.height - page * heightsPerPage}&limit=${heightsPerPage}`
     );
-    setBlocks(results.data);
+    setBlocks(data);
   };
 
   useEffect(() => {
@@ -33,10 +35,14 @@ const BlockchainPage = () => {
     getBlocks();
   }, [headBlock, page]);
 
-  const gotoPage = page => {
-    blockchainSection.current?.scrollIntoView({ behavior: "smooth" });
-    setPage(page);
-  };
+  useDidUpdateEffect(
+    () =>
+      (async () => {
+        await getBlocks();
+        blockchainSection.current?.scrollIntoView({ behavior: "smooth" });
+      })(),
+    [page]
+  );
 
   if (!blocks.length || !headBlockLoaded || !paramsLoaded)
     return (
@@ -48,7 +54,7 @@ const BlockchainPage = () => {
   const numPages = Math.ceil((headBlock.height + 1) / heightsPerPage);
 
   return (
-    <section ref={blockchainSection} className="section">
+    <section ref={blockchainSection} style={{ scrollMargin: "5rem" }} className="section">
       <h1 className="title is-size-4 is-size-2-tablet">Blockchain</h1>
       <p className="subtitle is-size-6 is-size-5-tablet mb-5">Explore the entire chain up to the genesis block.</p>
 
@@ -111,7 +117,7 @@ const BlockchainPage = () => {
               </p>
               <p className="mb-0 has-text-centered">
                 <span
-                  style={{ borderRadius: "0.3em" }}
+                  style={{ borderRadius: "0.3em", whiteSpace: "nowrap" }}
                   className={`title is-7 py-1 px-2 has-text-white ${status.colorClass}`}
                 >
                   {status.text}
@@ -122,7 +128,7 @@ const BlockchainPage = () => {
         })}
       </div>
 
-      <Pagination currentPage={page} onPageChange={gotoPage} numPages={numPages} />
+      <Pagination currentPage={page} onPageChange={setPage} numPages={numPages} />
     </section>
   );
 };
