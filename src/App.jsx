@@ -40,20 +40,20 @@ const WalletOnboardingPage = lazy(() => import("./pages/WalletOnboardingPage"));
 
 const App = () => {
   const dispatch = useDispatch();
-  const api = useSelector(state => state.network.api);
+  const nodeUrl = useSelector(state => state.network.nodeUrl);
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
     socket?.disconnect();
-    const soc = io(api);
+    const soc = io(nodeUrl);
     dispatch(resetBlockchain());
     dispatch(resetParams());
     initializeSocket(soc);
     setSocket(soc);
 
     // set axios apiUrl
-    axios.defaults.baseURL = api;
-  }, [api]);
+    axios.defaults.baseURL = nodeUrl;
+  }, [nodeUrl]);
 
   return (
     <SocketContext.Provider value={{ socket, setSocket }}>

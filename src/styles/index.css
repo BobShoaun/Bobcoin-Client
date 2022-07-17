@@ -21,6 +21,10 @@ code {
 }
 
 /* Rules for sizing the icon. */
+.md-12 {
+  font-size: 12px;
+}
+
 .md-14 {
   font-size: 14px;
 }

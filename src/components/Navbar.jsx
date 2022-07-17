@@ -1,11 +1,12 @@
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { getNodeIcon } from "../helpers";
 
 import "./navbar.css";
 
 const Navbar = () => {
-  const network = useSelector(state => state.network.network);
-  const keys = useSelector(state => state.wallet.keys);
+  const nodeName = useSelector(state => state.network.nodeName);
+  const { paramsLoaded } = useSelector(state => state.consensus);
 
   return (
     <>
@@ -112,8 +113,8 @@ const Navbar = () => {
             <p className="is-size-7">More</p>
             <div className="more-dropdown has-background-dark" role="menu">
               <p className="subtitle is-7 mb-3 has-text-white">
-                Currently connected to the{" "}
-                <strong className="has-text-success">{network === "mainnet" ? "MainNet" : "TestNet"}</strong>
+                Currently connected to{" "}
+                <strong className={paramsLoaded ? "has-text-success" : "has-text-warning"}>{nodeName}</strong>
               </p>
 
               <Link to="/settings" className="has-text-white nav-mobile px-4 py-3 is-flex is-align-items-center">
@@ -136,6 +137,8 @@ const Navbar = () => {
             </div>
           </div>
         </section>
+
+        {/* FOR LARGE SCREEN SIZES */}
 
         <div className="navbar-brand">
           <Link className="navbar-item mr-2" to="/">
@@ -225,14 +228,16 @@ const Navbar = () => {
                 aria-controls="dropdown-menu6"
                 className="dropdown-trigger button is-dark px-2 mx-0"
               >
-                <span className="material-icons md-28">{network === "mainnet" ? "language" : "bug_report"}</span>
-                <div className="indicator has-background-success"></div>
+                <span className="material-icons md-28">{getNodeIcon(nodeName)}</span>
+                <div
+                  className={`indicator ${paramsLoaded ? "has-background-success" : "has-background-warning"}`}
+                ></div>
               </button>
               <div className="dropdown-menu network-dropdown" id="dropdown-menu6" role="menu">
                 <div className="dropdown-content fhas-text-right">
                   <div className="dropdown-item">
                     <p>
-                      Currently connected to the <strong>{network === "mainnet" ? "MainNet" : "TestNet"}</strong>
+                      Currently connected to <strong>{nodeName}</strong>
                     </p>
                   </div>
                   <hr className="dropdown-divider"></hr>

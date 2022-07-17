@@ -41,3 +41,8 @@ export const getTransactionStatus = (transaction, headBlock, params) => {
       : "has-background-warning",
   };
 };
+
+export const getNodeIcon = nodeName => {
+  if (nodeName === "other") return "public";
+  return nodeName.split("-")[1] === "mainnet" ? "language" : "bug_report";
+};

@@ -22,7 +22,7 @@ const Parameter = ({ _key, value, info }) => (
 );
 
 const ParametersPage = () => {
-  const { network } = useSelector(state => state.network);
+  const { nodeName, nodeUrl } = useSelector(state => state.network);
   const { params, paramsLoaded } = useSelector(state => state.consensus);
 
   if (!paramsLoaded)
@@ -34,23 +34,23 @@ const ParametersPage = () => {
 
   return (
     <main className="section">
-      <div className="is-flex-tablet is-align-items-flex-end mb-4">
-        <div>
-          <h1 className="title is-size-4 is-size-2-tablet">Parameters</h1>
-          <p className="subtitle is-size-6 is-size-5-tablet mb-2">
-            The consensus rules that dictates the bobcoin protocol.
-          </p>
-        </div>
-        <div className="ml-auto mb-2">
-          <p className="subtitle is-size-6 is-size-5-tablet is-flex is-align-items-center mb-1">
-            <span className="material-icons-two-tone mr-1">language</span>Current Network: {network}
-          </p>
-          <p className="subtitle is-7 is-flex is-align-items-center">
-            <span className="material-icons-outlined md-14 mr-1">info</span>
-            You can change your network at settings.
-          </p>
-        </div>
-      </div>
+      <header className="mb-5">
+        <h1 className="title is-size-4 is-size-2-tablet">Parameters</h1>
+        <p className="subtitle is-size-6 is-size-5-tablet mb-4">
+          The consensus rules that dictates the bobcoin protocol.
+        </p>
+        <hr className="mt-0 has-background-grey-light" />
+      </header>
+      <p className="subtitle is-size-6 mb-1">
+        <span className="has-text-weight-semibold">Network:</span> {nodeName}
+      </p>
+      <p className="subtitle is-size-6 mb-1">
+        <span className="has-text-weight-semibold">Node URL:</span> {nodeUrl}
+      </p>
+      <p className="subtitle is-7 is-flex is-align-items-center">
+        <span className="material-icons-outlined md-12 mr-1">info</span>
+        You can change your network at settings.
+      </p>
       <section className="card">
         <div className="card-content params-list">
           <Parameter

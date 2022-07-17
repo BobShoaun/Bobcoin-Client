@@ -120,7 +120,7 @@ const LandingPage = () => {
           </div>
           <div className="-has-background-info has-text-white">
             <span className="material-icons-two-tone md-48 has-text-info">enhanced_encryption</span>
-            <h2 className="title is-size-5 is-size-4-tablet is-spaced mb-2">Bitcoin-Level Security</h2>
+            <h2 className="title is-size-5 is-size-4-tablet is-spaced mb-2">Secure</h2>
             <p className="subtitle is-6">Based heavily on the nakamoto consensus and bitcoin protocol.</p>
           </div>
         </div>
