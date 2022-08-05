@@ -1,6 +1,6 @@
 {
   "name": "bobcoin-client",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "private": true,
   "license": "MIT",
   "description": "This is a web client for the Bobcoin cryptocurrency.\r It is made using React and is deployed at [bobcoin.cash](https://bobcoin.cash/).",
