@@ -10,9 +10,9 @@ import {
   signTransaction,
   calculateTransactionHash,
   hexToBase58,
-  RESULT,
   signTransactionHex,
 } from "blockcrypto";
+import { VCODE } from "../../config";
 import TransactionFailureModal from "./TransactionFailureModal";
 import TransactionSuccessModal from "./TransactionSuccessModal";
 
@@ -105,7 +105,7 @@ const NewTransactionPage = () => {
 
     const { data: validation } = await axios.post(`/transaction`, transaction);
 
-    if (validation.code !== RESULT.VALID) {
+    if (validation.code !== VCODE.VALID) {
       console.error("tx invalid: ", transaction);
       setError(validation);
       setErrorModal(true);

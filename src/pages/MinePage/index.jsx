@@ -6,7 +6,8 @@ import MineMempool from "./MineMempool";
 import MineSuccessModal from "./MineSuccessModal";
 import MineFailureModal from "./MineFailureModal";
 
-import { calculateBlockReward, RESULT, hexToBigInt } from "blockcrypto";
+import { calculateBlockReward, hexToBigInt } from "blockcrypto";
+import { VCODE } from "../../config";
 
 import Miner from "./miner.worker";
 
@@ -84,7 +85,7 @@ const MinePage = () => {
 
     const { block, validation, target } = results.data;
 
-    if (validation.code !== RESULT.VALID) {
+    if (validation.code !== VCODE.VALID) {
       console.error("Candidate block is invalid, not mining: ", block);
       setError(validation);
       setErrorModal(true);
@@ -112,7 +113,7 @@ const MinePage = () => {
 
           const { validation, blockInfo } = (await axios.post(`/block`, data.block)).data;
 
-          if (validation.code !== RESULT.VALID) {
+          if (validation.code !== VCODE.VALID) {
             console.error("Block is invalid", blockInfo);
             setError(validation);
             setErrorModal(true);

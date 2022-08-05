@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import {
   deriveKeys,
@@ -8,7 +8,6 @@ import {
   createTransaction,
   signTransactionHex,
   calculateTransactionHash,
-  RESULT,
 } from "blockcrypto";
 import { addInternalKeys } from "../../store/walletSlice";
 
