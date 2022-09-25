@@ -27,6 +27,7 @@ const MinePage = () => {
   const [mineInfo, setMineInfo] = useState(null);
   const [miner, setMiner] = useState(externalKeys[externalKeys.length - 1]?.addr ?? keys.address ?? "");
   const [parentBlockHash, setParentBlockHash] = useState("");
+  const [canRestart, setCanRestart] = useState(true);
 
   const [terminalLog, setTerminalLog] = useState([]);
   const [successModal, setSuccessModal] = useState(false);
@@ -36,7 +37,9 @@ const MinePage = () => {
   const activeWorker = useRef(null);
 
   useEffect(() => {
-    if (headBlock) setParentBlockHash(headBlock.hash);
+    if (!headBlock) return;
+    if (headBlock.hash === parentBlockHash) return;
+    setParentBlockHash(headBlock.hash);
   }, [headBlock]);
 
   useEffect(
@@ -56,6 +59,30 @@ const MinePage = () => {
       })(),
     []
   );
+
+  const stopMining = () => {
+    if (activeWorker.current) {
+      activeWorker.current.terminate();
+      activeWorker.current = null;
+      setTerminalLog(log => [...log, `\nMining operation stopped.`]);
+      return;
+    }
+    setTerminalLog(log => [...log, `\nNo mining processes running.`]);
+  };
+
+  const restartMining = () => {
+    if (activeWorker.current) {
+      activeWorker.current.terminate();
+      activeWorker.current = null;
+      setTerminalLog(log => [...log, `\nNew head block found, mining operation restarting...`]);
+      startMining();
+    }
+  };
+
+  useEffect(() => {
+    console.log("new parent block hash, restarting", parentBlockHash);
+    if (canRestart) restartMining();
+  }, [parentBlockHash]);
 
   const loading = !paramsLoaded || !headBlockLoaded;
 
@@ -141,16 +168,6 @@ const MinePage = () => {
     });
   };
 
-  const stopMining = () => {
-    if (activeWorker.current) {
-      activeWorker.current.terminate();
-      activeWorker.current = null;
-      setTerminalLog(log => [...log, `\nMining operation stopped.`]);
-      return;
-    }
-    setTerminalLog(log => [...log, `\nNo mining processes running.`]);
-  };
-
   const programs = [
     {
       name: "mine",
@@ -169,15 +186,20 @@ const MinePage = () => {
     },
     {
       name: "set",
-      template: "set [miner | parent] <value>",
+      template: "set [miner | parent | restart] <value>",
       execute: args => {
         const type = args[1];
         const value = args[2];
         switch (type) {
           case "miner":
+            setTerminalLog(log => [...log, `\nSet miner to ${value}`]);
             return setMiner(value);
           case "parent":
+            setTerminalLog(log => [...log, `\nSet parent to ${value}`]);
             return setParentBlockHash(value);
+          case "restart":
+            setTerminalLog(log => [...log, `\nSet restart to ${value}`]);
+            return setCanRestart(value === "true");
           default:
             throw Error("invalid arguments");
         }
@@ -317,12 +339,13 @@ const MinePage = () => {
             </div>
 
             <p className="help">Previous block to mine from, usually the head block.</p>
-            {/* {prevBlock?.hash !== headBlock?.hash && (
-							<p className="help is-danger is-flex">
-								<span className="material-icons-outlined md-18 mr-2">warning</span>You are no longer
-								mining from the latest block.
-							</p>
-						)} */}
+
+            {parentBlockHash !== headBlock?.hash && (
+              <p className="help is-danger is-flex">
+                <span className="material-icons-outlined md-18 mr-2">warning</span>You are no longer mining from the
+                latest block.
+              </p>
+            )}
           </div>
 
           <button onClick={activeWorker.current ? stopMining : startMining} className="button mb-0">
