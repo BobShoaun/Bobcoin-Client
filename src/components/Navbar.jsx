@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { discordInviteLink } from "../config";
 import { getNodeIcon } from "../helpers";
 
 import "./navbar.css";
@@ -91,6 +92,14 @@ const Navbar = () => {
             </span>
             <p className="is-size-7">Join</p>
             <div className="explore-dropdown has-background-dark" role="menu">
+              <a
+                href={discordInviteLink}
+                target="_blank"
+                className="has-text-white nav-mobile px-4 py-3 is-flex is-align-items-center"
+              >
+                <span className="material-icons-outlined is-white md-20 mr-3">forum</span>
+                <p className="is-size-6">Discord</p>
+              </a>
               <Link to="/developer" className="has-text-white nav-mobile px-4 py-3 is-flex is-align-items-center">
                 <span className="material-icons-outlined is-white md-20 mr-3">code</span>
                 <p className="is-size-6">API</p>
@@ -191,9 +200,13 @@ const Navbar = () => {
           <div className="navbar-item has-dropdown is-hoverable mr-2">
             <div className="navbar-link">Participate</div>
             <div className="navbar-dropdown is-boxed">
+              <a href={discordInviteLink} target="_blank" className="navbar-item has-text-weight-semibold">
+                <span className="material-icons-two-tone md-18 mr-2">forum</span>
+                Discord Community
+              </a>
               <Link to="/developer" className="navbar-item has-text-weight-semibold">
                 <span className="material-icons-two-tone md-18 mr-2">code</span>
-                API
+                Developer API
               </Link>
               <Link to="/node" className="navbar-item has-text-weight-semibold">
                 <span className="material-icons-two-tone md-18 mr-2">dns</span>

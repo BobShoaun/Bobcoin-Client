@@ -61,6 +61,10 @@ export const VCODE = {
   VALID: 400,
 };
 
+export const donationAddress = "8bobLqxCRPTSEhvZwQTeKnKz5429N26";
+export const discordInviteLink = "https://discord.gg/Mr9kzmc6eh";
+export const personalWebsiteLink = "https://bobng.me";
+
 // export const bobcoinMainnet =
 //   development && !useProdNodeInDev ? REACT_APP_BOBCOIN_NODE_LOCAL_MAIN : REACT_APP_BOBCOIN_NODE_MAIN;
 
