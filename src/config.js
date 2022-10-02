@@ -7,8 +7,8 @@ const {
   REACT_APP_RECAPTCHA_SITE_KEY,
 } = process.env;
 
-const development = NODE_ENV === "development";
-const useProdNodeInDev = true;
+// const development = NODE_ENV === "development";
+// const useProdNodeInDev = true;
 
 export const recaptchaSiteKey = REACT_APP_RECAPTCHA_SITE_KEY;
 

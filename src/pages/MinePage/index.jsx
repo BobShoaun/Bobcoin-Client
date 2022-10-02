@@ -148,6 +148,8 @@ const MinePage = () => {
           }
 
           setSelectedTxs([]);
+
+          // startMining();
           setSuccessModal(true);
 
           if (Notification.permission !== "denied")
