@@ -8,6 +8,7 @@ import { copyToClipboard, numberWithCommas, getBlockStatus } from "../../helpers
 import Loading from "../../components/Loading";
 
 import { bigIntToHex64, calculateHashTarget, calculateBlockReward } from "blockcrypto";
+import { format } from "date-fns";
 
 import axios from "axios";
 
@@ -97,7 +98,7 @@ const BlockPage = () => {
           </tr>
           <tr>
             <td>Timestamp</td>
-            <td>{new Date(block.timestamp).toUTCString()}</td>
+            <td>{format(block.timestamp, "eee, d MMM yyy HH:mm:ss OOO")}</td>
           </tr>
           <tr>
             <td>Status</td>

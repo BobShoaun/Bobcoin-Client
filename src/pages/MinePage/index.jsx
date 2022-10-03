@@ -319,7 +319,8 @@ const MinePage = () => {
             <div className="field has-addons mb-0">
               <div className="control is-expanded">
                 <input
-                  onChange={e => setParentBlockHash(e.target.value)}
+                  // onChange={e => setParentBlockHash(e.target.value)}
+                  readOnly
                   value={parentBlockHash}
                   className="input"
                   type="text"
@@ -330,8 +331,8 @@ const MinePage = () => {
               <p className="control">
                 <button
                   onClick={async () => {
-                    setParentBlockHash(await navigator.clipboard.readText());
-                    toast.success("Block hash pasted");
+                    // setParentBlockHash(await navigator.clipboard.readText());
+                    // toast.success("Block hash pasted");
                   }}
                   className="button"
                 >
