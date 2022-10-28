@@ -38,7 +38,9 @@
 	color: black;
 }
 
-.tx[type="checkbox"] {
+.tx-checkbox[type="checkbox"] {
 	transform: scale(1.5);
-	transform-origin: top left;
+	transform-origin: top right;
+	align-self: flex-start;
+	width: 2em;
 }

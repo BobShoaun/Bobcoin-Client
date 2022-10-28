@@ -1,66 +1,45 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 import Transaction from "../../components/Transaction";
-import { useMempool } from "../../hooks/useMempool";
 
-const MineMempool = ({ addTransaction, removeTransaction }) => {
-  // const [mempoolLoading, mempool] = useMempool();
-  // const [mempool, setMempool] = useState(null);
-
+const MineMempool = ({ selectedTransactions, toggleSelected }) => {
   const { mempool, mempoolLoaded } = useSelector(state => state.blockchain);
-
-  const toggleSelected = (value, tx) => {
-    if (value) addTransaction(tx);
-    else removeTransaction(tx);
-  };
-
-  // const getMempool = async () => {
-  //   const results = await axios.get("/mempool");
-  //   setMempool(results.data);
-  // };
-
-  // useEffect(() => {
-  //   getMempool();
-  // }, []);
 
   if (!mempoolLoaded)
     return (
-      <main className="has-background-white mb-6 is-flex is-justify-content-center" style={{ padding: "2.5em" }}>
+      <section className="has-background-white mb-6 is-flex is-justify-content-center" style={{ padding: "2.5em" }}>
         <span className="material-icons-outlined mr-3 md-18">sync</span>
         <p className="subtitle is-6 has-text-centered">Loading...</p>
-      </main>
+      </section>
     );
 
   if (!mempool.length)
     return (
-      <main className="has-background-white mb-6 is-flex is-justify-content-center" style={{ padding: "2.5em" }}>
+      <section className="has-background-white mb-6 is-flex is-justify-content-center" style={{ padding: "2.5em" }}>
         <span className="material-icons-outlined mr-3 md-18">pending_actions</span>
         <p className="subtitle is-6 has-text-centered">There are currently no pending transactions...</p>
-      </main>
+      </section>
     );
 
   return (
-    <main>
+    <section>
       {mempool.map(transaction => (
         <div key={transaction.hash} className="card mb-2">
           <div className="card-content is-flex">
-            <div style={{ width: "2em" }}>
-              <input
-                className="tx is-clickable"
-                onChange={({ target }) => toggleSelected(target.checked, transaction)}
-                type="checkbox"
-              ></input>
-            </div>
+            <input
+              checked={selectedTransactions.includes(transaction)}
+              className="tx-checkbox is-clickable"
+              onChange={({ target }) => toggleSelected(target.checked, transaction)}
+              type="checkbox"
+            />
 
-            <div style={{ width: "calc(100% - 2em)" }}>
+            <div style={{ flexGrow: 1 }}>
               <Transaction transaction={transaction} />
             </div>
           </div>
         </div>
       ))}
-    </main>
+    </section>
   );
 };
 

@@ -18,7 +18,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const MinePage = () => {
-  const { headBlock, headBlockLoaded } = useSelector(state => state.blockchain);
+  const { headBlock, headBlockLoaded, mempool } = useSelector(state => state.blockchain);
   const { params, paramsLoaded } = useSelector(state => state.consensus);
 
   const keys = useSelector(state => state.wallet.keys);
@@ -28,6 +28,7 @@ const MinePage = () => {
   const [miner, setMiner] = useState(externalKeys[externalKeys.length - 1]?.addr ?? keys.address ?? "");
   const [parentBlockHash, setParentBlockHash] = useState("");
   const [canRestart, setCanRestart] = useState(true);
+  const keepMiningCheckbox = useRef(null);
 
   const [terminalLog, setTerminalLog] = useState([]);
   const [successModal, setSuccessModal] = useState(false);
@@ -59,6 +60,11 @@ const MinePage = () => {
       })(),
     []
   );
+
+  useEffect(() => {
+    if (!mempool.length) return;
+    setSelectedTxs([mempool[0]]);
+  }, [mempool]);
 
   const stopMining = () => {
     if (activeWorker.current) {
@@ -149,10 +155,14 @@ const MinePage = () => {
 
           setSelectedTxs([]);
 
-          // startMining();
+          if (keepMiningCheckbox.current.checked) {
+            startMining();
+            return;
+          }
+
           setSuccessModal(true);
 
-          if (Notification.permission !== "denied")
+          if (Notification.permission === "default")
             // ask user for permission
             await Notification.requestPermission();
 
@@ -286,7 +296,9 @@ const MinePage = () => {
         </section>
         <section className="mb-6">
           <div className="field mb-4">
-            <label className="label">Miner's address</label>
+            <label className="label mb-0">Miner's address</label>
+            <p className="is-size-7 mb-1">The address of the miner, where to send block reward and fees.</p>
+
             <div className="field has-addons mb-0">
               <div className="control is-expanded">
                 <input
@@ -300,6 +312,7 @@ const MinePage = () => {
               </div>
               <p className="control">
                 <button
+                  title="Paste address from clipboard"
                   onClick={async () => {
                     setMiner(await navigator.clipboard.readText());
                     toast.success("Address pasted");
@@ -310,11 +323,11 @@ const MinePage = () => {
                 </button>
               </p>
             </div>
-            <p className="help">The address of the miner, where to send block reward and fees.</p>
           </div>
 
           <div className="field mb-5">
-            <label className="label">Parent block</label>
+            <label className="label mb-0">Parent block</label>
+            <p className="is-size-7 mb-1">Previous block to mine from, usually the head block.</p>
 
             <div className="field has-addons mb-0">
               <div className="control is-expanded">
@@ -341,14 +354,22 @@ const MinePage = () => {
               </p>
             </div>
 
-            <p className="help">Previous block to mine from, usually the head block.</p>
-
             {parentBlockHash !== headBlock?.hash && (
               <p className="help is-danger is-flex">
                 <span className="material-icons-outlined md-18 mr-2">warning</span>You are no longer mining from the
                 latest block.
               </p>
             )}
+          </div>
+
+          <div className="mb-5">
+            <label className="checkbox is-flex" style={{ gap: ".5em" }}>
+              <input type="checkbox" ref={keepMiningCheckbox} />
+              <div>
+                <h3 className="label mb-0">Mine Continuously</h3>
+                <p className="is-size-7 mb-1">Don't show success modal, keep mining the next block after.</p>
+              </div>
+            </label>
           </div>
 
           <button onClick={activeWorker.current ? stopMining : startMining} className="button mb-0">
@@ -368,8 +389,12 @@ const MinePage = () => {
 				</button> */}
       </div>
       <MineMempool
-        addTransaction={tx => setSelectedTxs(txs => [...txs, tx])}
-        removeTransaction={tx => setSelectedTxs(txs => txs.filter(tx2 => tx2.hash !== tx.hash))}
+        selectedTransactions={selectedTxs}
+        toggleSelected={(value, tx) => {
+          console.log("change ", value, tx);
+          if (value) setSelectedTxs(txs => [...txs, tx]);
+          else setSelectedTxs(txs => txs.filter(tx2 => tx2.hash !== tx.hash));
+        }}
       />
 
       <MineSuccessModal
