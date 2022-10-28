@@ -25,7 +25,7 @@ const MineMempool = ({ selectedTransactions, toggleSelected }) => {
     <section>
       {mempool.map(transaction => (
         <div key={transaction.hash} className="card mb-2">
-          <div className="card-content is-flex">
+          <div className="card-content is-flex is-align-items-start" style={{ gap: ".5em" }}>
             <input
               checked={selectedTransactions.includes(transaction)}
               className="tx-checkbox is-clickable"
@@ -33,7 +33,7 @@ const MineMempool = ({ selectedTransactions, toggleSelected }) => {
               type="checkbox"
             />
 
-            <div style={{ flexGrow: 1 }}>
+            <div style={{ width: "calc(100% - 2em)" }}>
               <Transaction transaction={transaction} />
             </div>
           </div>

@@ -386,8 +386,7 @@ const MinePage = () => {
         </div>
         {/* <button className="button ml-auto">
 					<span className="material-icons-outlined md-18 mr-2">refresh</span>Refresh
-				</button> */}{" "}
-        helo
+				</button> */}
       </div>
       <MineMempool
         selectedTransactions={selectedTxs}

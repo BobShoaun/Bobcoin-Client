@@ -39,8 +39,7 @@
 }
 
 .tx-checkbox[type="checkbox"] {
-	transform: scale(1.5);
-	transform-origin: top right;
-	align-self: flex-start;
-	width: 2em;
+	margin-top: 0.3em;
+	width: 1.3em;
+	height: 1.3em;
 }

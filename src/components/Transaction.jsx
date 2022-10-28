@@ -31,9 +31,9 @@ const Transaction = ({ transaction }) => {
       ]) + 1;
 
   return (
-    <div className="">
+    <div>
       <div className="is-flex-tablet is-align-items-center mb-3">
-        <div className="is-flex is-align-items-center">
+        <div className="is-flex is-align-items-center truncated">
           <h3 className="title is-6 mb-0 mr-1" style={{ whiteSpace: "nowrap" }}>
             Hash:
           </h3>
