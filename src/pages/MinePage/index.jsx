@@ -36,6 +36,7 @@ const MinePage = () => {
   const [error, setError] = useState({});
   const [selectedTxs, setSelectedTxs] = useState([]);
   const activeWorker = useRef(null);
+  const startMiningTimeout = useRef(null);
 
   useEffect(() => {
     if (!headBlock) return;
@@ -46,6 +47,7 @@ const MinePage = () => {
   useEffect(
     () => () => {
       // terminate worker when leaving page / component
+      clearTimeout(startMiningTimeout.current);
       console.log("terminating worker", activeWorker.current);
       activeWorker.current?.terminate();
     },
@@ -81,7 +83,7 @@ const MinePage = () => {
       activeWorker.current.terminate();
       activeWorker.current = null;
       setTerminalLog(log => [...log, `\nNew head block found, mining operation restarting...`]);
-      startMining();
+      startMiningTimeout.current = setTimeout(startMining, 2000);
     }
   };
 
@@ -143,6 +145,7 @@ const MinePage = () => {
             `\nMining successful! New block mined with...\nhash: ${data.block.hash}\nnonce: ${data.block.nonce}`,
           ]);
           activeWorker.current = null;
+          setSelectedTxs([]);
 
           const { validation, blockInfo } = (await axios.post(`/block`, data.block)).data;
 
@@ -153,10 +156,8 @@ const MinePage = () => {
             break;
           }
 
-          setSelectedTxs([]);
-
           if (keepMiningCheckbox.current.checked) {
-            startMining();
+            startMiningTimeout.current = setTimeout(startMining, 2000);
             return;
           }
 
