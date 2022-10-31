@@ -6,7 +6,7 @@ import MineMempool from "./MineMempool";
 import MineSuccessModal from "./MineSuccessModal";
 import MineFailureModal from "./MineFailureModal";
 
-import { calculateBlockReward, hexToBigInt } from "blockcrypto";
+import { calculateBlockReward, hexToBigInt, signTransaction, calculateTransactionHash, hexToBase58 } from "blockcrypto";
 import { VCODE } from "../../config";
 
 import Miner from "./miner.worker";
@@ -20,12 +20,14 @@ import toast from "react-hot-toast";
 const MinePage = () => {
   const { headBlock, headBlockLoaded, mempool } = useSelector(state => state.blockchain);
   const { params, paramsLoaded } = useSelector(state => state.consensus);
+  const { externalKeys, keys } = useSelector(state => state.wallet);
 
-  const keys = useSelector(state => state.wallet.keys);
-  const { externalKeys } = useSelector(state => state.wallet);
+  const minerAddress = externalKeys[externalKeys.length - 1]?.addr ?? keys.address ?? "";
+  const minerPublicKey = externalKeys[externalKeys.length - 1]?.pk ?? keys.pk ?? "";
+  const minerSecretKey = externalKeys[externalKeys.length - 1]?.sk ?? keys.sk ?? "";
 
   const [mineInfo, setMineInfo] = useState(null);
-  const [miner, setMiner] = useState(externalKeys[externalKeys.length - 1]?.addr ?? keys.address ?? "");
+  const [miner, setMiner] = useState(minerAddress);
   const [parentBlockHash, setParentBlockHash] = useState("");
   const [canRestart, setCanRestart] = useState(true);
   const keepMiningCheckbox = useRef(null);
@@ -128,6 +130,11 @@ const MinePage = () => {
     }
 
     setTerminalLog(log => [...log, `Mining started...\nprevious block: ${parentBlockHash}\ntarget hash: ${target}\n `]);
+
+    // populate pubkey, signature, and hash for donation tx
+    block.transactions[1].inputs[0].publicKey = minerPublicKey;
+    block.transactions[1].inputs[0].signature = signTransaction(block.transactions[1], hexToBase58(minerSecretKey));
+    block.transactions[1].hash = calculateTransactionHash(block.transactions[1]);
 
     const worker = new Miner();
     worker.postMessage({ block, target: hexToBigInt(target) });

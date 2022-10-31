@@ -12,7 +12,7 @@ const TraditionalMode = () => {
 
   const [keys, setKeys] = useState({ sk: "", address: "" });
   const [skQR, setSKQR] = useState("");
-  const [addQR, setAddQR] = useState("");
+  const [addQR, setAddrQR] = useState("");
 
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -26,7 +26,7 @@ const TraditionalMode = () => {
     if (privateKey === "") {
       setKeys({ sk: "", address: "" });
       setSKQR(null);
-      setAddQR(null);
+      setAddrQR(null);
       return;
     }
     try {
@@ -46,7 +46,7 @@ const TraditionalMode = () => {
   const generateQRCode = async keys => {
     try {
       setSKQR(await QRCode.toString(keys.sk));
-      setAddQR(await QRCode.toString(keys.address));
+      setAddrQR(await QRCode.toString(keys.address));
     } catch (e) {
       console.error(e);
     }
