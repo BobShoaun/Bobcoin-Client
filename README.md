@@ -19,6 +19,16 @@ In the webapp, you can:
 
 # For developers
 
+Getting started
+
+First, populate .env file based on example.env
+
+```
+npm install
+
+npm run dev
+```
+
 ## Available Scripts
 
 In the project directory, you can run:

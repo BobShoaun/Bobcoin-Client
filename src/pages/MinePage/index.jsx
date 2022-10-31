@@ -6,8 +6,19 @@ import MineMempool from "./MineMempool";
 import MineSuccessModal from "./MineSuccessModal";
 import MineFailureModal from "./MineFailureModal";
 
-import { calculateBlockReward, hexToBigInt, signTransaction, calculateTransactionHash, hexToBase58 } from "blockcrypto";
-import { VCODE } from "../../config";
+import {
+  calculateBlockReward,
+  signTransaction,
+  calculateTransactionHash,
+  hexToBase58,
+  createInput,
+  createOutput,
+  calculateMerkleRoot,
+  calculateHashTarget,
+  createTransaction,
+  bigIntToHex64,
+} from "blockcrypto";
+import { VCODE, nodeDonationAddress, nodeDonationPercent } from "../../config";
 
 import Miner from "./miner.worker";
 
@@ -114,30 +125,56 @@ const MinePage = () => {
 
     setTerminalLog(log => [...log, "\nForming and verifying candidate block..."]);
 
-    const results = await axios.post(`/mine/candidate-block`, {
-      previousBlockHash: parentBlockHash,
-      miner,
-      transactions: selectedTxs.sort((a, b) => a.timestamp - b.timestamp),
-    });
+    selectedTxs.sort((a, b) => a.timestamp - b.timestamp);
+    const { data } = await axios.post("/mine/candidate-block/info", { transactions: selectedTxs });
+    const { previousBlock, difficulty, fees } = data;
 
-    const { block, validation, target } = results.data;
+    const blockReward = calculateBlockReward(params, previousBlock.height + 1);
+    const coinbaseAmount = blockReward + fees;
+    const donationAmount = Math.floor(blockReward * nodeDonationPercent);
 
-    if (validation.code !== VCODE.VALID) {
-      console.error("Candidate block is invalid, not mining: ", block);
-      setError(validation);
-      setErrorModal(true);
-      return;
-    }
+    // coinbase transaction
+    const coinbaseOutput = createOutput(miner, coinbaseAmount);
+    const coinbase = createTransaction(params, [], [coinbaseOutput]);
+    coinbase.hash = calculateTransactionHash(coinbase);
 
-    setTerminalLog(log => [...log, `Mining started...\nprevious block: ${parentBlockHash}\ntarget hash: ${target}\n `]);
+    // donation transaction
+    const donationOutput = createOutput(nodeDonationAddress, donationAmount);
+    const donationChangeOutput = createOutput(miner, coinbaseAmount - donationAmount);
+    const donationInput = createInput(coinbase.hash, 0, minerPublicKey);
+    const donation = createTransaction(params, [donationInput], [donationOutput, donationChangeOutput]);
+    const donationInputSignature = signTransaction(donation, hexToBase58(minerSecretKey));
+    donation.inputs.forEach(input => (input.signature = donationInputSignature));
+    donation.hash = calculateTransactionHash(donation);
 
-    // populate pubkey, signature, and hash for donation tx
-    block.transactions[1].inputs[0].publicKey = minerPublicKey;
-    block.transactions[1].inputs[0].signature = signTransaction(block.transactions[1], hexToBase58(minerSecretKey));
-    block.transactions[1].hash = calculateTransactionHash(block.transactions[1]);
+    const transactions = [coinbase, donation, ...selectedTxs];
+    const block = {
+      height: previousBlock.height + 1,
+      previousHash: previousBlock.hash,
+      transactions,
+      timestamp: Date.now(),
+      version: params.version,
+      difficulty,
+      merkleRoot: calculateMerkleRoot(transactions.map(tx => tx.hash)),
+      nonce: 0,
+      hash: "",
+    };
+    const target = calculateHashTarget(params, block);
+
+    // if (validation.code !== VCODE.VALID) {
+    //   console.error("Candidate block is invalid, not mining: ", block);
+    //   setError(validation);
+    //   setErrorModal(true);
+    //   return;
+    // }
+
+    setTerminalLog(log => [
+      ...log,
+      `Mining started...\nprevious block: ${previousBlock}\ntarget hash: ${bigIntToHex64(target)}\n `,
+    ]);
 
     const worker = new Miner();
-    worker.postMessage({ block, target: hexToBigInt(target) });
+    worker.postMessage({ block, target });
     activeWorker.current = worker;
 
     worker.addEventListener("message", async ({ data }) => {
