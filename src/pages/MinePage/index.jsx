@@ -40,7 +40,7 @@ const MinePage = () => {
   const [mineInfo, setMineInfo] = useState(null);
   const [miner, setMiner] = useState(minerAddress);
   const [parentBlockHash, setParentBlockHash] = useState("");
-  const [canRestart, setCanRestart] = useState(true);
+  const canRestart = useRef(true);
   const keepMiningCheckbox = useRef(null);
 
   const [terminalLog, setTerminalLog] = useState([]);
@@ -52,44 +52,31 @@ const MinePage = () => {
   const startMiningTimeout = useRef(null);
 
   useEffect(() => {
-    if (!headBlock) return;
-    if (headBlock.hash === parentBlockHash) return;
-    setParentBlockHash(headBlock.hash);
-  }, [headBlock]);
-
-  useEffect(
-    () => () => {
+    (async () => {
+      const { data } = await axios.get("/mine/info");
+      setMineInfo(data);
+    })();
+    return () => {
       // terminate worker when leaving page / component
       clearTimeout(startMiningTimeout.current);
       console.log("terminating worker", activeWorker.current);
       activeWorker.current?.terminate();
-    },
-    []
-  );
+    };
+  }, []);
 
-  useEffect(
-    () =>
-      (async () => {
-        const { data } = await axios.get("/mine/info");
-        setMineInfo(data);
-      })(),
-    []
-  );
+  useEffect(() => {
+    if (!headBlock) return;
+    setParentBlockHash(headBlock.hash);
+    if (canRestart.current) {
+      console.log("new head block hash, restarting", headBlock.hash);
+      restartMining();
+    }
+  }, [headBlock]);
 
   useEffect(() => {
     if (!mempool.length) return;
     setSelectedTxs([mempool[0]]);
   }, [mempool]);
-
-  const stopMining = () => {
-    if (activeWorker.current) {
-      activeWorker.current.terminate();
-      activeWorker.current = null;
-      setTerminalLog(log => [...log, `\nMining operation stopped.`]);
-      return;
-    }
-    setTerminalLog(log => [...log, `\nNo mining processes running.`]);
-  };
 
   const restartMining = () => {
     if (activeWorker.current) {
@@ -100,10 +87,15 @@ const MinePage = () => {
     }
   };
 
-  useEffect(() => {
-    console.log("new parent block hash, restarting", parentBlockHash);
-    if (canRestart) restartMining();
-  }, [parentBlockHash]);
+  const stopMining = () => {
+    if (activeWorker.current) {
+      activeWorker.current.terminate();
+      activeWorker.current = null;
+      setTerminalLog(log => [...log, `\nMining operation stopped.`]);
+      return;
+    }
+    setTerminalLog(log => [...log, `\nNo mining processes running.`]);
+  };
 
   const loading = !paramsLoaded || !headBlockLoaded;
 
@@ -170,7 +162,7 @@ const MinePage = () => {
 
     setTerminalLog(log => [
       ...log,
-      `Mining started...\nprevious block: ${previousBlock}\ntarget hash: ${bigIntToHex64(target)}\n `,
+      `Mining started...\nprevious block: ${previousBlock.hash}\ntarget hash: ${bigIntToHex64(target)}\n `,
     ]);
 
     const worker = new Miner();
@@ -256,7 +248,8 @@ const MinePage = () => {
             return setParentBlockHash(value);
           case "restart":
             setTerminalLog(log => [...log, `\nSet restart to ${value}`]);
-            return setCanRestart(value === "true");
+            canRestart.current = value === "true";
+            return;
           default:
             throw Error("invalid arguments");
         }
@@ -347,7 +340,8 @@ const MinePage = () => {
             <div className="field has-addons mb-0">
               <div className="control is-expanded">
                 <input
-                  onChange={({ target }) => setMiner(target.value)}
+                  readOnly
+                  // onChange={({ target }) => setMiner(target.value)}
                   value={miner}
                   className="input"
                   type="text"
@@ -359,8 +353,8 @@ const MinePage = () => {
                 <button
                   title="Paste address from clipboard"
                   onClick={async () => {
-                    setMiner(await navigator.clipboard.readText());
-                    toast.success("Address pasted");
+                    // setMiner(await navigator.clipboard.readText());
+                    // toast.success("Address pasted");
                   }}
                   className="button"
                 >

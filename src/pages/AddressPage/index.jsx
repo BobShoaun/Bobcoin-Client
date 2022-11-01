@@ -149,7 +149,7 @@ const AddressPage = ({ match }) => {
                   <div data-tip data-for="total-received" className="is-block ml-2">
                     <span className="has-text-info material-icons-outlined md-14 is-block my-auto">info</span>
                     <ReactTooltip id="total-received" type="dark" effect="solid">
-                      <span>total output amount to address</span>
+                      <span>Total incoming volume for each transaction</span>
                     </ReactTooltip>
                   </div>
                 </div>
@@ -165,7 +165,7 @@ const AddressPage = ({ match }) => {
                   <div data-tip data-for="total-sent" className="is-block ml-2">
                     <span className="has-text-info material-icons-outlined md-14 is-block my-auto">info</span>
                     <ReactTooltip id="total-sent" type="dark" effect="solid">
-                      <span>total input amount to address</span>
+                      <span>Total outgoing volume for each transaction</span>
                     </ReactTooltip>
                   </div>
                 </div>
