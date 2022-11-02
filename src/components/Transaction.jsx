@@ -107,7 +107,7 @@ const Transaction = ({ transaction }) => {
                 <p className="has-text-weight-medium has-text-right">
                   {numberWithCommas((output.amount / params.coin).toFixed(decimalPlaces))} {params.symbol}
                 </p>
-                {!transaction.block.valid ? (
+                {!transaction.block?.valid ? (
                   <div data-tip data-for="unspendable" className="is-block ml-3" style={{ cursor: "not-allowed" }}>
                     <span className="has-text-grey material-icons-outlined md-18 is-block my-auto">credit_card</span>
                     <ReactTooltip id="unspendable" type="dark" effect="solid">

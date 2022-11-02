@@ -1,9 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { nodes } from "../config";
 
+if (!["other", ...nodes.map(node => node.name)].includes(localStorage.getItem("network-name")))
+  localStorage.removeItem("network-name");
+
 const nodeName = localStorage.getItem("network-name") ?? nodes[0].name;
 const nodeUrl = localStorage.getItem("network-url") ?? nodes[0].url;
-const showMiningPopup = (localStorage.getItem("mining-popup") ?? "true") == "true";
+const showMiningPopup = (localStorage.getItem("mining-popup") ?? "true") === "true";
 
 const networkSlice = createSlice({
   name: "network",

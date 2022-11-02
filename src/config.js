@@ -1,23 +1,27 @@
 const {
   NODE_ENV,
-  REACT_APP_BOBCOIN_NODE_ALPHA_MAINNET_URL,
-  REACT_APP_BOBCOIN_NODE_ALPHA_TESTNET_URL,
-  REACT_APP_BOBCOIN_NODE_LOCAL_MAINNET_URL,
-  REACT_APP_BOBCOIN_NODE_LOCAL_TESTNET_URL,
+  REACT_APP_NODE_MAINNET_ALPHA_URL,
+  REACT_APP_NODE_TESTNET_ALPHA_URL,
+  REACT_APP_NODE_MAINNET_LOCAL_URL,
+  REACT_APP_NODE_TESTNET_LOCAL_URL,
   REACT_APP_RECAPTCHA_SITE_KEY,
 } = process.env;
-
-// const development = NODE_ENV === "development";
-// const useProdNodeInDev = true;
 
 export const recaptchaSiteKey = REACT_APP_RECAPTCHA_SITE_KEY;
 
 export const nodes = [
-  { name: "alpha-mainnet", url: REACT_APP_BOBCOIN_NODE_ALPHA_MAINNET_URL },
-  { name: "alpha-testnet", url: REACT_APP_BOBCOIN_NODE_ALPHA_TESTNET_URL },
-  { name: "local-mainnet", url: REACT_APP_BOBCOIN_NODE_LOCAL_MAINNET_URL },
-  { name: "local-testnet", url: REACT_APP_BOBCOIN_NODE_LOCAL_TESTNET_URL },
+  { name: "mainnet-alpha", url: REACT_APP_NODE_MAINNET_ALPHA_URL },
+  { name: "testnet-alpha", url: REACT_APP_NODE_TESTNET_ALPHA_URL },
+  { name: "mainnet-local", url: REACT_APP_NODE_MAINNET_LOCAL_URL },
+  { name: "testnet-local", url: REACT_APP_NODE_TESTNET_LOCAL_URL },
 ];
+
+export const donationAddress = "8bobLqxCRPTSEhvZwQTeKnKz5429N26";
+export const discordInviteLink = "https://discord.gg/Mr9kzmc6eh";
+export const personalWebsiteLink = "https://bobng.me";
+
+export const nodeDonationPercent = 0.1;
+export const nodeDonationAddress = "8WHdkueKmPjbmAH1Va9uZpC2v7Xbqkw";
 
 export const VCODE = {
   BK00: 0,
@@ -60,16 +64,3 @@ export const VCODE = {
 
   VALID: 400,
 };
-
-export const donationAddress = "8bobLqxCRPTSEhvZwQTeKnKz5429N26";
-export const discordInviteLink = "https://discord.gg/Mr9kzmc6eh";
-export const personalWebsiteLink = "https://bobng.me";
-
-export const nodeDonationPercent = 0.1;
-export const nodeDonationAddress = "8WHdkueKmPjbmAH1Va9uZpC2v7Xbqkw";
-
-// export const bobcoinMainnet =
-//   development && !useProdNodeInDev ? REACT_APP_BOBCOIN_NODE_LOCAL_MAIN : REACT_APP_BOBCOIN_NODE_MAIN;
-
-// export const bobcoinTestnet =
-//   development && !useProdNodeInDev ? REACT_APP_BOBCOIN_NODE_LOCAL_TEST : REACT_APP_BOBCOIN_NODE_TEST;

@@ -7,6 +7,7 @@ import { copyToClipboard, numberWithCommas, getTransactionStatus } from "../../h
 import Loading from "../../components/Loading";
 
 import axios from "axios";
+import { format } from "date-fns";
 
 const TransactionPage = () => {
   const { hash } = useParams();
@@ -100,7 +101,7 @@ const TransactionPage = () => {
           </tr>
           <tr>
             <td>Timestamp</td>
-            <td>{new Date(transaction.timestamp).toUTCString()}</td>
+            <td>{format(transaction.timestamp, "eee, d MMM yyy HH:mm:ss OOO")}</td>
           </tr>
 
           <tr>

@@ -42,10 +42,10 @@ const SettingsPage = () => {
           <div className="control has-icons-left">
             <div className="select">
               <select value={nodeName} onChange={({ target }) => setNodeName(target.value)} required>
-                <option value="alpha-mainnet">Alpha Mainnet</option>
-                <option value="alpha-testnet">Alpha Testnet</option>
-                <option value="local-mainnet">Local Mainnet</option>
-                <option value="local-testnet">Local Testnet</option>
+                <option value="mainnet-alpha">Mainnet Alpha</option>
+                <option value="testnet-alpha">Testnet Alpha</option>
+                <option value="mainnet-local">Mainnet Local</option>
+                <option value="testnet-local">Testnet Local</option>
                 <option value="other">Other</option>
               </select>
             </div>
