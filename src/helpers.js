@@ -44,5 +44,5 @@ export const getTransactionStatus = (transaction, headBlock, params) => {
 
 export const getNodeIcon = nodeName => {
   if (nodeName === "other") return "public";
-  return nodeName.split("-")[1] === "mainnet" ? "language" : "bug_report";
+  return nodeName.split("-")[0] === "mainnet" ? "language" : "bug_report";
 };
