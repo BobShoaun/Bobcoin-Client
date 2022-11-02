@@ -66,7 +66,7 @@ export const discordInviteLink = "https://discord.gg/Mr9kzmc6eh";
 export const personalWebsiteLink = "https://bobng.me";
 
 export const nodeDonationPercent = 0.1;
-export const nodeDonationAddress = "8GEN8Ab66ydbi82Q3wVcVwWKpvRVphN";
+export const nodeDonationAddress = "8WHdkueKmPjbmAH1Va9uZpC2v7Xbqkw";
 
 // export const bobcoinMainnet =
 //   development && !useProdNodeInDev ? REACT_APP_BOBCOIN_NODE_LOCAL_MAIN : REACT_APP_BOBCOIN_NODE_MAIN;

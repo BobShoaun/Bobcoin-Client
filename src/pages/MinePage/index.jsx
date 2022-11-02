@@ -118,7 +118,7 @@ const MinePage = () => {
     setTerminalLog(log => [...log, "\nForming and verifying candidate block..."]);
 
     selectedTxs.sort((a, b) => a.timestamp - b.timestamp);
-    const { data } = await axios.post("/mine/candidate-block/info", { transactions: selectedTxs });
+    const { data } = await axios.post("/mine/candidate-block/info", { parentBlockHash, transactions: selectedTxs });
     const { previousBlock, difficulty, fees } = data;
 
     const blockReward = calculateBlockReward(params, previousBlock.height + 1);
@@ -371,7 +371,7 @@ const MinePage = () => {
             <div className="field has-addons mb-0">
               <div className="control is-expanded">
                 <input
-                  // onChange={e => setParentBlockHash(e.target.value)}
+                  onChange={e => setParentBlockHash(e.target.value)}
                   readOnly
                   value={parentBlockHash}
                   className="input"
@@ -383,8 +383,8 @@ const MinePage = () => {
               <p className="control">
                 <button
                   onClick={async () => {
-                    // setParentBlockHash(await navigator.clipboard.readText());
-                    // toast.success("Block hash pasted");
+                    setParentBlockHash(await navigator.clipboard.readText());
+                    toast.success("Parent block hash pasted");
                   }}
                   className="button"
                 >

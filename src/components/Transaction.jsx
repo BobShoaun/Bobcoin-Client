@@ -93,7 +93,7 @@ const Transaction = ({ transaction }) => {
           </i>
         </div>
 
-        <div className="is-flex  truncated" style={{ flex: "1" }}>
+        <div className="is-flex truncated" style={{ flex: "1" }}>
           <div className="truncated">
             {transaction.outputs.map((output, index) => (
               <Link key={index} className="is-block truncated" to={`/address/${output.address}`}>
@@ -107,10 +107,10 @@ const Transaction = ({ transaction }) => {
                 <p className="has-text-weight-medium has-text-right">
                   {numberWithCommas((output.amount / params.coin).toFixed(decimalPlaces))} {params.symbol}
                 </p>
-                {!transaction.block?.valid ? (
-                  <div data-tip data-for="spent" className="is-block ml-3">
+                {!transaction.block.valid ? (
+                  <div data-tip data-for="unspendable" className="is-block ml-3" style={{ cursor: "not-allowed" }}>
                     <span className="has-text-grey material-icons-outlined md-18 is-block my-auto">credit_card</span>
-                    <ReactTooltip id="spent" type="dark" effect="solid">
+                    <ReactTooltip id="unspendable" type="dark" effect="solid">
                       <span>Unspendable Output</span>
                     </ReactTooltip>
                   </div>
@@ -121,7 +121,6 @@ const Transaction = ({ transaction }) => {
                         credit_card_off
                       </span>
                     </Link>
-
                     <ReactTooltip id="spent" type="error" effect="solid">
                       <span>Spent output</span>
                     </ReactTooltip>
