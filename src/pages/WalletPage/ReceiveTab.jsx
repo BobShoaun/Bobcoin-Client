@@ -15,13 +15,13 @@ const ReceiveTab = () => {
   const { xprv, externalKeys } = useSelector(state => state.wallet);
   const { walletInfo, params } = useContext(WalletContext);
 
-  const [addQR, setAddQR] = useState("");
+  const [addressQR, setAddressQR] = useState("");
   const [addressIndex, setAddressIndex] = useState(externalKeys.length - 1);
-  const [addrUsage, setAddrUsage] = useState([]);
+  const [addressUsage, setAddressUsage] = useState([]);
 
   const generateQRCode = async () => {
     try {
-      setAddQR(await QRCode.toString(address));
+      setAddressQR(await QRCode.toString(address));
     } catch (e) {
       console.error(e);
     }
@@ -29,20 +29,20 @@ const ReceiveTab = () => {
 
   const generateNewAddress = () => {
     const index = externalKeys.length;
-    const { sk, pk, addr } = deriveKeys(params, xprv, 0, 0, index);
-    dispatch(addExternalKeys({ sk, pk, addr, index }));
+    const { secretKey, publicKey, address } = deriveKeys(params, xprv, 0, 0, index);
+    dispatch(addExternalKeys({ secretKey, publicKey, address, index }));
     setAddressIndex(index);
   };
 
   const getAddressUsage = async () => {
     const results = await axios.post(
       "/wallet/used",
-      externalKeys.map(key => key.addr)
+      externalKeys.map(key => key.address)
     );
-    setAddrUsage(results.data.map(a => a.used));
+    setAddressUsage(results.data.map(a => a.used));
   };
 
-  const address = useMemo(() => externalKeys[addressIndex]?.addr ?? "", [externalKeys, addressIndex]);
+  const address = useMemo(() => externalKeys[addressIndex]?.address ?? "", [externalKeys, addressIndex]);
 
   useEffect(generateQRCode, [address]);
   useEffect(getAddressUsage, [externalKeys]);
@@ -67,8 +67,8 @@ const ReceiveTab = () => {
         </div>
 
         <div className="box mx-auto mb-6" style={{ width: "250px", height: "250px" }}>
-          {addQR ? (
-            <div dangerouslySetInnerHTML={{ __html: addQR }}></div>
+          {addressQR ? (
+            <div dangerouslySetInnerHTML={{ __html: addressQR }}></div>
           ) : (
             <div
               className="is-flex has-text-centered"
@@ -94,7 +94,7 @@ const ReceiveTab = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {[...externalKeys].reverse().map(({ addr, index }) => (
+                  {[...externalKeys].reverse().map(({ address, index }) => (
                     <tr
                       onClick={() => setAddressIndex(index)}
                       className={`is-clickable ${index === addressIndex ? "is-selected" : ""}`}
@@ -102,10 +102,10 @@ const ReceiveTab = () => {
                     >
                       <td>
                         <a
-                          href={`/address/${addr}`}
+                          href={`/address/${address}`}
                           title="View in block explorer"
                           className="material-icons md-14 ml-2"
-                          onClick={() => copyToClipboard(addr, "Address copied")}
+                          onClick={() => copyToClipboard(address, "Address copied")}
                         >
                           open_in_new
                         </a>
@@ -114,16 +114,16 @@ const ReceiveTab = () => {
                         <i
                           title="copy address to clipboard"
                           className="material-icons md-14"
-                          onClick={() => copyToClipboard(addr, "Address copied")}
+                          onClick={() => copyToClipboard(address, "Address copied")}
                         >
                           content_copy
                         </i>
                       </td>
                       <td>
-                        <p>{addr}</p>
+                        <p>{address}</p>
                       </td>
                       <td>{`m/${params.derivPurpose}'/${params.derivCoinType}'/0'/0/${index}`}</td>
-                      <td>{addrUsage[index] ? "Used" : "Unused"}</td>
+                      <td>{addressUsage[index] ? "Used" : "Unused"}</td>
                     </tr>
                   ))}
                 </tbody>

@@ -6,7 +6,7 @@ import {
   createInput,
   createOutput,
   createTransaction,
-  signTransactionHex,
+  signTransaction,
   calculateTransactionHash,
 } from "blockcrypto";
 import { addInternalKeys } from "../../store/walletSlice";
@@ -23,7 +23,7 @@ const SendTab = () => {
   const dispatch = useDispatch();
 
   const { walletInfo, params, externalKeys, internalKeys, xprv } = useContext(WalletContext);
-  const [recipientAddr, setRecipientAddr] = useState("");
+  const [recipientAddress, setRecipientAddress] = useState("");
   const [amount, setAmount] = useState("");
   const [fee, setFee] = useState("");
 
@@ -36,7 +36,7 @@ const SendTab = () => {
   const getWalletUtxos = async () => {
     const results = await axios.post(
       `/wallet/utxos`,
-      [...externalKeys, ...internalKeys].map(key => key.addr)
+      [...externalKeys, ...internalKeys].map(key => key.address)
     );
     console.log(results.data);
     setUtxos(results.data);
@@ -45,7 +45,7 @@ const SendTab = () => {
   useEffect(getWalletUtxos, [externalKeys, internalKeys]);
 
   const resetFields = () => {
-    setRecipientAddr("");
+    setRecipientAddress("");
     setAmount("");
     setFee("");
   };
@@ -83,28 +83,28 @@ const SendTab = () => {
       inputAmount += utxo.amount;
 
       console.log(utxo);
-      const { pk } = [...externalKeys, ...internalKeys].find(keys => keys.addr === utxo.address);
-      const input = createInput(utxo.txHash, utxo.outIndex, pk);
+      const { publicKey } = [...externalKeys, ...internalKeys].find(({ address }) => address === utxo.address);
+      const input = createInput(utxo.txHash, utxo.outIndex, publicKey);
       inputs.push(input);
     }
 
     const outputs = [];
-    const payment = createOutput(recipientAddr, _amount);
+    const payment = createOutput(recipientAddress, _amount);
     outputs.push(payment);
 
     const changeAmount = inputAmount - _amount - _fee;
     let changeKeys = null;
     if (changeAmount > 0) {
       changeKeys = deriveKeys(params, xprv, 0, 1, internalKeys.length);
-      const change = createOutput(changeKeys.addr, changeAmount);
+      const change = createOutput(changeKeys.address, changeAmount);
       outputs.push(change);
     }
 
     const transaction = createTransaction(params, inputs, outputs);
 
     for (const input of transaction.inputs) {
-      const { sk } = [...externalKeys, ...internalKeys].find(({ pk }) => pk === input.publicKey);
-      const signature = signTransactionHex(transaction, sk);
+      const { secretKey } = [...externalKeys, ...internalKeys].find(({ publicKey }) => publicKey === input.publicKey);
+      const signature = signTransaction(transaction, secretKey);
       input.signature = signature;
     }
 
@@ -121,8 +121,7 @@ const SendTab = () => {
     }
 
     if (changeAmount > 0) {
-      const { sk, pk, addr } = changeKeys;
-      dispatch(addInternalKeys({ sk, pk, addr, index: internalKeys.length }));
+      dispatch(addInternalKeys({ ...changeKeys, index: internalKeys.length }));
     }
 
     resetFields();
@@ -141,14 +140,14 @@ const SendTab = () => {
               className="input"
               type="text"
               placeholder="Enter Address"
-              value={recipientAddr}
-              onChange={({ target: { value } }) => setRecipientAddr(value)}
+              value={recipientAddress}
+              onChange={({ target: { value } }) => setRecipientAddress(value)}
             ></input>
           </div>
           <p className="control">
             <button
               onClick={async () => {
-                setRecipientAddr(await navigator.clipboard.readText());
+                setRecipientAddress(await navigator.clipboard.readText());
                 toast.success("Address pasted");
               }}
               className="button"

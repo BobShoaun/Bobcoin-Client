@@ -10,10 +10,9 @@ const TraditionalMode = () => {
   const dispatch = useDispatch();
   const params = useSelector(state => state.consensus.params);
 
-  const [keys, setKeys] = useState({ sk: "", address: "" });
-  const [skQR, setSKQR] = useState("");
-  const [addQR, setAddrQR] = useState("");
-
+  const [keys, setKeys] = useState({ secretKey: "", publicKey: "", address: "" });
+  const [secretKeyQR, setSecretKeyQR] = useState("");
+  const [addressQR, setAddressQR] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
 
   const generateRandom = () => {
@@ -22,15 +21,15 @@ const TraditionalMode = () => {
     generateQRCode(keys);
   };
 
-  const handleChangePrivateKey = privateKey => {
-    if (privateKey === "") {
-      setKeys({ sk: "", address: "" });
-      setSKQR(null);
-      setAddrQR(null);
+  const handleChangeSecretKey = secretKey => {
+    if (secretKey === "") {
+      setKeys({ secretKey: "", publicKey: "", address: "" });
+      setSecretKeyQR(null);
+      setAddressQR(null);
       return;
     }
     try {
-      const keys = getKeys(params, privateKey);
+      const keys = getKeys(params, secretKey);
       setKeys(keys);
       generateQRCode(keys);
     } catch {
@@ -45,8 +44,8 @@ const TraditionalMode = () => {
 
   const generateQRCode = async keys => {
     try {
-      setSKQR(await QRCode.toString(keys.sk));
-      setAddrQR(await QRCode.toString(keys.address));
+      setSecretKeyQR(await QRCode.toString(keys.secretKey));
+      setAddressQR(await QRCode.toString(keys.address));
     } catch (e) {
       console.error(e);
     }
@@ -56,8 +55,8 @@ const TraditionalMode = () => {
       <div className="is-flex-tablet mb-6">
         <section className="px-0 py-6 px-6-tablet" style={{ flexBasis: "50%" }}>
           <div className="box mx-auto mb-6" style={{ width: "250px", height: "250px" }}>
-            {skQR ? (
-              <div dangerouslySetInnerHTML={{ __html: skQR }}></div>
+            {secretKeyQR ? (
+              <div dangerouslySetInnerHTML={{ __html: secretKeyQR }}></div>
             ) : (
               <div
                 className="is-flex has-text-centered"
@@ -76,12 +75,12 @@ const TraditionalMode = () => {
                   className="input"
                   type="text"
                   placeholder="Enter or auto-generate private key"
-                  value={keys.sk}
-                  onChange={({ target }) => handleChangePrivateKey(target.value)}
+                  value={keys.secretKey}
+                  onChange={({ target }) => handleChangeSecretKey(target.value)}
                 ></input>
               </div>
               <p className="control">
-                <button className="button" onClick={() => copyToClipboard(keys.sk, "Copied!")}>
+                <button className="button" onClick={() => copyToClipboard(keys.secretKey, "Copied!")}>
                   <i className="material-icons md-18">content_copy</i>
                 </button>
               </p>
@@ -94,8 +93,8 @@ const TraditionalMode = () => {
 
         <section className="px-0 py-6 px-6-tablet" style={{ flexBasis: "50%" }}>
           <div className="box mx-auto mb-6" style={{ width: "250px", height: "250px" }}>
-            {addQR ? (
-              <div dangerouslySetInnerHTML={{ __html: addQR }}></div>
+            {addressQR ? (
+              <div dangerouslySetInnerHTML={{ __html: addressQR }}></div>
             ) : (
               <div
                 className="is-flex has-text-centered"
@@ -153,10 +152,10 @@ const TraditionalMode = () => {
             </p>
 
             <p className="title is-spaced is-6 mb-2">Private key:</p>
-            <pre className="subtitle is-spaced is-6 py-2 mb-4">{keys.sk}</pre>
+            <pre className="subtitle is-spaced is-6 py-2 mb-4">{keys.secretKey}</pre>
 
             <p className="title is-spaced is-6 mb-2">Public key:</p>
-            <pre className="subtitle is-spaced is-6 py-2 mb-4">{keys.pk}</pre>
+            <pre className="subtitle is-spaced is-6 py-2 mb-4">{keys.publicKey}</pre>
 
             <p className="title is-spaced is-6 mb-2">Address:</p>
             <pre className="subtitle is-spaced is-6 py-2 mb-6">{keys.address}</pre>

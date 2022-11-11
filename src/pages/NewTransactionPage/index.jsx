@@ -9,8 +9,7 @@ import {
   createTransaction,
   signTransaction,
   calculateTransactionHash,
-  hexToBase58,
-  signTransactionHex,
+  base58ToHex,
 } from "blockcrypto";
 import { VCODE } from "../../config";
 import TransactionFailureModal from "./TransactionFailureModal";
@@ -21,40 +20,39 @@ import toast from "react-hot-toast";
 
 const NewTransactionPage = () => {
   const keys = useSelector(state => state.wallet.keys);
-  const { params, paramsLoaded } = useSelector(state => state.consensus);
+  const { params } = useSelector(state => state.consensus);
 
   const history = useHistory();
 
-  const [showSK, setShowSK] = useState(false);
+  const [showSecretKey, setShowSecretKey] = useState(false);
   const [amount, setAmount] = useState("");
   const [fee, setFee] = useState("");
 
-  const [sk, setSK] = useState(keys.sk ?? "");
-  const [sender, setSender] = useState({ sk: "", pk: "", address: "" });
-  const [recipientAdd, setRecipientAdd] = useState("");
-  const [skFormat, setSKFormat] = useState("base58");
+  const [senderSecretKey, setSenderSecretKey] = useState(keys.secretKey ?? "");
+  const [sender, setSender] = useState({ secretKey: "", publicKey: "", address: "" });
+  const [recipientAddress, setRecipientAddress] = useState("");
+  const [secretKeyFormat, setSecretKeyFormat] = useState("hex");
 
   const [confirmModal, setConfirmModal] = useState(false);
   const [errorModal, setErrorModal] = useState(false);
   const [error, setError] = useState({});
 
   const resetFields = () => {
-    setRecipientAdd("");
+    setRecipientAddress("");
     setAmount("");
     setFee("");
   };
 
   useEffect(() => {
-    updatePkAdd(sk);
-  }, [skFormat, sk]);
+    updateSender(senderSecretKey);
+  }, [secretKeyFormat, senderSecretKey]);
 
-  const updatePkAdd = secretKey => {
+  const updateSender = secretKey => {
     try {
-      const _sk = skFormat === "base58" ? secretKey : hexToBase58(secretKey);
-      const { sk, pk, address } = getKeys(params, _sk);
-      setSender({ sk, pk, address });
+      const keys = getKeys(params, secretKeyFormat === "base58" ? base58ToHex(secretKey) : secretKey);
+      setSender(keys);
     } catch {
-      setSender({ sk: "", pk: "", address: "" });
+      setSender({ secretKey: "", publicKey: "", address: "" });
     }
   };
 
@@ -84,12 +82,12 @@ const NewTransactionPage = () => {
     for (const utxo of utxos) {
       if (inputAmount >= _amount) break;
       inputAmount += utxo.amount;
-      const input = createInput(utxo.txHash, utxo.outIndex, sender.pk);
+      const input = createInput(utxo.txHash, utxo.outIndex, sender.publicKey);
       inputs.push(input);
     }
 
     const outputs = [];
-    const payment = createOutput(recipientAdd, _amount);
+    const payment = createOutput(recipientAddress, _amount);
     outputs.push(payment);
 
     const changeAmount = inputAmount - _amount - _fee;
@@ -99,7 +97,7 @@ const NewTransactionPage = () => {
     }
 
     const transaction = createTransaction(params, inputs, outputs);
-    const signature = signTransaction(transaction, sender.sk);
+    const signature = signTransaction(transaction, sender.secretKey);
     transaction.inputs.forEach(input => (input.signature = signature));
     transaction.hash = calculateTransactionHash(transaction);
 
@@ -129,20 +127,20 @@ const NewTransactionPage = () => {
           Sender's Private key
           <span className="ml-4 is-size-7 has-text-weight-normal">
             <span
-              onClick={() => setSKFormat("base58")}
+              onClick={() => setSecretKeyFormat("base58")}
               className="is-clickable"
               style={{
-                textDecoration: skFormat === "base58" ? "underline" : "",
+                textDecoration: secretKeyFormat === "base58" ? "underline" : "",
               }}
             >
               Base58
             </span>
             <span className="mx-3">|</span>
             <span
-              onClick={() => setSKFormat("hex")}
+              onClick={() => setSecretKeyFormat("hex")}
               className="is-clickable"
               style={{
-                textDecoration: skFormat === "hex" ? "underline" : "",
+                textDecoration: secretKeyFormat === "hex" ? "underline" : "",
               }}
             >
               Hex
@@ -153,15 +151,15 @@ const NewTransactionPage = () => {
           <div className="control is-expanded">
             <input
               className="input"
-              type={showSK ? "text" : "password"}
+              type={showSecretKey ? "text" : "password"}
               placeholder="Enter private key"
-              value={sk}
-              onChange={({ target: { value } }) => setSK(value)}
+              value={senderSecretKey}
+              onChange={({ target: { value } }) => setSenderSecretKey(value)}
             ></input>
           </div>
           <p className="control">
-            <button onClick={() => setShowSK(showSK => !showSK)} className="button">
-              <i className="material-icons md-18">{showSK ? "visibility_off" : "visibility"}</i>
+            <button onClick={() => setShowSecretKey(showSK => !showSK)} className="button">
+              <i className="material-icons md-18">{showSecretKey ? "visibility_off" : "visibility"}</i>
             </button>
           </p>
         </div>
@@ -171,7 +169,7 @@ const NewTransactionPage = () => {
       <div className="field mb-4">
         <label className="label">Sender's Public key</label>
         <input
-          value={sender.pk}
+          value={sender.publicKey}
           className="input"
           type="text"
           placeholder="Input private key above to get public key"
@@ -200,14 +198,14 @@ const NewTransactionPage = () => {
               className="input"
               type="text"
               placeholder="Enter Address"
-              value={recipientAdd}
-              onChange={({ target: { value } }) => setRecipientAdd(value)}
+              value={recipientAddress}
+              onChange={({ target: { value } }) => setRecipientAddress(value)}
             ></input>
           </div>
           <p className="control">
             <button
               onClick={async () => {
-                setRecipientAdd(await navigator.clipboard.readText());
+                setRecipientAddress(await navigator.clipboard.readText());
                 toast.success("Address pasted");
               }}
               className="button"

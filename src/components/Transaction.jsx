@@ -13,7 +13,7 @@ const Transaction = ({ transaction }) => {
 
   const totalInput = transaction.inputs.reduce((total, input) => total + input.amount, 0);
   const totalOutput = transaction.outputs.reduce((total, output) => total + output.amount, 0);
-  const isCoinbase = transaction.inputs.length === 0 && transaction.outputs.length === 1;
+  const isCoinbase = transaction.inputs.length === 0;
   const fee = totalInput - totalOutput;
   const status = getTransactionStatus(transaction, headBlock, params);
 

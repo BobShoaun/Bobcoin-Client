@@ -113,12 +113,12 @@ const InfoTab = () => {
               </tr>
             </thead>
             <tbody>
-              {externalKeys.map(({ sk, pk, addr, index }) => (
+              {externalKeys.map(({ secretKey, publicKey, address, index }) => (
                 <tr key={index}>
                   <td className="has-text-centered">{index}</td>
-                  <td style={{ wordBreak: "break-all" }}>{addr}</td>
-                  <td style={{ wordBreak: "break-all" }}>{pk}</td>
-                  <td style={{ wordBreak: "break-all" }}>{sk}</td>
+                  <td style={{ wordBreak: "break-all" }}>{address}</td>
+                  <td style={{ wordBreak: "break-all" }}>{publicKey}</td>
+                  <td style={{ wordBreak: "break-all" }}>{secretKey}</td>
                   <td>{`m/${params.derivPurpose}'/${params.derivCoinType}'/0'/0/${index}`}</td>
                 </tr>
               ))}
@@ -144,12 +144,12 @@ const InfoTab = () => {
               </tr>
             </thead>
             <tbody>
-              {internalKeys.map(({ sk, pk, addr, index }) => (
+              {internalKeys.map(({ secretKey, publicKey, address, index }) => (
                 <tr key={index}>
                   <td className="has-text-centered">{index}</td>
-                  <td style={{ wordBreak: "break-all" }}>{addr}</td>
-                  <td style={{ wordBreak: "break-all" }}>{pk}</td>
-                  <td style={{ wordBreak: "break-all" }}>{sk}</td>
+                  <td style={{ wordBreak: "break-all" }}>{address}</td>
+                  <td style={{ wordBreak: "break-all" }}>{publicKey}</td>
+                  <td style={{ wordBreak: "break-all" }}>{secretKey}</td>
                   <td>{`m/${params.derivPurpose}'/${params.derivCoinType}'/0'/1/${index}`}</td>
                 </tr>
               ))}

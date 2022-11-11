@@ -125,21 +125,19 @@ const Terminal = () => {
     const args = command.split(" ");
     event.target.command.value = "";
 
-    setTerminalLogs(logs => [...logs, `> ${command}`]);
+    setTerminalLogs(logs => [...logs, `> ${command}`, "\n"]);
 
     const program = programs.find(program => program.name === args[0]);
     if (!program) {
-      setTerminalLogs(logs => [...logs, `Unknown command: ${args[0]}, type 'help' for help.`]);
+      setTerminalLogs(logs => [...logs, `Unknown command: ${args[0]}, type 'help' for help.`, "\n"]);
       return;
     }
 
     try {
       program.execute(args);
     } catch (e) {
-      setTerminalLogs(logs => [...logs, e.toString()]);
+      setTerminalLogs(logs => [...logs, e.toString(), "\n"]);
     }
-
-    setTerminalLogs(logs => [...logs, `\n`]);
   };
 
   const navigateCommandHistory = e => {
@@ -158,7 +156,7 @@ const Terminal = () => {
   };
 
   return (
-    <section className="terminal mb-5" style={{ flex: "1 0 10em" }}>
+    <section className="terminal" style={{ flex: "1 0 10em" }}>
       <div className="mt-auto content" style={{ width: "100%" }}>
         {terminalLogs.map((log, index) => (
           <pre className="terminal-output" key={index}>

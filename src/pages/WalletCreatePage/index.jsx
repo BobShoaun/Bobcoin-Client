@@ -5,7 +5,7 @@ import { useHistory } from "react-router";
 import Loading from "../../components/Loading";
 import "./index.css";
 
-import { generateHdKey, deriveKeys } from "blockcrypto";
+import { generateHdKeys, deriveKeys } from "blockcrypto";
 import { copyToClipboard } from "../../helpers";
 import { setHdKeys as setHdWalletKeys, addExternalKeys } from "../../store/walletSlice";
 
@@ -27,15 +27,15 @@ const WalletCreatePage = () => {
       console.error("wordlist not selected!");
       return;
     }
-    const hdKeys = await generateHdKey("", wordList);
+    const hdKeys = await generateHdKeys("", wordList);
     setHdKeys(hdKeys);
     setShowBackup(true);
   };
 
   const saveKeys = () => {
-    const { sk, pk, addr } = deriveKeys(params, hdKeys.xprv, 0, 0, 0);
+    const { secretKey, publicKey, address } = deriveKeys(params, hdKeys.xprv, 0, 0, 0);
     dispatch(setHdWalletKeys(hdKeys));
-    dispatch(addExternalKeys({ sk, pk, addr, index: 0 }));
+    dispatch(addExternalKeys({ secretKey, publicKey, address, index: 0 }));
     setModalOpen(true);
   };
 

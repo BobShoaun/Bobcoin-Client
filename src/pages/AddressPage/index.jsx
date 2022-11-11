@@ -155,7 +155,8 @@ const AddressPage = ({ match }) => {
                 </div>
               </td>
               <td>
-                {numberWithCommas((totalReceived / params.coin).toFixed(8))} {params.symbol}
+                {/* {numberWithCommas((totalReceived / params.coin).toFixed(8))} {params.symbol} */}
+                {new Intl.NumberFormat().format((totalReceived / params.coin).toFixed(8))} {params.symbol}
               </td>
             </tr>
             <tr>

@@ -22,7 +22,7 @@ const WalletPage = () => {
   const [tab, setTab] = useState("summary");
 
   const getWalletInfo = async () => {
-    const addresses = [...externalKeys, ...internalKeys].map(key => key.addr);
+    const addresses = [...externalKeys, ...internalKeys].map(key => key.address);
     if (!addresses.length) return;
     const results = await axios.post(`/wallet/info`, addresses);
     setWalletInfo(results.data);

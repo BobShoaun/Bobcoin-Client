@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
 import Loading from "../../components/Loading";
-import { deriveKeys, validateMnemonic, getHdKey } from "blockcrypto";
+import { deriveKeys, isMnemonicValid, getHdKeys } from "blockcrypto";
 import { setHdKeys as setHdWalletKeys, addExternalKeys, addInternalKeys } from "../../store/walletSlice";
 
 import axios from "axios";
@@ -19,13 +19,13 @@ const WalletImportPage = () => {
     const discoveryGapLimit = 20;
     const keys = [];
     for (let i = startIndex; i < startIndex + discoveryGapLimit; i++) {
-      const key = deriveKeys(params, hdKeys.xprv, 0, isInternal ? 1 : 0, i);
-      key.index = i;
-      keys.push(key);
+      const _keys = deriveKeys(params, hdKeys.xprv, 0, isInternal ? 1 : 0, i);
+      _keys.index = i;
+      keys.push(_keys);
     }
     const results = await axios.post(
       "/wallet/used",
-      keys.map(key => key.addr)
+      keys.map(key => key.address)
     );
 
     // get last used address index
@@ -39,8 +39,7 @@ const WalletImportPage = () => {
 
     // add keys until last used address index
     for (let i = 0; i < upper; i++) {
-      const { sk, pk, addr, index } = keys[i];
-      dispatch((isInternal ? addInternalKeys : addExternalKeys)({ sk, pk, addr, index }));
+      dispatch((isInternal ? addInternalKeys : addExternalKeys)(keys[i]));
     }
 
     if (upper > 0) await scanAddresses(hdKeys, startIndex + upper, isInternal);
@@ -53,17 +52,17 @@ const WalletImportPage = () => {
       alert("Please select a word list");
       return;
     }
-    if (!validateMnemonic(mnemonic, wordList)) {
+    if (!isMnemonicValid(mnemonic, wordList)) {
       console.error("invalid mnemonic");
       alert("invalid mnemonic for word list");
       return;
     }
-    const hdKeys = await getHdKey(mnemonic, "");
+    const hdKeys = await getHdKeys(mnemonic, "");
     dispatch(setHdWalletKeys({ mnemonic, xprv: hdKeys.xprv, xpub: hdKeys.xpub }));
 
     // setup external keys
-    const { sk, pk, addr } = deriveKeys(params, hdKeys.xprv, 0, 0, 0);
-    dispatch(addExternalKeys({ sk, pk, addr, index: 0 }));
+    const { secretKey, publicKey, address } = deriveKeys(params, hdKeys.xprv, 0, 0, 0);
+    dispatch(addExternalKeys({ secretKey, publicKey, address, index: 0 }));
     await scanAddresses(hdKeys, 1, false);
 
     // setup internal keys

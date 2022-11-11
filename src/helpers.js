@@ -8,7 +8,7 @@ export async function copyToClipboard(text, prompt) {
 export const getMaxDecimalPlaces = numbers =>
   Math.max(...numbers.map(number => number.toString().split(".")[1]?.length || 0));
 
-export const numberWithCommas = x => x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+export const numberWithCommas = x => x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ","); // TODO: found the safari culprit
 
 export const getBlockStatus = (block, headBlock, params) => {
   const confirmations = headBlock.height - block.height + 1;

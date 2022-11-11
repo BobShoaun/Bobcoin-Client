@@ -26,7 +26,7 @@ const SummaryTab = () => {
   const { width } = useWindowDimensions();
   const isTablet = width > 769;
   const addresses = useMemo(
-    () => [...externalKeys, ...internalKeys].map(key => key.addr),
+    () => [...externalKeys, ...internalKeys].map(key => key.address),
     [externalKeys, internalKeys]
   );
 
