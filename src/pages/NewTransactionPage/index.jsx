@@ -101,17 +101,16 @@ const NewTransactionPage = () => {
     transaction.inputs.forEach(input => (input.signature = signature));
     transaction.hash = calculateTransactionHash(transaction);
 
-    const { data: validation } = await axios.post(`/transaction`, transaction);
-
-    if (validation.code !== VCODE.VALID) {
+    try {
+      await axios.post(`/transaction`, transaction);
+      resetFields();
+      setConfirmModal(true);
+    } catch (e) {
       console.error("tx invalid: ", transaction);
+      const validation = e.response.data;
       setError(validation);
       setErrorModal(true);
-      return;
     }
-
-    resetFields();
-    setConfirmModal(true);
   };
 
   return (

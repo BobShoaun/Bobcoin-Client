@@ -13,7 +13,7 @@ const TransactionFailureModal = ({ isOpen, close, error }) => {
           <img
             style={{ width: "80%", display: "block" }}
             className="mx-auto mb-5"
-            src="images/poor.jpg"
+            src="/images/poor.jpg"
             alt="transaction"
           />
           <h2 className="title is-5 has-text-centered is-spaced mb-4">Here are some possible reasons:</h2>
