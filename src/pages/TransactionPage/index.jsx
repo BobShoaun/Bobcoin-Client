@@ -8,6 +8,7 @@ import Loading from "../../components/Loading";
 
 import axios from "axios";
 import { format } from "date-fns";
+import { getTransactionSize } from "blockcrypto";
 
 const TransactionPage = () => {
   const { hash } = useParams();
@@ -39,7 +40,7 @@ const TransactionPage = () => {
   const totalInput = transaction.inputs.reduce((total, input) => total + input.amount, 0);
   const totalOutput = transaction.outputs.reduce((total, output) => total + output.amount, 0);
   const fee = totalInput - totalOutput;
-  const isCoinbase = !transaction.inputs.length && transaction.outputs.length === 1;
+  const isCoinbase = !transaction.inputs.length;
   const confirmations = transaction.block ? headBlock.height - transaction.block.height + 1 : 0;
 
   const status = getTransactionStatus(transaction, headBlock, params);
@@ -78,7 +79,7 @@ const TransactionPage = () => {
           </tr>
           <tr>
             <td>Confirmations</td>
-            <td>{transaction.block?.valid ? confirmations : "-"}</td>
+            <td>{transaction.block?.valid ? confirmations : 0}</td>
           </tr>
           <tr>
             <td>Block Height</td>
@@ -94,6 +95,10 @@ const TransactionPage = () => {
               )}
             </td>
           </tr>
+          <tr>
+            <td>Message</td>
+            <td style={{ wordBreak: "break-word" }}>{transaction.message ?? "-"}</td>
+          </tr>
 
           <tr>
             <td>Version</td>
@@ -103,15 +108,19 @@ const TransactionPage = () => {
             <td>Timestamp</td>
             <td>{format(transaction.timestamp, "eee, d MMM yyy HH:mm:ss OOO")}</td>
           </tr>
+          <tr>
+            <td>Size</td>
+            <td>{getTransactionSize(transaction)} bytes</td>
+          </tr>
 
           <tr>
-            <td>Total Input Amount</td>
+            <td>Total Input</td>
             <td>
               {numberWithCommas((totalInput / params.coin).toFixed(8))} {params.symbol}
             </td>
           </tr>
           <tr>
-            <td>Total Output Amount</td>
+            <td>Total Output</td>
             <td>
               {numberWithCommas((totalOutput / params.coin).toFixed(8))} {params.symbol}
             </td>

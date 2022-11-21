@@ -1,3 +1,4 @@
+/* global BigInt */
 import { useState, useEffect, useRef, useContext, createContext } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
@@ -19,6 +20,7 @@ import {
   calculateHashTarget,
   createTransaction,
   bigIntToHex64,
+  hexToBigInt,
 } from "blockcrypto";
 import { VCODE, nodeDonationAddress, nodeDonationPercent } from "../../config";
 
@@ -38,9 +40,7 @@ const MinePage = () => {
   const { params, paramsLoaded } = useSelector(state => state.consensus);
   const { externalKeys, keys } = useSelector(state => state.wallet);
 
-  const minerAddress = externalKeys[externalKeys.length - 1]?.addr ?? keys.address ?? "";
-  const minerPublicKey = externalKeys[externalKeys.length - 1]?.pk ?? keys.pk ?? "";
-  const minerSecretKey = externalKeys[externalKeys.length - 1]?.sk ?? keys.sk ?? "";
+  const minerAddress = externalKeys[externalKeys.length - 1]?.address ?? keys.address ?? "";
 
   const [mineInfo, setMineInfo] = useState(null);
   const [miner, setMiner] = useState(minerAddress);
@@ -109,25 +109,7 @@ const MinePage = () => {
     setIsMining(false);
   };
 
-  const loading = !paramsLoaded || !headBlockLoaded;
-
-  if (loading)
-    return (
-      <div style={{ height: "70vh" }}>
-        <Loading />
-      </div>
-    );
-
-  const startMining = async () => {
-    if (activeWorker.current) {
-      setTerminalLogs(log => [
-        ...log,
-        `\nAnother mining process is currently running, to terminate it type 'mine stop'.`,
-      ]);
-      return;
-    }
-    setIsMining(true);
-
+  const startSoloMining = async () => {
     setTerminalLogs(log => [...log, "\nForming and verifying candidate block..."]);
 
     selectedTxs.sort((a, b) => a.timestamp - b.timestamp);
@@ -158,7 +140,7 @@ const MinePage = () => {
 
     setTerminalLogs(log => [
       ...log,
-      `Mining started...\nprevious block: ${parentBlockHash}\ntarget hash: ${bigIntToHex64(target)}\n `,
+      `Mining started...\nprevious block: ${candidateBlock.previousHash}\ntarget hash: ${bigIntToHex64(target)}\n `,
     ]);
 
     const worker = new Miner();
@@ -214,6 +196,88 @@ const MinePage = () => {
       }
     });
   };
+
+  const calculateHashTarget2 = (params, block) => {
+    // divide by multiplying divisor by 1000 then dividing results by 1000
+    const initHashTarget = hexToBigInt("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+    console.log("init hash target", initHashTarget);
+
+    const hashTarget = (initHashTarget / BigInt(Math.trunc(block.difficulty * 1000))) * 1000n;
+
+    console.log("hash target", hashTarget);
+    if (hashTarget > initHashTarget) {
+      console.log("have to clmap");
+      // clamp hash target if too big
+      return initHashTarget;
+    }
+    return hashTarget;
+  };
+
+  const startPoolMining = async () => {
+    const { candidateBlock, shareDifficulty } = (await axios.get(`/pool/candidate-block/${miner}`)).data;
+    console.log(candidateBlock, shareDifficulty);
+
+    const target = calculateHashTarget(params, { difficulty: shareDifficulty });
+
+    setTerminalLogs(log => [
+      ...log,
+      `Mining started...\nprevious block: ${
+        candidateBlock.previousHash
+      }\nshare difficulty: ${shareDifficulty}\ntarget hash: ${bigIntToHex64(target)} `,
+    ]);
+
+    const worker = new Miner();
+    worker.postMessage({ block: candidateBlock, target });
+    activeWorker.current = worker;
+
+    worker.addEventListener("message", async ({ data }) => {
+      switch (data.message) {
+        case "nonce":
+          setTerminalLogs(log => [...log, `nonce reached: ${data.block.nonce}`]);
+          break;
+
+        case "success":
+          setTerminalLogs(log => [
+            ...log,
+            `\nMining successful! New block mined with...\nhash: ${data.block.hash}\nnonce: ${data.block.nonce}`,
+          ]);
+          activeWorker.current = null;
+
+          const { validation, numSharesGranted } = (
+            await axios.post(`/pool/block`, { nonce: data.block.nonce, hash: data.block.hash, miner })
+          ).data;
+
+          console.log(validation, numSharesGranted);
+
+          setIsMining(false);
+          break;
+        default:
+          console.error("invalid worker case");
+      }
+    });
+  };
+
+  const startMining = () => {
+    if (activeWorker.current) {
+      setTerminalLogs(log => [
+        ...log,
+        `\nAnother mining process is currently running, to terminate it type 'mine stop'.`,
+      ]);
+      return;
+    }
+    setIsMining(true);
+
+    tab === "solo" ? startSoloMining() : startPoolMining();
+  };
+
+  const loading = !paramsLoaded || !headBlockLoaded;
+
+  if (loading)
+    return (
+      <div style={{ height: "70vh" }}>
+        <Loading />
+      </div>
+    );
 
   return (
     <MinePageContext.Provider
@@ -282,7 +346,7 @@ const MinePage = () => {
                 <div className="control is-expanded">
                   <input
                     readOnly
-                    // onChange={({ target }) => setMiner(target.value)}
+                    onChange={({ target }) => setMiner(target.value)}
                     value={miner}
                     className="input"
                     type="text"
@@ -294,8 +358,8 @@ const MinePage = () => {
                   <button
                     title="Paste address from clipboard"
                     onClick={async () => {
-                      // setMiner(await navigator.clipboard.readText());
-                      // toast.success("Address pasted");
+                      setMiner(await navigator.clipboard.readText());
+                      toast.success("Address pasted");
                     }}
                     className="button"
                   >

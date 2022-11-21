@@ -7,7 +7,7 @@ import Transaction from "../../components/Transaction";
 import { copyToClipboard, numberWithCommas, getBlockStatus } from "../../helpers";
 import Loading from "../../components/Loading";
 
-import { bigIntToHex64, calculateHashTarget, calculateBlockReward } from "blockcrypto";
+import { bigIntToHex64, calculateHashTarget, calculateBlockReward, getBlockSize } from "blockcrypto";
 import { format } from "date-fns";
 
 import axios from "axios";
@@ -150,7 +150,7 @@ const BlockPage = () => {
             <td>{numberWithCommas(block.nonce)}</td>
           </tr>
           <tr>
-            <td>Previous block</td>
+            <td>Previous Block</td>
             <td style={{ wordBreak: "break-all" }}>
               {block.previousHash ? <Link to={`/block/${block.previousHash}`}>{block.previousHash}</Link> : "-"}
             </td>
@@ -164,19 +164,23 @@ const BlockPage = () => {
             <td style={{ wordBreak: "break-all" }}>{block.merkleRoot}</td>
           </tr>
           <tr>
-            <td>Total transacted amount</td>
+            <td>Size</td>
+            <td>{getBlockSize(block)} bytes</td>
+          </tr>
+          <tr>
+            <td>Transaction Volume</td>
             <td>
               {numberWithCommas((totalInput / params.coin).toFixed(8))} {params.symbol}
             </td>
           </tr>
           <tr>
-            <td>Block reward</td>
+            <td>Block Reward</td>
             <td>
               {numberWithCommas((calculateBlockReward(params, block.height) / params.coin).toFixed(8))} {params.symbol}
             </td>
           </tr>
           <tr>
-            <td>Total Fees</td>
+            <td>Fee Reward</td>
             <td>
               {numberWithCommas(((totalInput - totalOutput) / params.coin).toFixed(8))} {params.symbol}
             </td>
