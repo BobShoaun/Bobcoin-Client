@@ -1,10 +1,9 @@
-import React from "react";
 import { useSelector } from "react-redux";
 import { copyToClipboard } from "../helpers";
 import { discordInviteLink, personalWebsiteLink, donationAddress } from "../config";
 
 const Footer = () => {
-  const params = useSelector(state => state.consensus.params);
+  const { params } = useSelector(state => state.consensus);
 
   return (
     <footer className="footer has-background-dark has-text-grey-light">

@@ -1,6 +1,8 @@
-import React from "react";
+import { useSelector } from "react-redux";
 
-const MineSuccessModal = ({ isOpen, close, params, blockReward }) => {
+const MineSuccessModal = ({ isOpen, close, blockReward }) => {
+  const { params } = useSelector(state => state.consensus);
+
   return (
     <div className={`modal ${isOpen ? "is-active" : ""}`}>
       <div className="modal-background"></div>

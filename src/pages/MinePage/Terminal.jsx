@@ -5,14 +5,13 @@ import { MinePageContext } from ".";
 
 const Terminal = () => {
   const {
+    setMiningMode,
     terminalLogs,
     miner,
     parentBlockHash,
     isAutoRestart,
     isKeepMining,
     setTerminalLogs,
-    startMining,
-    stopMining,
     setMiner,
     setParentBlockHash,
     setIsAutoRestart,
@@ -32,9 +31,9 @@ const Terminal = () => {
         const operation = args[1];
         switch (operation) {
           case "start":
-            return startMining();
+            return setMiningMode("solo");
           case "stop":
-            return stopMining();
+            return setMiningMode(null);
           default:
             throw Error("invalid arguments");
         }
