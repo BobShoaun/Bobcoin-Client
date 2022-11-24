@@ -10,7 +10,9 @@ In the webapp, you can:
 - Generate Bobcoin keypairs
 - Create and manage BIP compliant wallets for storing Bobcoins
 - Make transactions thru your wallet or directly from a secret key.
-- Mine blocks and earn Bobcoins as a block reward.
+- Mine blocks and earn Bobcoins as reward. Blocks can be mined in two ways:
+  - Solo mining
+  - Pool mining
 - Obtain small amounts of Bobcoins from the faucet
 - Explore the entire Bobcoin Blockchain; All blocks, transactions, and addresses.
   - Even data from orphaned blocks are kept
