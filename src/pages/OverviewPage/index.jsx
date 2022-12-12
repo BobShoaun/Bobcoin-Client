@@ -67,12 +67,7 @@ const OverviewPage = () => {
     [txPage]
   );
 
-  if (!paramsLoaded || !mempoolLoaded)
-    return (
-      <div style={{ height: "70vh" }}>
-        <Loading />
-      </div>
-    );
+  if (!paramsLoaded || !mempoolLoaded) return <Loading />;
 
   return (
     <section className="section">

@@ -28,16 +28,11 @@ const PoolMiner = () => {
     tab,
     miningMode,
     setMiningMode,
-    selectedTransactions,
+    isKeepMiningPool,
+    setIsKeepMiningPool,
     miner,
-    parentBlockHash,
-    isAutoRestart,
-    isKeepMining,
     setTerminalLogs,
     setMiner,
-    setParentBlockHash,
-    setIsAutoRestart,
-    setIsKeepMining,
     setError,
     setErrorModal,
   } = useContext(MinePageContext);
@@ -126,31 +121,29 @@ const PoolMiner = () => {
       switch (data.message) {
         case "nonce":
           setTerminalLogs(log => [...log, `nonce reached: ${data.block.nonce}`]);
-          break;
+          return;
 
         case "success":
-          //   worker.terminate();
-          //   miningController.current = null;
-
           setTerminalLogs(log => [...log, `\nSuccess! Share proof of work fulfilled with nonce: ${data.block.nonce}`]);
 
-          const { validation, numSharesGranted } = (
-            await axios.post(`/pool/block`, { nonce: data.block.nonce, hash: data.block.hash, miner })
-          ).data;
-
-          if (validation.code !== VCODE.VALID) {
-            console.error("Block is invalid", data.block);
+          let response = null;
+          try {
+            response = await axios.post(`/pool/block`, { nonce: data.block.nonce, hash: data.block.hash, miner });
+          } catch (error) {
+            console.error("Block is invalid", error);
             miningController.current = null;
             setMiningMode(null);
-            // setError(validation);
-            // setErrorModal(true);
-            break;
+            return;
           }
+          const { numSharesGranted, totalShares } = response.data;
+          console.log(response.data);
 
-          setTerminalLogs(log => [...log, `\nShares granted: ${numSharesGranted}`]);
-          //   setMiningMode(null);
+          setTerminalLogs(log => [...log, `\nShares granted: ${numSharesGranted}\nTotal shares: ${totalShares}`]);
+          if (isKeepMiningPool) return;
 
-          break;
+          setMiningMode(null);
+
+          return;
         default:
           console.error("invalid worker case");
       }
@@ -160,24 +153,6 @@ const PoolMiner = () => {
 
   return (
     <section>
-      <div className="mb-4">
-        <h2 className="label mb-0">Pool Name</h2>
-        <p className="is-size-7 mb-1">The name of the mining pool.</p>
-        <p className="has-background-white px-3 py-1 has-text-black">{poolInfo?.poolName ?? "-"}</p>
-      </div>
-      <div className="mb-4">
-        <h2 className="label mb-0">Pool Address</h2>
-        <p className="is-size-7 mb-1">Address where all block rewards and fees go to, and is distributed from.</p>
-        <p className="has-background-white px-3 py-1 has-text-black">{poolInfo?.poolAddress ?? "-"}</p>
-      </div>
-      <div className="mb-4">
-        <h2 className="label mb-0">Pool Target Share Time</h2>
-        <p className="is-size-7 mb-1">Desired time between each block submission that qualifies for shares.</p>
-        <p className="has-background-white px-3 py-1 has-text-black">
-          {poolInfo ? `${poolInfo.poolTargetShareTime} seconds` : "-"}
-        </p>
-      </div>
-
       <div className="field mb-4">
         <label className="label mb-0">Miner's address</label>
         <p className="is-size-7 mb-1">The address of the miner, where to send the pool's rewards.</p>
@@ -209,15 +184,46 @@ const PoolMiner = () => {
         </div>
       </div>
 
-      <div className="has-text-right">
-        <button
-          onClick={() => (miningMode === "pool" ? setMiningMode(null) : setMiningMode("pool"))}
-          className="button mb-0"
-        >
+      <div className="mb-5">
+        <label className="checkbox is-flex" style={{ gap: ".5em" }}>
+          <input type="checkbox" checked={isKeepMiningPool} onChange={e => setIsKeepMiningPool(e.target.checked)} />
+          <div>
+            <h3 className="label mb-0">Keep Mining</h3>
+            <p className="is-size-7">Keep mining non-stop after receiving shares.</p>
+          </div>
+        </label>
+      </div>
+
+      <div className="has-text-right mb-5">
+        <button onClick={() => setMiningMode(miningMode === "pool" ? null : "pool")} className="button mb-0">
           <i className="material-icons mr-2">memory</i>
           {miningMode === "pool" ? "Stop mining" : "Start mining"}
         </button>
       </div>
+
+      <details className="message is-info">
+        <summary className="message-header is-clickable" style={{ display: "list-item", borderRadius: "4px" }}>
+          Pool Info
+        </summary>
+        <div className="message-body has-background-light">
+          <div className="mb-3">
+            <h2 className="label mb-0">Pool Address</h2>
+            <p className="is-size-7 mb-1 has-text-grey">
+              Address where all block rewards and fees go to, and is distributed from.
+            </p>
+            <p className="has-background-white px-3 py-1 has-text-black">{poolInfo?.poolAddress ?? "-"}</p>
+          </div>
+          <div className="">
+            <h2 className="label mb-0">Pool Target Share Time</h2>
+            <p className="is-size-7 mb-1 has-text-grey">
+              Desired time between each block submission that qualifies for shares.
+            </p>
+            <p className="has-background-white px-3 py-1 has-text-black">
+              {poolInfo ? `${poolInfo.poolTargetShareTime} seconds` : "-"}
+            </p>
+          </div>
+        </div>
+      </details>
 
       <MineSuccessModal
         isOpen={successModal}

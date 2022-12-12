@@ -71,12 +71,7 @@ const WalletImportPage = () => {
     history.push("/wallet");
   };
 
-  if (!paramsLoaded)
-    return (
-      <div style={{ height: "70vh" }}>
-        <Loading />
-      </div>
-    );
+  if (!params) return <Loading />;
 
   return (
     <main className="section">

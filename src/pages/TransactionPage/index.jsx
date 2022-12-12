@@ -30,12 +30,7 @@ const TransactionPage = () => {
 
   useEffect(getTransaction, [getTransaction]);
 
-  if (!transaction || !paramsLoaded || !headBlockLoaded)
-    return (
-      <div style={{ height: "70vh" }}>
-        <Loading />
-      </div>
-    );
+  if (!transaction || !paramsLoaded || !headBlockLoaded) return <Loading />;
 
   const totalInput = transaction.inputs.reduce((total, input) => total + input.amount, 0);
   const totalOutput = transaction.outputs.reduce((total, output) => total + output.amount, 0);

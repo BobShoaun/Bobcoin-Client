@@ -58,38 +58,41 @@ const App = () => {
   return (
     <SocketContext.Provider value={{ socket, setSocket }}>
       <Router>
-        <main className="is-flex is-flex-direction-column" style={{ minHeight: "100vh" }}>
+        <main className="is-flex is-flex-direction-column" style={{ height: "100%" }}>
           <Navbar />
-          <Suspense fallback={<Loading />}>
-            <div className="container" style={{ width: "100%", height: "100%" }}>
-              <Switch>
-                <Route path="/generate-keys" component={GenerateKeysPage} />
-                <Route path="/receive" component={ReceivePage} />
-                <Route path="/mine" component={MinePage} />
-                <Route path="/blockchain" component={BlockchainPage} />
-                <Route path="/block/height/:height" component={BlockPage}></Route>
-                <Route path="/block/:hash" component={BlockPage}></Route>
-                <Route path="/transaction/create" component={NewTransactionPage}></Route>
-                <Route path="/transaction/:hash" component={TransactionPage}></Route>
-                <Route path="/address/:address" component={AddressPage}></Route>
-                <Route path="/settings" component={SettingsPage} />
-                <Route path="/parameters" component={ParametersPage} />
-                <Route path="/overview" component={OverviewPage} />
-                <Route path="/faucet" component={FaucetPage} />
-                <Route path="/node" component={NodePage} />
-                <Route path="/developer" component={DeveloperPage} />
-                <Route path="/wallet/onboarding" component={WalletOnboardingPage} />
-                <Route path="/wallet/import" component={WalletImportPage} />
-                <Route path="/wallet/create" component={WalletCreatePage} />
-                <Route path="/wallet" component={WalletPage} />
-                <Route path="/" component={LandingPage} />
-              </Switch>
+          <div className="is-flex is-flex-direction-column" style={{ overflow: "auto", flex: 1 }}>
+            <div className="container" style={{ width: "100%" }}>
+              <Suspense fallback={<Loading />}>
+                <Switch>
+                  <Route path="/generate-keys" component={GenerateKeysPage} />
+                  <Route path="/receive" component={ReceivePage} />
+                  <Route path="/mine" component={MinePage} />
+                  <Route path="/blockchain" component={BlockchainPage} />
+                  <Route path="/block/height/:height" component={BlockPage}></Route>
+                  <Route path="/block/:hash" component={BlockPage}></Route>
+                  <Route path="/transaction/create" component={NewTransactionPage}></Route>
+                  <Route path="/transaction/:hash" component={TransactionPage}></Route>
+                  <Route path="/address/:address" component={AddressPage}></Route>
+                  <Route path="/settings" component={SettingsPage} />
+                  <Route path="/parameters" component={ParametersPage} />
+                  <Route path="/overview" component={OverviewPage} />
+                  <Route path="/faucet" component={FaucetPage} />
+                  <Route path="/node" component={NodePage} />
+                  <Route path="/developer" component={DeveloperPage} />
+                  <Route path="/wallet/onboarding" component={WalletOnboardingPage} />
+                  <Route path="/wallet/import" component={WalletImportPage} />
+                  <Route path="/wallet/create" component={WalletCreatePage} />
+                  <Route path="/wallet" component={WalletPage} />
+                  <Route path="/" component={LandingPage} />
+                </Switch>
+              </Suspense>
             </div>
-            <div className="is-hidden is-block-desktop">
-              <NewTransactionAction />
-            </div>
-          </Suspense>
-          <Footer />
+            <Footer />
+          </div>
+
+          <div className="is-hidden-touch">
+            <NewTransactionAction />
+          </div>
           <Toaster />
         </main>
       </Router>

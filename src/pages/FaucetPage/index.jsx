@@ -45,12 +45,7 @@ const FaucetPage = () => {
     recaptchaRef.current.reset();
   };
 
-  if (!paramsLoaded || !faucetInfo)
-    return (
-      <div style={{ height: "70vh" }}>
-        <Loading />
-      </div>
-    );
+  if (!params || !faucetInfo) return <Loading />;
 
   return (
     <main className="section">

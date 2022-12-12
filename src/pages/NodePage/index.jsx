@@ -2,14 +2,9 @@ import Loading from "../../components/Loading";
 import { useSelector } from "react-redux";
 
 const NodePage = () => {
-  const { params, paramsLoaded } = useSelector(state => state.consensus);
+  const { params } = useSelector(state => state.consensus);
 
-  if (!paramsLoaded)
-    return (
-      <div style={{ height: "70vh" }}>
-        <Loading />
-      </div>
-    );
+  if (!params) return <Loading />;
 
   return (
     <main className="section">

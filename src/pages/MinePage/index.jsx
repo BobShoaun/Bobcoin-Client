@@ -32,8 +32,11 @@ const MinePage = () => {
   const [poolInfo, setPoolInfo] = useState(null);
   const [miner, setMiner] = useState(minerAddress);
   const [parentBlockHash, setParentBlockHash] = useState("");
-  const [isAutoRestart, setIsAutoRestart] = useState(true);
-  const [isKeepMining, setIsKeepMining] = useState(true);
+  const [isAutoRestart, setIsAutoRestart] = useState(JSON.parse(localStorage.getItem("auto-remine")) ?? true);
+  const [isKeepMining, setIsKeepMining] = useState(JSON.parse(localStorage.getItem("keep-mining-solo")) ?? false);
+  const [isKeepMiningPool, setIsKeepMiningPool] = useState(
+    JSON.parse(localStorage.getItem("keep-mining-pool")) ?? true
+  );
   const [tab, setTab] = useState("solo");
 
   const [terminalLogs, setTerminalLogs] = useState([]);
@@ -54,7 +57,7 @@ const MinePage = () => {
 
   useEffect(() => {
     if (!mempool.length) return;
-    setSelectedTransactions([mempool[0]]);
+    // setSelectedTransactions([mempool[0]]);
   }, [mempool]);
 
   useEffect(() => {
@@ -62,14 +65,13 @@ const MinePage = () => {
     else history.push("#solo");
   }, [history]);
 
+  useEffect(() => localStorage.setItem("auto-remine", isAutoRestart), [isAutoRestart]);
+  useEffect(() => localStorage.setItem("keep-mining-solo", isKeepMining), [isKeepMining]);
+  useEffect(() => localStorage.setItem("keep-mining-pool", isKeepMiningPool), [isKeepMiningPool]);
+
   const loading = !paramsLoaded || !headBlockLoaded;
 
-  if (loading)
-    return (
-      <div style={{ height: "70vh" }}>
-        <Loading />
-      </div>
-    );
+  if (loading) return <Loading />;
 
   return (
     <MinePageContext.Provider
@@ -93,6 +95,8 @@ const MinePage = () => {
         setError,
         setErrorModal,
         setSelectedTransactions,
+        isKeepMiningPool,
+        setIsKeepMiningPool,
       }}
     >
       <main className="section">

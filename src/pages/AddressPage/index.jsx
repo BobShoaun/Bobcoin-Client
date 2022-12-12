@@ -63,12 +63,7 @@ const AddressPage = ({ match }) => {
     history.push(`./${searchInput.current.value}`);
   };
 
-  if (!addressInfo || !paramsLoaded)
-    return (
-      <div style={{ height: "70vh" }}>
-        <Loading />
-      </div>
-    );
+  if (!addressInfo || !paramsLoaded) return <Loading />;
 
   const { balance, totalReceived, totalSent, numUtxos, numTransactions, numBlocksMined } = addressInfo;
   const isValid = isAddressValid(params, address);

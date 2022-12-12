@@ -25,12 +25,7 @@ const ParametersPage = () => {
   const { nodeName, nodeUrl } = useSelector(state => state.network);
   const { params, paramsLoaded } = useSelector(state => state.consensus);
 
-  if (!paramsLoaded)
-    return (
-      <div style={{ height: "70vh" }}>
-        <Loading />
-      </div>
-    );
+  if (!paramsLoaded) return <Loading />;
 
   return (
     <main className="section">

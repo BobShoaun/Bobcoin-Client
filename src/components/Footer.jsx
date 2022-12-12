@@ -26,11 +26,10 @@ const Footer = () => {
           </span>
         </p>
         <p className="is-size-7 is-size-6-tablet">
-          <strong className="has-text-white">{params.name}</strong> by{" "}
+          <strong className="has-text-white">{params?.name}</strong> by{" "}
           <a className="has-text-primary" target="_blank" href={personalWebsiteLink}>
             Ng Bob Shoaun
           </a>
-          .
         </p>
       </div>
     </footer>

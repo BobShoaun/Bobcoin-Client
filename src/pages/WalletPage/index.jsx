@@ -39,12 +39,7 @@ const WalletPage = () => {
   }, [history]);
 
   const loading = !walletInfo || !paramsLoaded;
-  if (loading)
-    return (
-      <div style={{ height: "70vh" }}>
-        <Loading />
-      </div>
-    );
+  if (loading) return <Loading />;
 
   return (
     <WalletContext.Provider value={{ walletInfo, params, externalKeys, internalKeys, xprv }}>

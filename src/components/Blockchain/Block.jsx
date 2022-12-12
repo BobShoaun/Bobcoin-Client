@@ -33,6 +33,13 @@ const Block = ({ block, selected, blockchainRef, onChange, rerender }) => {
     onChange?.();
   };
 
+  const countLeadingZeros = hash => {
+    const match = hash.match(/^0+/);
+    return match?.[0].length ?? 0;
+  };
+
+  const numLeadingZeros = countLeadingZeros(block.hash);
+
   return (
     <div className={`card is-flex is-flex-direction-column h-100 block ${selected ? "block-selected" : ""}`}>
       <div className="card-header" style={{ borderRadius: 0 }}>
@@ -41,7 +48,8 @@ const Block = ({ block, selected, blockchainRef, onChange, rerender }) => {
 
           <h1 className="subtitle mb-0 is-6 truncated is-family-monospace px-5">
             <Link className="has-text-info" to={`/block/${block.hash}`}>
-              {block.hash}
+              0<sub>{numLeadingZeros}</sub>
+              {block.hash.slice(numLeadingZeros)}
             </Link>
           </h1>
           {/* {block.height === 0 && <span className="subtitle is-6 mb-0"> (Genesis)</span>} */}

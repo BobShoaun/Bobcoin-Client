@@ -36,12 +36,7 @@ const BlockPage = () => {
   };
   useEffect(getBlocksByHeight, [height]);
 
-  if (!block || !paramsLoaded || !headBlockLoaded)
-    return (
-      <div style={{ height: "70vh" }}>
-        <Loading />
-      </div>
-    );
+  if (!block || !paramsLoaded || !headBlockLoaded) return <Loading />;
 
   const totalInput = block.transactions
     .slice(1)

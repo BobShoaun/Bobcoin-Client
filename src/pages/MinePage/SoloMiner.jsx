@@ -238,8 +238,7 @@ const SoloMiner = () => {
 
         {parentBlockHash !== headBlock?.hash && (
           <p className="help is-danger is-flex">
-            <span className="material-icons-outlined md-18 mr-2">warning</span>You are no longer mining from the latest
-            block.
+            <span className="material-icons-outlined md-18 mr-2">warning</span>You are not mining from the latest block.
           </p>
         )}
       </div>
@@ -254,7 +253,7 @@ const SoloMiner = () => {
         </label>
       </div>
 
-      <div className="mb-6">
+      <div className="mb-5">
         <label className="checkbox is-flex" style={{ gap: ".5em" }}>
           <input type="checkbox" checked={isKeepMining} onChange={e => setIsKeepMining(e.target.checked)} />
           <div>

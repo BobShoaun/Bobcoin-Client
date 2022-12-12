@@ -44,12 +44,7 @@ const BlockchainPage = () => {
     [page]
   );
 
-  if (!blocks.length || !headBlockLoaded || !paramsLoaded)
-    return (
-      <div style={{ height: "70vh" }}>
-        <Loading />
-      </div>
-    );
+  if (!blocks.length || !headBlockLoaded || !paramsLoaded) return <Loading />;
 
   const numPages = Math.ceil((headBlock.height + 1) / heightsPerPage);
 

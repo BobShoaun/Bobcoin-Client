@@ -15,7 +15,7 @@ const Navbar = () => {
         className="navbar is-dark"
         role="navigation"
         aria-label="main navigation"
-        style={{ position: "fixed", left: 0, right: 0, top: 0 }}
+        // style={{ position: "fixed", left: 0, right: 0, top: 0 }}
       >
         <section
           className="has-background-dark has-text-centered is-flex is-justify-content-space-evenly is-hidden-desktop"
