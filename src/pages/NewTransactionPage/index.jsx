@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import {
   getKeys,
@@ -23,7 +23,7 @@ const NewTransactionPage = () => {
   const { keys } = useSelector(state => state.wallet);
   const { params } = useSelector(state => state.consensus);
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [showSecretKey, setShowSecretKey] = useState(false);
   const [amount, setAmount] = useState("");
@@ -304,7 +304,7 @@ const NewTransactionPage = () => {
         </div>
 
         <div className="buttons is-pulled-right">
-          <button onClick={history.goBack} className="button">
+          <button onClick={() => navigate(-1)} className="button">
             Cancel
           </button>
           <button type="submit" className="button is-link has-text-weight-semibold">

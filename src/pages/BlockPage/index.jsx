@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { useParams, Link, useHistory } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 
 import Transaction from "../../components/Transaction";
 
@@ -14,7 +14,7 @@ import axios from "axios";
 
 const BlockPage = () => {
   const { hash, height } = useParams();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { params, paramsLoaded } = useSelector(state => state.consensus);
   const { headBlock, headBlockLoaded } = useSelector(state => state.blockchain);
 
@@ -55,14 +55,14 @@ const BlockPage = () => {
           <button
             title="Previous block"
             className="button is-link"
-            onClick={() => history.push(`/block/${block.previousHash}`)}
+            onClick={() => navigate(`/block/${block.previousHash}`)}
             disabled={!block.previousHash}
           >
             <span className="material-icons-two-tone">arrow_back</span>
           </button>
           <button
             title="Next block"
-            onClick={() => history.push(`/block/height/${block.height + 1}`)}
+            onClick={() => navigate(`/block/height/${block.height + 1}`)}
             className="button is-link ml-3"
             disabled={block.height >= headBlock.height}
           >

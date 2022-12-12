@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router";
 
 import Loading from "../../components/Loading";
 import { deriveKeys, isMnemonicValid, getHdKeys } from "blockcrypto";
@@ -10,8 +10,8 @@ import axios from "axios";
 
 const WalletImportPage = () => {
   const dispatch = useDispatch();
-  const history = useHistory();
-  const { params, paramsLoaded } = useSelector(state => state.consensus);
+  const navigate = useNavigate();
+  const { params } = useSelector(state => state.consensus);
   const wordListSelect = useRef(null);
   const [mnemonic, setMnemonic] = useState("");
 
@@ -68,7 +68,7 @@ const WalletImportPage = () => {
     // setup internal keys
     await scanAddresses(hdKeys, 0, true);
 
-    history.push("/wallet");
+    navigate("/wallet");
   };
 
   if (!params) return <Loading />;
@@ -113,7 +113,7 @@ const WalletImportPage = () => {
         </div>
 
         <div className="field is-grouped">
-          <div onClick={() => history.goBack()} className="control ml-auto">
+          <div onClick={() => navigate(-1)} className="control ml-auto">
             <button className="button">Cancel</button>
           </div>
           <div className="control">

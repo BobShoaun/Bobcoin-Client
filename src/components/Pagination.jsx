@@ -1,22 +1,23 @@
 import { useEffect, useRef } from "react";
-import { useHistory } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 
 const Pagination = ({ currentPage, onPageChange, numPages }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation();
   const page = currentPage;
 
   const pageInputRef = useRef(null);
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(history.location.search);
+    const searchParams = new URLSearchParams(location.search);
     const page = (parseInt(searchParams.get("page")) || 1) - 1;
     onPageChange(page);
-  }, [history]);
+  }, [navigate]);
 
   const updatePage = page => {
     onPageChange(page);
     const searchParams = new URLSearchParams({ page: page + 1 });
-    history.push({ search: `?${searchParams}`, hash: history.location.hash });
+    navigate({ search: `?${searchParams}`, hash: location.hash });
     pageInputRef.current.value = page + 1;
   };
 

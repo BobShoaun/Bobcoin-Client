@@ -1,6 +1,6 @@
 import { useState, useEffect, createContext } from "react";
 import { useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import Loading from "../../components/Loading";
 
@@ -14,7 +14,8 @@ import axios from "axios";
 export const WalletContext = createContext();
 
 const WalletPage = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation();
   const { mnemonic, externalKeys, internalKeys, xprv } = useSelector(state => state.wallet);
   const { params, paramsLoaded } = useSelector(state => state.consensus);
 
@@ -30,13 +31,13 @@ const WalletPage = () => {
 
   useEffect(getWalletInfo, [externalKeys, internalKeys]);
   useEffect(() => {
-    if (!mnemonic) history.push("/wallet/onboarding");
+    if (!mnemonic) navigate("/wallet/onboarding");
   }, [mnemonic]);
 
   useEffect(() => {
-    if (history.location.hash) setTab(history.location.hash.slice(1));
-    else history.push("#summary");
-  }, [history]);
+    if (location.hash) setTab(location.hash.slice(1));
+    else navigate("#summary");
+  }, [navigate, location]);
 
   const loading = !walletInfo || !paramsLoaded;
   if (loading) return <Loading />;

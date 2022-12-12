@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router";
 
 import Loading from "../../components/Loading";
 import "./index.css";
@@ -11,8 +11,8 @@ import { setHdKeys as setHdWalletKeys, addExternalKeys } from "../../store/walle
 
 const WalletCreatePage = () => {
   const dispatch = useDispatch();
-  const history = useHistory();
-  const { params, paramsLoaded } = useSelector(state => state.consensus);
+  const navigate = useNavigate();
+  const { params } = useSelector(state => state.consensus);
 
   const [showBackup, setShowBackup] = useState(false);
   const [hdKeys, setHdKeys] = useState({});
@@ -72,7 +72,7 @@ const WalletCreatePage = () => {
 
           <div className="field is-grouped mb-6">
             <div className="control ml-auto">
-              <button onClick={() => history.goBack()} className="button">
+              <button onClick={() => navigate(-1)} className="button">
                 Cancel
               </button>
             </div>
@@ -165,13 +165,13 @@ const WalletCreatePage = () => {
             </p>
 
             <div className="has-text-centered">
-              <button onClick={() => history.push("/wallet")} className="button is-dark has-text-weight-semibold">
+              <button onClick={() => navigate("/wallet")} className="button is-dark has-text-weight-semibold">
                 Okay
               </button>
             </div>
           </section>
         </div>
-        <button onClick={() => history.push("/wallet")} className="modal-close is-large" aria-label="close"></button>
+        <button onClick={() => navigate("/wallet")} className="modal-close is-large" aria-label="close"></button>
       </div>
     </main>
   );

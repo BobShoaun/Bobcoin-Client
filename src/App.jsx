@@ -1,6 +1,6 @@
 import { useState, useEffect, Suspense, lazy } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -63,28 +63,28 @@ const App = () => {
           <div className="is-flex is-flex-direction-column" style={{ overflow: "auto", flex: 1 }}>
             <div className="container" style={{ width: "100%" }}>
               <Suspense fallback={<Loading />}>
-                <Switch>
-                  <Route path="/generate-keys" component={GenerateKeysPage} />
-                  <Route path="/receive" component={ReceivePage} />
-                  <Route path="/mine" component={MinePage} />
-                  <Route path="/blockchain" component={BlockchainPage} />
-                  <Route path="/block/height/:height" component={BlockPage}></Route>
-                  <Route path="/block/:hash" component={BlockPage}></Route>
-                  <Route path="/transaction/create" component={NewTransactionPage}></Route>
-                  <Route path="/transaction/:hash" component={TransactionPage}></Route>
-                  <Route path="/address/:address" component={AddressPage}></Route>
-                  <Route path="/settings" component={SettingsPage} />
-                  <Route path="/parameters" component={ParametersPage} />
-                  <Route path="/overview" component={OverviewPage} />
-                  <Route path="/faucet" component={FaucetPage} />
-                  <Route path="/node" component={NodePage} />
-                  <Route path="/developer" component={DeveloperPage} />
-                  <Route path="/wallet/onboarding" component={WalletOnboardingPage} />
-                  <Route path="/wallet/import" component={WalletImportPage} />
-                  <Route path="/wallet/create" component={WalletCreatePage} />
-                  <Route path="/wallet" component={WalletPage} />
-                  <Route path="/" component={LandingPage} />
-                </Switch>
+                <Routes>
+                  <Route path="/generate-keys" element={<GenerateKeysPage />} />
+                  <Route path="/receive" element={<ReceivePage />} />
+                  <Route path="/mine" element={<MinePage />} />
+                  <Route path="/blockchain" element={<BlockchainPage />} />
+                  <Route path="/block/height/:height" element={<BlockPage />} />
+                  <Route path="/block/:hash" element={<BlockPage />} />
+                  <Route path="/transaction/create" element={<NewTransactionPage />} />
+                  <Route path="/transaction/:hash" element={<TransactionPage />} />
+                  <Route path="/address/:address" element={<AddressPage />} />
+                  <Route path="/settings" element={<SettingsPage />} />
+                  <Route path="/parameters" element={<ParametersPage />} />
+                  <Route path="/overview" element={<OverviewPage />} />
+                  <Route path="/faucet" element={<FaucetPage />} />
+                  <Route path="/node" element={<NodePage />} />
+                  <Route path="/developer" element={<DeveloperPage />} />
+                  <Route path="/wallet/onboarding" element={<WalletOnboardingPage />} />
+                  <Route path="/wallet/import" element={<WalletImportPage />} />
+                  <Route path="/wallet/create" element={<WalletCreatePage />} />
+                  <Route path="/wallet" element={<WalletPage />} />
+                  <Route path="/" element={<LandingPage />} />
+                </Routes>
               </Suspense>
             </div>
             <Footer />

@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, useContext, createContext, useMemo } from "react";
 import { useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { calculateBlockReward, calculateHashTarget, bigIntToHex64, hexToBigInt } from "blockcrypto";

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useContext, createContext } from "react";
 import { useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { calculateBlockReward, calculateHashTarget, bigIntToHex64, hexToBigInt } from "blockcrypto";
@@ -21,7 +21,8 @@ import "./mine.css";
 export const MinePageContext = createContext();
 
 const MinePage = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation();
   const { headBlock, headBlockLoaded, mempool } = useSelector(state => state.blockchain);
   const { params, paramsLoaded } = useSelector(state => state.consensus);
   const { externalKeys, keys } = useSelector(state => state.wallet);
@@ -57,13 +58,13 @@ const MinePage = () => {
 
   useEffect(() => {
     if (!mempool.length) return;
-    // setSelectedTransactions([mempool[0]]);
+    // setSelectedTransactions([mempool[0]]); // TODO uncomment
   }, [mempool]);
 
   useEffect(() => {
-    if (history.location.hash) setTab(history.location.hash.slice(1));
-    else history.push("#solo");
-  }, [history]);
+    if (location.hash) setTab(location.hash.slice(1));
+    else navigate("#solo");
+  }, [location, navigate]);
 
   useEffect(() => localStorage.setItem("auto-remine", isAutoRestart), [isAutoRestart]);
   useEffect(() => localStorage.setItem("keep-mining-solo", isKeepMining), [isKeepMining]);

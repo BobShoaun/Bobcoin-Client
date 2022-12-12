@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 import QRCode from "qrcode";
 import { copyToClipboard, numberWithCommas } from "../../helpers";
@@ -16,7 +16,7 @@ import useDidUpdateEffect from "../../hooks/useUpdateEffect";
 
 const AddressPage = ({ match }) => {
   const { address } = useParams();
-  const history = useHistory();
+  const navigate = useNavigate();
   const searchInput = useRef();
   const [addressQR, setAddressQR] = useState("");
 
@@ -41,7 +41,7 @@ const AddressPage = ({ match }) => {
     setTransactions(data);
   };
 
-  useEffect(() => setPage(0), [match.params.address]);
+  // useEffect(() => setPage(0), [match?.params.address]);
   useEffect(getAddressInfo, [address]);
   useEffect(getAddressTransactions, [address, page]);
 
@@ -60,7 +60,7 @@ const AddressPage = ({ match }) => {
 
   const handleSearch = event => {
     event.preventDefault();
-    history.push(`./${searchInput.current.value}`);
+    navigate(`./${searchInput.current.value}`);
   };
 
   if (!addressInfo || !paramsLoaded) return <Loading />;
