@@ -23,8 +23,8 @@ export const MinePageContext = createContext();
 const MinePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { headBlock, headBlockLoaded, mempool } = useSelector(state => state.blockchain);
-  const { params, paramsLoaded } = useSelector(state => state.consensus);
+  const { headBlock, mempool } = useSelector(state => state.blockchain);
+  const { params } = useSelector(state => state.consensus);
   const { externalKeys, keys } = useSelector(state => state.wallet);
 
   const minerAddress = externalKeys[externalKeys.length - 1]?.address ?? keys.address ?? "";
@@ -57,20 +57,20 @@ const MinePage = () => {
   }, []);
 
   useEffect(() => {
-    if (!mempool.length) return;
+    if (!mempool?.length) return;
     // setSelectedTransactions([mempool[0]]); // TODO uncomment
   }, [mempool]);
 
   useEffect(() => {
-    if (location.hash) setTab(location.hash.slice(1));
-    else navigate("#solo");
+    if (!location.hash) return navigate("#solo");
+    setTab(location.hash.slice(1));
   }, [location, navigate]);
 
   useEffect(() => localStorage.setItem("auto-remine", isAutoRestart), [isAutoRestart]);
   useEffect(() => localStorage.setItem("keep-mining-solo", isKeepMining), [isKeepMining]);
   useEffect(() => localStorage.setItem("keep-mining-pool", isKeepMiningPool), [isKeepMiningPool]);
 
-  const loading = !paramsLoaded || !headBlockLoaded;
+  const loading = !params || !headBlock;
 
   if (loading) return <Loading />;
 

@@ -124,7 +124,7 @@ const SummaryTab = () => {
       <h1 ref={transactionsSection} style={{ scrollMargin: "5rem" }} className="title is-size-5 is-size-4-tablet mb-3">
         Confirmed transactions
       </h1>
-      <div className="mb-6">
+      <div className="mb-5">
         {transactions.length ? (
           transactions.map(transaction => (
             <div key={transaction.hash} className="card mb-3">

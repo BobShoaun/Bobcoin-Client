@@ -22,6 +22,10 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
+.section {
+  padding-bottom: 8em;
+}
+
 /* Rules for sizing the icon. */
 .md-12 {
   font-size: 12px;

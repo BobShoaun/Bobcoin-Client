@@ -1,10 +1,13 @@
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
+import Loading from "../../components/Loading";
 import "./index.css";
 
 const LandingPage = () => {
-  const { params, paramsLoaded } = useSelector(state => state.consensus);
+  const { params } = useSelector(state => state.consensus);
+
+  if (!params) return <Loading />;
 
   return (
     <main className="section">
@@ -133,7 +136,7 @@ const LandingPage = () => {
         </p>
         <hr className="has-background-grey-light" />
       </div>
-      <ol className="pl-3 px-6-tablet has-text-grey-dark" style={{ marginBottom: "5em", fontSize: "1.15rem" }}>
+      <ol className="pl-3 px-6-tablet has-text-grey-dark" style={{ fontSize: "1.15rem" }}>
         <li className="mb-5">
           <div className="is-flex">
             <p>Create or import a Bobcoin wallet.</p>

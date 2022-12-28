@@ -38,7 +38,7 @@ const Pagination = ({ currentPage, onPageChange, numPages }) => {
 
   return (
     <nav className="is-flex-tablet" role="navigation" aria-label="pagination">
-      <ul className="pagination-list mb-4" style={{ order: "unset" }}>
+      <ul className="pagination-list" style={{ order: "unset" }}>
         {/* first pages */}
 
         {firstPages.map(_page => (

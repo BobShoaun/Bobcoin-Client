@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   params: null,
-  paramsLoaded: false,
 };
 
 const consensusSlice = createSlice({
@@ -11,7 +10,6 @@ const consensusSlice = createSlice({
   reducers: {
     setParams(state, { payload: params }) {
       state.params = params;
-      state.paramsLoaded = true;
     },
     reset: () => initialState,
   },

@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   headBlock: null,
   headBlockLoaded: false,
-  mempool: [],
+  mempool: null,
   mempoolLoaded: false,
 };
 

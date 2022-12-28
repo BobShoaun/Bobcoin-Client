@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import {
   getKeys,
@@ -24,6 +24,7 @@ const NewTransactionPage = () => {
   const { params } = useSelector(state => state.consensus);
 
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const [showSecretKey, setShowSecretKey] = useState(false);
   const [amount, setAmount] = useState("");
@@ -32,7 +33,7 @@ const NewTransactionPage = () => {
 
   const [senderSecretKey, setSenderSecretKey] = useState(keys.secretKey ?? "");
   const [sender, setSender] = useState({ secretKey: "", publicKey: "", address: "" });
-  const [recipientAddress, setRecipientAddress] = useState("");
+  const [recipientAddress, setRecipientAddress] = useState(searchParams.get("recipient") ?? "");
   const [secretKeyFormat, setSecretKeyFormat] = useState("hex");
 
   const [confirmModal, setConfirmModal] = useState(false);
@@ -50,6 +51,11 @@ const NewTransactionPage = () => {
     if (!params) return;
     updateSender(senderSecretKey);
   }, [secretKeyFormat, senderSecretKey, params]);
+
+  useEffect(() => {
+    const amount = searchParams.get("amount");
+    if (amount) handleAmountChange(amount);
+  }, [searchParams]);
 
   const updateSender = secretKey => {
     try {
@@ -303,7 +309,7 @@ const NewTransactionPage = () => {
           </p>
         </div>
 
-        <div className="buttons is-pulled-right">
+        <div className="buttons is-pulled-right mb-0">
           <button onClick={() => navigate(-1)} className="button">
             Cancel
           </button>

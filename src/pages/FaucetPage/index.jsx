@@ -9,7 +9,7 @@ import axios from "axios";
 import { numberWithCommas } from "../../helpers";
 
 const FaucetPage = () => {
-  const { params, paramsLoaded } = useSelector(state => state.consensus);
+  const { params } = useSelector(state => state.consensus);
   const [errorMessage, setErrorMessage] = useState("");
   const [faucetInfo, setFaucetInfo] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);

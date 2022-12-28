@@ -17,7 +17,7 @@ const WalletPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { mnemonic, externalKeys, internalKeys, xprv } = useSelector(state => state.wallet);
-  const { params, paramsLoaded } = useSelector(state => state.consensus);
+  const { params } = useSelector(state => state.consensus);
 
   const [walletInfo, setWalletInfo] = useState(null);
   const [tab, setTab] = useState("summary");
@@ -30,16 +30,14 @@ const WalletPage = () => {
   };
 
   useEffect(getWalletInfo, [externalKeys, internalKeys]);
-  useEffect(() => {
-    if (!mnemonic) navigate("/wallet/onboarding");
-  }, [mnemonic]);
 
   useEffect(() => {
-    if (location.hash) setTab(location.hash.slice(1));
-    else navigate("#summary");
-  }, [navigate, location]);
+    if (!mnemonic) return navigate("/wallet/onboarding");
+    if (!location.hash) return navigate("#summary");
+    setTab(location.hash.slice(1));
+  }, [navigate, mnemonic, location]);
 
-  const loading = !walletInfo || !paramsLoaded;
+  const loading = !walletInfo || !params;
   if (loading) return <Loading />;
 
   return (

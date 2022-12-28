@@ -13,8 +13,8 @@ import useDidUpdateEffect from "../../hooks/useUpdateEffect";
 import "./index.css";
 
 const OverviewPage = () => {
-  const { params, paramsLoaded } = useSelector(state => state.consensus);
-  const { mempool, mempoolLoaded } = useSelector(state => state.blockchain);
+  const { params } = useSelector(state => state.consensus);
+  const { mempool } = useSelector(state => state.blockchain);
 
   const [transactions, setTransactions] = useState([]);
   const [numTxPages, setNumTxPages] = useState(0);
@@ -67,7 +67,7 @@ const OverviewPage = () => {
     [txPage]
   );
 
-  if (!paramsLoaded || !mempoolLoaded) return <Loading />;
+  if (!params || !mempool) return <Loading />;
 
   return (
     <section className="section">
@@ -99,7 +99,7 @@ const OverviewPage = () => {
               <h2 className="title is-size-5 is-size-4-tablet">Blocks - Recently mined</h2>
               <p className="subtitle is-size-6">Most recently mined blocks in the blockchain.</p>
             </div>
-            <Link to="./blockchain" className="button is-secondary ml-auto has-text-weight-semibold">
+            <Link to="/blockchain" className="button is-secondary ml-auto has-text-weight-semibold">
               <span className="material-icons mr-2">view_in_ar</span>
               <span>View all Blocks</span>
             </Link>
@@ -138,7 +138,7 @@ const OverviewPage = () => {
         <h2 className="title is-size-5 is-size-4-tablet">Confirmed Transactions</h2>
         <p className="subtitle is-size-6">All recently confirmed transactions on the blockchain.</p>
       </div>
-      <div className="mb-6">
+      <div className="mb-5">
         {transactions.length ? (
           transactions.slice(0, 20).map(transaction => (
             <div key={transaction.hash} className="card mb-3">
@@ -154,9 +154,7 @@ const OverviewPage = () => {
         )}
       </div>
 
-      <div className="mb-6">
-        <Pagination currentPage={txPage} onPageChange={setTxPage} numPages={numTxPages} />
-      </div>
+      <Pagination currentPage={txPage} onPageChange={setTxPage} numPages={numTxPages} />
     </section>
   );
 };

@@ -7,7 +7,7 @@ import "./navbar.css";
 
 const Navbar = () => {
   const nodeName = useSelector(state => state.network.nodeName);
-  const { paramsLoaded } = useSelector(state => state.consensus);
+  const { params } = useSelector(state => state.consensus);
 
   return (
     <>
@@ -123,7 +123,7 @@ const Navbar = () => {
             <div className="more-dropdown has-background-dark" role="menu">
               <p className="subtitle is-7 mb-3 has-text-white">
                 Currently connected to{" "}
-                <strong className={paramsLoaded ? "has-text-success" : "has-text-warning"}>{nodeName}</strong>
+                <strong className={params ? "has-text-success" : "has-text-warning"}>{nodeName}</strong>
               </p>
 
               <Link to="/settings" className="has-text-white nav-mobile px-4 py-3 is-flex is-align-items-center">
@@ -242,9 +242,7 @@ const Navbar = () => {
                 className="dropdown-trigger button is-dark px-2 mx-0"
               >
                 <span className="material-icons md-28">{getNodeIcon(nodeName)}</span>
-                <div
-                  className={`indicator ${paramsLoaded ? "has-background-success" : "has-background-warning"}`}
-                ></div>
+                <div className={`indicator ${params ? "has-background-success" : "has-background-warning"}`}></div>
               </button>
               <div className="dropdown-menu network-dropdown" id="dropdown-menu6" role="menu">
                 <div className="dropdown-content fhas-text-right">

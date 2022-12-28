@@ -17,6 +17,7 @@ export const nodes = [
 ];
 
 export const donationAddress = "8bobLqxCRPTSEhvZwQTeKnKz5429N26";
+export const donationAmountSuggestion = 100;
 export const discordInviteLink = "https://discord.gg/Mr9kzmc6eh";
 export const personalWebsiteLink = "https://bobng.me";
 

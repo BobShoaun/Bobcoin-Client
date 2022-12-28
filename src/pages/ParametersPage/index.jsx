@@ -23,9 +23,9 @@ const Parameter = ({ _key, value, info }) => (
 
 const ParametersPage = () => {
   const { nodeName, nodeUrl } = useSelector(state => state.network);
-  const { params, paramsLoaded } = useSelector(state => state.consensus);
+  const { params } = useSelector(state => state.consensus);
 
-  if (!paramsLoaded) return <Loading />;
+  if (!params) return <Loading />;
 
   return (
     <main className="section">

@@ -15,8 +15,8 @@ import axios from "axios";
 const BlockPage = () => {
   const { hash, height } = useParams();
   const navigate = useNavigate();
-  const { params, paramsLoaded } = useSelector(state => state.consensus);
-  const { headBlock, headBlockLoaded } = useSelector(state => state.blockchain);
+  const { params } = useSelector(state => state.consensus);
+  const { headBlock } = useSelector(state => state.blockchain);
 
   const [block, setBlock] = useState(null);
 
@@ -36,7 +36,7 @@ const BlockPage = () => {
   };
   useEffect(getBlocksByHeight, [height]);
 
-  if (!block || !paramsLoaded || !headBlockLoaded) return <Loading />;
+  if (!block || !params || !headBlock) return <Loading />;
 
   const totalInput = block.transactions
     .slice(1)

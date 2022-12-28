@@ -15,8 +15,8 @@ import "./blockchain.css";
 import axios from "axios";
 
 const BlockchainPage = () => {
-  const { headBlock, headBlockLoaded } = useSelector(state => state.blockchain);
-  const { params, paramsLoaded } = useSelector(state => state.consensus);
+  const { headBlock } = useSelector(state => state.blockchain);
+  const { params } = useSelector(state => state.consensus);
 
   const [blocks, setBlocks] = useState([]);
   const [page, setPage] = useState(0); // 0 indexed page
@@ -31,7 +31,7 @@ const BlockchainPage = () => {
   };
 
   useEffect(() => {
-    if (!headBlockLoaded) return;
+    if (!headBlock) return;
     getBlocks();
   }, [headBlock, page]);
 
@@ -44,7 +44,7 @@ const BlockchainPage = () => {
     [page]
   );
 
-  if (!blocks.length || !headBlockLoaded || !paramsLoaded) return <Loading />;
+  if (!blocks.length || !headBlock || !params) return <Loading />;
 
   const numPages = Math.ceil((headBlock.height + 1) / heightsPerPage);
 

@@ -15,8 +15,8 @@ const TransactionPage = () => {
   const location = useLocation();
 
   const [transaction, setTransaction] = useState(null);
-  const { params, paramsLoaded } = useSelector(state => state.consensus);
-  const { headBlock, headBlockLoaded } = useSelector(state => state.blockchain);
+  const { params } = useSelector(state => state.consensus);
+  const { headBlock } = useSelector(state => state.blockchain);
 
   const blockHash = new URLSearchParams(location.search).get("block");
 
@@ -30,7 +30,7 @@ const TransactionPage = () => {
 
   useEffect(getTransaction, [getTransaction]);
 
-  if (!transaction || !paramsLoaded || !headBlockLoaded) return <Loading />;
+  if (!transaction || !params || !headBlock) return <Loading />;
 
   const totalInput = transaction.inputs.reduce((total, input) => total + input.amount, 0);
   const totalOutput = transaction.outputs.reduce((total, output) => total + output.amount, 0);

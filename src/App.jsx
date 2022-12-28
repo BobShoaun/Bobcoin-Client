@@ -1,6 +1,6 @@
 import { useState, useEffect, Suspense, lazy } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, ScrollRestoration } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -88,6 +88,7 @@ const App = () => {
               </Suspense>
             </div>
             <Footer />
+            {/* <ScrollRestoration /> */}
           </div>
 
           <div className="is-hidden-touch">

@@ -20,7 +20,7 @@ const AddressPage = ({ match }) => {
   const searchInput = useRef();
   const [addressQR, setAddressQR] = useState("");
 
-  const { params, paramsLoaded } = useSelector(state => state.consensus);
+  const { params } = useSelector(state => state.consensus);
 
   const [addressInfo, setAddressInfo] = useState(null);
   const [transactions, setTransactions] = useState([]);
@@ -63,7 +63,7 @@ const AddressPage = ({ match }) => {
     navigate(`./${searchInput.current.value}`);
   };
 
-  if (!addressInfo || !paramsLoaded) return <Loading />;
+  if (!addressInfo || !params) return <Loading />;
 
   const { balance, totalReceived, totalSent, numUtxos, numTransactions, numBlocksMined } = addressInfo;
   const isValid = isAddressValid(params, address);

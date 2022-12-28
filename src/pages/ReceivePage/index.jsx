@@ -5,7 +5,7 @@ import { copyToClipboard } from "../../helpers";
 import QRCode from "qrcode";
 
 const ReceivePage = () => {
-  const { params, paramsLoaded } = useSelector(state => state.consensus);
+  const { params } = useSelector(state => state.consensus);
 
   const { address } = useSelector(state => state.wallet.keys);
 

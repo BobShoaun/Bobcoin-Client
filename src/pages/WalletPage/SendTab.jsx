@@ -1,5 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { useSearchParams } from "react-router-dom";
 import classNames from "classnames";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -20,9 +21,10 @@ import { numberWithCommas } from "../../helpers";
 
 const SendTab = () => {
   const dispatch = useDispatch();
+  const [searchParams] = useSearchParams();
 
   const { walletInfo, params, externalKeys, internalKeys, xprv } = useContext(WalletContext);
-  const [recipientAddress, setRecipientAddress] = useState("");
+  const [recipientAddress, setRecipientAddress] = useState(searchParams.get("recipient") ?? "");
   const [amount, setAmount] = useState("");
   const [fee, setFee] = useState("");
   const [message, setMessage] = useState("");
@@ -43,6 +45,10 @@ const SendTab = () => {
   };
 
   useEffect(getWalletUtxos, [externalKeys, internalKeys]);
+  useEffect(() => {
+    const amount = searchParams.get("amount");
+    if (amount) handleAmountChange(amount);
+  }, [searchParams]);
 
   const resetFields = () => {
     setRecipientAddress("");

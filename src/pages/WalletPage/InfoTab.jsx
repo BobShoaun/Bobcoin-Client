@@ -131,7 +131,7 @@ const InfoTab = () => {
       <p className="subtitle is-6 mb-3">
         Addresses not explicitly used by the user, designated for change outputs in a transaction.
       </p>
-      <div className="card mb-6">
+      <div className="card">
         <div className="card-content">
           <table className="table is-fullwidth is-block" style={{ overflowY: "auto" }}>
             <thead>
