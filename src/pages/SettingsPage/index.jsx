@@ -1,18 +1,25 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setNetwork, setMiningPopup as _setMiningPopup } from "../../store/networkSlice";
+import { setNetwork, setMiningPopup as _setMiningPopup, setApiToken as _setApiToken } from "../../store/networkSlice";
 import { nodes } from "../../config";
 import { getNodeIcon } from "../../helpers";
 
 const SettingsPage = () => {
   const dispatch = useDispatch();
-  const { nodeName: _nodeName, nodeUrl: _nodeUrl, showMiningPopup } = useSelector(state => state.network);
+  const {
+    nodeName: _nodeName,
+    nodeUrl: _nodeUrl,
+    showMiningPopup,
+    apiToken: _apiToken,
+  } = useSelector(state => state.network);
 
   const [nodeName, setNodeName] = useState(_nodeName);
   const [nodeUrl, setNodeUrl] = useState(_nodeUrl);
   const [miningPopup, setMiningPopup] = useState(showMiningPopup);
+  const [apiToken, setApiToken] = useState(_apiToken);
 
-  const hasChanges = nodeName !== _nodeName || nodeUrl !== _nodeUrl || miningPopup !== showMiningPopup;
+  const hasChanges =
+    nodeName !== _nodeName || nodeUrl !== _nodeUrl || miningPopup !== showMiningPopup || apiToken !== _apiToken;
 
   useEffect(() => {
     if (nodeName === "other") {
@@ -27,6 +34,7 @@ const SettingsPage = () => {
     e.preventDefault();
     dispatch(_setMiningPopup(miningPopup));
     dispatch(setNetwork({ nodeName, nodeUrl }));
+    dispatch(_setApiToken(apiToken));
   };
 
   return (
@@ -38,7 +46,7 @@ const SettingsPage = () => {
       <form onSubmit={confirmSettings} action="">
         <h2 className="title is-5 is-spaced mb-2">Network</h2>
 
-        <div className="is-flex is-flex-wrap-wrap mb-6" style={{ gap: ".5em" }}>
+        <div className="is-flex is-flex-wrap-wrap mb-5" style={{ gap: ".5em" }}>
           <div className="control has-icons-left">
             <div className="select">
               <select value={nodeName} onChange={({ target }) => setNodeName(target.value)} required>
@@ -64,6 +72,16 @@ const SettingsPage = () => {
             style={{ maxWidth: "30em" }}
           />
         </div>
+
+        <h2 className="title is-5 is-spaced mb-2">API Token</h2>
+        <input
+          value={apiToken}
+          onChange={e => setApiToken(e.target.value)}
+          type="password"
+          className="input mb-5"
+          placeholder="Secret api token to access restricted features"
+          style={{ maxWidth: "30em" }}
+        />
 
         <h2 className="title is-5 is-spaced mb-2">Mining</h2>
         <label className="checkbox is-flex is-align-items-center mb-6">

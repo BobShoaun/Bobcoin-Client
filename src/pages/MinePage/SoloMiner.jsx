@@ -37,6 +37,7 @@ const SoloMiner = () => {
 
   const { headBlock } = useSelector(state => state.blockchain);
   const { params } = useSelector(state => state.consensus);
+  const { apiToken } = useSelector(state => state.network);
 
   const [successModal, setSuccessModal] = useState(false);
   const miningController = useRef(null);
@@ -140,7 +141,11 @@ const SoloMiner = () => {
           ]);
           setSelectedTransactions([]);
 
-          const { validation, blockInfo } = (await axios.post(`/block`, data.block)).data;
+          const { validation, blockInfo } = (
+            await axios.post(`/block`, data.block, {
+              headers: { Authorization: `Bearer ${apiToken}` }, // TODO: remove once tested
+            })
+          ).data;
 
           if (validation.code !== VCODE.VALID) {
             console.error("Block is invalid", blockInfo);
@@ -265,6 +270,7 @@ const SoloMiner = () => {
       <div className="has-text-right">
         <button
           onClick={() => (miningMode === "solo" ? setMiningMode(null) : setMiningMode("solo"))}
+          disabled={!apiToken} // TODO: remove once tested
           className="button mb-0"
         >
           <i className="material-icons mr-2">memory</i>

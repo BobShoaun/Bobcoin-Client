@@ -60,7 +60,7 @@ const AddressPage = ({ match }) => {
 
   const handleSearch = event => {
     event.preventDefault();
-    navigate(`./${searchInput.current.value}`);
+    navigate(`/address/${searchInput.current.value}`);
   };
 
   if (!addressInfo || !params) return <Loading />;
