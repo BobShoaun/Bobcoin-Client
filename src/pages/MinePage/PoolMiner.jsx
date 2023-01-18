@@ -83,7 +83,7 @@ const PoolMiner = () => {
       miningController.current.abort();
       miningController.current = null;
       setTerminalLogs(log => [...log, `\nNew head block found, mining operation restarting...`]);
-      // startMining();
+      startMining();
     }
   }, [headBlock]);
 
@@ -133,6 +133,7 @@ const PoolMiner = () => {
             );
           } catch (error) {
             console.error("Block is invalid", error);
+            miningController.current.abort();
             miningController.current = null;
             setMiningMode(null);
             return;
@@ -145,10 +146,8 @@ const PoolMiner = () => {
             `\nShares granted: ${numSharesGranted}\nTotal shares: ${totalShares}\nBlock valid: ${isValid}`,
           ]);
 
-          if (isKeepMiningPool) {
-            setCounter(i => i + 1);
-            return;
-          }
+          if (!isValid) setCounter(i => i + 1);
+          if (isKeepMiningPool) return;
 
           setMiningMode(null);
 
