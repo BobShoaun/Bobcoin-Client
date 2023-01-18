@@ -31,6 +31,12 @@ npm install
 npm run dev
 ```
 
+## Deployment
+
+```
+npm run deploy
+```
+
 ## Available Scripts
 
 In the project directory, you can run:
