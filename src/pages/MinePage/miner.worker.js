@@ -3,7 +3,7 @@ import { mineBlock, calculateBlockHash, hexToBigInt } from "blockcrypto";
 const soloMiner = (_block, target) => {
   let block = _block;
   for (block of mineBlock(block, target)) {
-    if (block.nonce % 1000000 === 0 && block.nonce > 0) postMessage({ message: "nonce", block });
+    if (block.nonce % 50000 === 0 && block.nonce > 0) postMessage({ message: "nonce", block });
   }
   postMessage({ message: "success", block });
 };
@@ -18,7 +18,7 @@ const poolMiner = (block, target) => {
       return;
     }
     block.nonce++;
-    if (block.nonce % 20000 === 0) postMessage({ message: "nonce", block });
+    if (block.nonce % 50000 === 0) postMessage({ message: "nonce", block });
   }
 };
 

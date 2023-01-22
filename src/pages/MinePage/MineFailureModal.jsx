@@ -1,4 +1,3 @@
-import React from "react";
 import { VCODE } from "../../config";
 
 const MineFailureModal = ({ isOpen, close, error }) => {

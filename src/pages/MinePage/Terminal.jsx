@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 
 import { MinePageContext } from ".";
@@ -7,15 +7,17 @@ const Terminal = () => {
   const {
     setMiningMode,
     terminalLogs,
-    miner,
-    parentBlockHash,
-    isAutoRestart,
-    isKeepMining,
     setTerminalLogs,
+    miner,
     setMiner,
+    parentBlockHash,
     setParentBlockHash,
+    isAutoRestart,
     setIsAutoRestart,
-    setIsKeepMining,
+    isKeepMiningSolo,
+    setIsKeepMiningSolo,
+    isKeepMiningPool,
+    setIsKeepMiningPool,
   } = useContext(MinePageContext);
   const { params } = useSelector(state => state.consensus);
 
@@ -26,12 +28,21 @@ const Terminal = () => {
   const programs = [
     {
       name: "mine",
-      template: "mine [start | stop]",
+      template: "mine [start | stop] [solo | pool]",
       execute: args => {
         const operation = args[1];
+        const mode = args[2];
         switch (operation) {
           case "start":
-            return setMiningMode("solo");
+            switch (mode) {
+              case "solo":
+              case "":
+                return setMiningMode("solo");
+              case "pool":
+                return setMiningMode("pool");
+              default:
+                throw Error("invalid arguments");
+            }
           case "stop":
             return setMiningMode(null);
           default:
@@ -41,7 +52,7 @@ const Terminal = () => {
     },
     {
       name: "get",
-      template: "get [miner | parent | auto-restart | keep-mining]",
+      template: "get [miner | parent | auto-remine | keep-solo-mining | keep-pool-mining]",
       execute: args => {
         const type = args[1];
         switch (type) {
@@ -49,10 +60,12 @@ const Terminal = () => {
             return setTerminalLogs(log => [...log, miner]);
           case "parent":
             return setTerminalLogs(log => [...log, parentBlockHash]);
-          case "auto-restart":
+          case "auto-remine":
             return setTerminalLogs(log => [...log, `${isAutoRestart}`]);
-          case "keep-mining":
-            return setTerminalLogs(log => [...log, `${isKeepMining}`]);
+          case "keep-solo-mining":
+            return setTerminalLogs(log => [...log, `${isKeepMiningSolo}`]);
+          case "keep-pool-mining":
+            return setTerminalLogs(log => [...log, `${isKeepMiningPool}`]);
           default:
             throw Error("invalid arguments");
         }
@@ -60,7 +73,7 @@ const Terminal = () => {
     },
     {
       name: "set",
-      template: "set [miner | parent | auto-restart | keep-mining] <value>",
+      template: "set [miner | parent | auto-remine | keep-solo-mining | keep-pool-mining] <value>",
       execute: args => {
         const type = args[1];
         const value = args[2];
@@ -71,16 +84,22 @@ const Terminal = () => {
           case "parent":
             setTerminalLogs(log => [...log, `Set parent to ${value}`]);
             return setParentBlockHash(value);
-          case "auto-restart": {
+          case "auto-remine": {
             const newValue = value === "true";
-            setTerminalLogs(log => [...log, `Set auto-restart to ${newValue}`]);
+            setTerminalLogs(log => [...log, `Set auto-remine to ${newValue}`]);
             setIsAutoRestart(newValue);
             return;
           }
-          case "keep-mining": {
+          case "keep-solo-mining": {
             const newValue = value === "true";
-            setTerminalLogs(log => [...log, `Set keep-mining to ${newValue}`]);
-            setIsKeepMining(newValue);
+            setTerminalLogs(log => [...log, `Set keep-solo-mining to ${newValue}`]);
+            setIsKeepMiningSolo(newValue);
+            return;
+          }
+          case "keep-pool-mining": {
+            const newValue = value === "true";
+            setTerminalLogs(log => [...log, `Set keep-pool-mining to ${newValue}`]);
+            setIsKeepMiningPool(newValue);
             return;
           }
           default:

@@ -1,20 +1,16 @@
-import { useState, useEffect, useRef, useContext, createContext } from "react";
+import { useState, useEffect, createContext } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
-import toast from "react-hot-toast";
-import { calculateBlockReward, calculateHashTarget, bigIntToHex64, hexToBigInt } from "blockcrypto";
 
 import Blockchain from "../../components/Blockchain/";
 import MineMempool from "./MineMempool";
-import MineSuccessModal from "./MineSuccessModal";
 import MineFailureModal from "./MineFailureModal";
 import Terminal from "./Terminal";
 import Mempool from "../../components/Mempool";
 import Loading from "../../components/Loading";
 import SoloMiner from "./SoloMiner";
 import PoolMiner from "./PoolMiner";
-import Miner from "./miner.worker";
 
 import "./mine.css";
 
@@ -29,23 +25,27 @@ const MinePage = () => {
 
   const minerAddress = externalKeys[externalKeys.length - 1]?.address ?? keys.address ?? "";
 
-  const [mineInfo, setMineInfo] = useState(null);
-  const [poolInfo, setPoolInfo] = useState(null);
-  const [miner, setMiner] = useState(minerAddress);
-  const [parentBlockHash, setParentBlockHash] = useState("");
-  const [isAutoRestart, setIsAutoRestart] = useState(JSON.parse(localStorage.getItem("auto-remine")) ?? true);
-  const [isKeepMining, setIsKeepMining] = useState(JSON.parse(localStorage.getItem("keep-mining-solo")) ?? false);
-  const [isKeepMiningPool, setIsKeepMiningPool] = useState(
-    JSON.parse(localStorage.getItem("keep-mining-pool")) ?? true
-  );
   const [tab, setTab] = useState("solo");
+  const [miningMode, setMiningMode] = useState(null);
+  const [mineInfo, setMineInfo] = useState(null);
+  const [miner, setMiner] = useState(minerAddress);
 
   const [terminalLogs, setTerminalLogs] = useState([]);
   const [errorModal, setErrorModal] = useState(false);
   const [error, setError] = useState({});
+
+  // solo
+  const [parentBlockHash, setParentBlockHash] = useState("");
+  const [isAutoRestart, setIsAutoRestart] = useState(JSON.parse(localStorage.getItem("auto-remine")) ?? true);
+  const [isKeepMiningSolo, setIsKeepMiningSolo] = useState(
+    JSON.parse(localStorage.getItem("keep-mining-solo")) ?? false
+  );
   const [selectedTransactions, setSelectedTransactions] = useState([]);
-  const [isMining, setIsMining] = useState(false);
-  const [miningMode, setMiningMode] = useState(null);
+
+  // pool
+  const [isKeepMiningPool, setIsKeepMiningPool] = useState(
+    JSON.parse(localStorage.getItem("keep-mining-pool")) ?? true
+  );
 
   const getMineInfo = async () => {
     const { data } = await axios.get("/mine/info");
@@ -58,7 +58,7 @@ const MinePage = () => {
 
   useEffect(() => {
     if (!mempool?.length) return;
-    // setSelectedTransactions([mempool[0]]); // TODO uncomment
+    setSelectedTransactions([mempool[0]]);
   }, [mempool]);
 
   useEffect(() => {
@@ -67,7 +67,7 @@ const MinePage = () => {
   }, [location, navigate]);
 
   useEffect(() => localStorage.setItem("auto-remine", isAutoRestart), [isAutoRestart]);
-  useEffect(() => localStorage.setItem("keep-mining-solo", isKeepMining), [isKeepMining]);
+  useEffect(() => localStorage.setItem("keep-mining-solo", isKeepMiningSolo), [isKeepMiningSolo]);
   useEffect(() => localStorage.setItem("keep-mining-pool", isKeepMiningPool), [isKeepMiningPool]);
 
   const loading = !params || !headBlock;
@@ -78,26 +78,23 @@ const MinePage = () => {
     <MinePageContext.Provider
       value={{
         miningMode,
-        tab,
-        selectedTransactions,
-        terminalLogs,
-        miner,
-        parentBlockHash,
-        isAutoRestart,
-        isKeepMining,
-        isMining,
         setMiningMode,
-        setIsMining,
-        setTerminalLogs,
-        setMiner,
-        setParentBlockHash,
-        setIsAutoRestart,
-        setIsKeepMining,
-        setError,
-        setErrorModal,
+        selectedTransactions,
         setSelectedTransactions,
+        terminalLogs,
+        setTerminalLogs,
+        miner,
+        setMiner,
+        parentBlockHash,
+        setParentBlockHash,
+        isAutoRestart,
+        setIsAutoRestart,
+        isKeepMiningSolo,
+        setIsKeepMiningSolo,
         isKeepMiningPool,
         setIsKeepMiningPool,
+        setError,
+        setErrorModal,
       }}
     >
       <main className="section">

@@ -1,15 +1,12 @@
 /* global BigInt */
-import { useState, useEffect, useRef, useContext, createContext, useMemo } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { calculateBlockReward, calculateHashTarget, bigIntToHex64, hexToBigInt } from "blockcrypto";
+import { bigIntToHex64, hexToBigInt } from "blockcrypto";
 
-import MineMempool from "./MineMempool";
 import MineSuccessModal from "./MineSuccessModal";
 import MineFailureModal from "./MineFailureModal";
-import Terminal from "./Terminal";
-import { VCODE } from "../../config";
 import { MinePageContext } from ".";
 import Miner from "./miner.worker";
 
@@ -24,7 +21,6 @@ const calculateUnclampedHashTarget = (params, block) => {
 
 const PoolMiner = () => {
   const {
-    tab,
     miningMode,
     setMiningMode,
     isKeepMiningPool,
@@ -38,7 +34,6 @@ const PoolMiner = () => {
 
   const { headBlock } = useSelector(state => state.blockchain);
   const { params } = useSelector(state => state.consensus);
-  const { apiToken } = useSelector(state => state.network);
 
   const [successModal, setSuccessModal] = useState(false);
   const [poolInfo, setPoolInfo] = useState(null);
@@ -53,30 +48,20 @@ const PoolMiner = () => {
 
   useEffect(() => {
     getPoolInfo();
-    return () => {
-      miningController.current?.abort();
-    };
+    return () => miningController.current?.abort();
   }, []);
 
   useEffect(() => {
-    if (miningMode !== "pool") {
-      if (!miningController.current) return;
-      // stop mining
-      miningController.current.abort();
-      miningController.current = null;
-      setTerminalLogs(log => [...log, `\nMining operation stopped.`]);
-    }
-    if (miningMode === "pool") {
-      startMining();
-    }
+    if (miningMode === "pool") return startMining();
+    if (!miningController.current) return;
+    // stop mining
+    miningController.current.abort();
+    miningController.current = null;
+    setTerminalLogs(log => [...log, `\nMining operation stopped.`]);
   }, [miningMode]);
 
   useEffect(() => {
     if (miningMode !== "pool") return;
-    if (isKeepMiningPool) startMining();
-  }, [counter]);
-
-  useEffect(() => {
     if (!headBlock) return;
     if (miningController.current) {
       console.log("new head block hash, restarting", headBlock.hash);
@@ -84,14 +69,22 @@ const PoolMiner = () => {
       miningController.current = null;
       setTerminalLogs(log => [...log, `\nNew head block found, mining operation restarting...`]);
       startMining();
+      return;
     }
+    if (isKeepMiningPool) return startMining();
+    setMiningMode(null);
   }, [headBlock]);
+
+  useEffect(() => {
+    if (miningMode !== "pool") return;
+    if (isKeepMiningPool) return startMining();
+    setMiningMode(null);
+  }, [counter]);
 
   const startMining = async () => {
     miningController.current = new AbortController();
 
     setTerminalLogs(log => [...log, "\nRequesting candidate block..."]);
-
     let response = null;
     try {
       response = await axios.get(`/pool/candidate-block/${miner}`, { signal: miningController.current.signal });
@@ -122,19 +115,15 @@ const PoolMiner = () => {
           return;
 
         case "success":
+          miningController.current.abort();
+          miningController.current = null;
           setTerminalLogs(log => [...log, `\nSuccess! Share proof of work fulfilled with nonce: ${data.block.nonce}`]);
 
           let response = null;
           try {
-            response = await axios.post(
-              `/pool/block`,
-              { nonce: data.block.nonce, hash: data.block.hash, miner },
-              { headers: { Authorization: `Bearer ${apiToken}` } } // TODO: remove once tested
-            );
+            response = await axios.post(`/pool/block`, { nonce: data.block.nonce, hash: data.block.hash, miner });
           } catch (error) {
             console.error("Block is invalid", error);
-            miningController.current.abort();
-            miningController.current = null;
             setMiningMode(null);
             return;
           }
@@ -147,11 +136,8 @@ const PoolMiner = () => {
           ]);
 
           if (!isValid) setCounter(i => i + 1);
-          if (isKeepMiningPool) return;
 
-          setMiningMode(null);
-
-          return;
+          break;
         default:
           console.error("invalid worker case");
       }
@@ -203,11 +189,7 @@ const PoolMiner = () => {
       </div>
 
       <div className="has-text-right mb-5">
-        <button
-          onClick={() => setMiningMode(miningMode === "pool" ? null : "pool")}
-          disabled={!apiToken} // TODO: remove once tested
-          className="button mb-0"
-        >
+        <button onClick={() => setMiningMode(miningMode === "pool" ? null : "pool")} className="button mb-0">
           <i className="material-icons mr-2">memory</i>
           {miningMode === "pool" ? "Stop mining" : "Start mining"}
         </button>
@@ -237,11 +219,11 @@ const PoolMiner = () => {
         </div>
       </details>
 
-      <MineSuccessModal
+      {/* <MineSuccessModal
         isOpen={successModal}
         close={() => setSuccessModal(false)}
         // blockReward={(calculateBlockReward(params, headBlock.height) / params.coin).toFixed(8)}
-      />
+      /> */}
     </section>
   );
 };

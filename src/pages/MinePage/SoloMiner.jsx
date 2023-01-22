@@ -1,14 +1,11 @@
-import { useState, useEffect, useRef, useContext, createContext, useMemo } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { calculateBlockReward, calculateHashTarget, bigIntToHex64, hexToBigInt } from "blockcrypto";
+import { calculateHashTarget, bigIntToHex64 } from "blockcrypto";
 
-import Blockchain from "../../components/Blockchain/";
-import MineMempool from "./MineMempool";
 import MineSuccessModal from "./MineSuccessModal";
 import MineFailureModal from "./MineFailureModal";
-import Terminal from "./Terminal";
 import { VCODE } from "../../config";
 import { MinePageContext } from ".";
 import Miner from "./miner.worker";
@@ -19,17 +16,16 @@ const SoloMiner = () => {
   const {
     miningMode,
     setMiningMode,
-    tab,
     selectedTransactions,
     miner,
     parentBlockHash,
     isAutoRestart,
-    isKeepMining,
+    isKeepMiningSolo,
+    setIsKeepMiningSolo,
     setTerminalLogs,
     setMiner,
     setParentBlockHash,
     setIsAutoRestart,
-    setIsKeepMining,
     setError,
     setErrorModal,
     setSelectedTransactions,
@@ -37,16 +33,12 @@ const SoloMiner = () => {
 
   const { headBlock } = useSelector(state => state.blockchain);
   const { params } = useSelector(state => state.consensus);
-  const { apiToken } = useSelector(state => state.network);
 
   const [successModal, setSuccessModal] = useState(false);
+  const [counter, setCounter] = useState(0);
   const miningController = useRef(null);
 
-  useEffect(() => {
-    return () => {
-      miningController.current?.abort();
-    };
-  }, []);
+  useEffect(() => () => miningController.current?.abort(), []);
 
   useEffect(() => {
     if (!headBlock) return;
@@ -54,20 +46,17 @@ const SoloMiner = () => {
   }, [headBlock]);
 
   useEffect(() => {
-    if (miningMode !== "solo") {
-      if (!miningController.current) return;
-      // stop mining
-      miningController.current.abort();
-      miningController.current = null;
-      setTerminalLogs(log => [...log, `\nMining operation stopped.`]);
-    }
-    if (miningMode === "solo") {
-      startMining();
-    }
+    if (miningMode === "solo") return startMining();
+    if (!miningController.current) return;
+    // stop mining
+    miningController.current.abort();
+    miningController.current = null;
+    setTerminalLogs(log => [...log, `\nMining operation stopped.`]);
   }, [miningMode]);
 
   useEffect(() => {
     if (miningMode !== "solo") return;
+    if (!parentBlockHash) return;
     if (isAutoRestart && miningController.current) {
       console.log("new head block hash, restarting", headBlock.hash);
       miningController.current.abort();
@@ -76,8 +65,31 @@ const SoloMiner = () => {
       startMining();
       return;
     }
-    if (isKeepMining) startMining();
+    if (isKeepMiningSolo) return startMining();
+    endMining();
   }, [parentBlockHash]);
+
+  useEffect(async () => {
+    if (miningMode !== "solo") return;
+    if (isKeepMiningSolo) return startMining();
+    endMining();
+  }, [counter]);
+
+  const endMining = async () => {
+    setMiningMode(null);
+    setSuccessModal(true);
+    if (Notification.permission === "default")
+      // ask user for permission
+      await Notification.requestPermission();
+
+    if (Notification.permission === "granted") {
+      const notification = new Notification("Bobcoins mined!", {
+        body: "You have successfully mined a block",
+        // icon:
+      });
+      notification.onclick = () => window.focus();
+    }
+  };
 
   const startMining = async () => {
     miningController.current = new AbortController();
@@ -132,43 +144,45 @@ const SoloMiner = () => {
           break;
 
         case "success":
-          worker.terminate();
+          miningController.current.abort();
           miningController.current = null;
-
           setTerminalLogs(log => [
             ...log,
             `\nMining successful! New block mined with...\nhash: ${data.block.hash}\nnonce: ${data.block.nonce}`,
           ]);
           setSelectedTransactions([]);
 
-          const { validation, blockInfo } = (
-            await axios.post(`/block`, data.block, {
-              headers: { Authorization: `Bearer ${apiToken}` }, // TODO: remove once tested
-            })
-          ).data;
+          let response = null;
+          try {
+            response = await axios.post(`/block`, data.block);
+          } catch (error) {
+            setMiningMode(null);
 
-          if (validation.code !== VCODE.VALID) {
-            console.error("Block is invalid", blockInfo);
+            const { validation, blockInfo } = error.response.data;
+            console.error("Block is invalid", error, blockInfo);
             setError(validation);
             setErrorModal(true);
-            break;
+            return;
           }
 
-          if (isKeepMining) return;
+          const { blockInfo } = response.data;
+          if (blockInfo.height <= headBlock.height) setCounter(i => i + 1);
 
-          setSuccessModal(true);
-          if (Notification.permission === "default")
-            // ask user for permission
-            await Notification.requestPermission();
+          // if (isKeepMiningSolo) return;
 
-          if (Notification.permission === "granted") {
-            const notification = new Notification("Bobcoins mined!", {
-              body: "You have successfully mined a block",
-              // icon:
-            });
-            notification.onclick = () => window.focus();
-          }
-          setMiningMode(null);
+          // setSuccessModal(true);
+          // if (Notification.permission === "default")
+          //   // ask user for permission
+          //   await Notification.requestPermission();
+
+          // if (Notification.permission === "granted") {
+          //   const notification = new Notification("Bobcoins mined!", {
+          //     body: "You have successfully mined a block",
+          //     // icon:
+          //   });
+          //   notification.onclick = () => window.focus();
+          // }
+          // setMiningMode(null);
 
           break;
         default:
@@ -259,7 +273,7 @@ const SoloMiner = () => {
 
       <div className="mb-5">
         <label className="checkbox is-flex" style={{ gap: ".5em" }}>
-          <input type="checkbox" checked={isKeepMining} onChange={e => setIsKeepMining(e.target.checked)} />
+          <input type="checkbox" checked={isKeepMiningSolo} onChange={e => setIsKeepMiningSolo(e.target.checked)} />
           <div>
             <h3 className="label mb-0">Keep Mining</h3>
             <p className="is-size-7">Don't show success prompt, keep mining the next block after.</p>
@@ -268,11 +282,7 @@ const SoloMiner = () => {
       </div>
 
       <div className="has-text-right">
-        <button
-          onClick={() => (miningMode === "solo" ? setMiningMode(null) : setMiningMode("solo"))}
-          disabled={!apiToken} // TODO: remove once tested
-          className="button mb-0"
-        >
+        <button onClick={() => setMiningMode(miningMode === "solo" ? null : "solo")} className="button mb-0">
           <i className="material-icons mr-2">memory</i>
           {miningMode === "solo" ? "Stop mining" : "Start mining"}
         </button>
