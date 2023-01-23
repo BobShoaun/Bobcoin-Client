@@ -34,6 +34,7 @@ const PoolMiner = () => {
 
   const { headBlock } = useSelector(state => state.blockchain);
   const { params } = useSelector(state => state.consensus);
+  const { apiToken } = useSelector(state => state.network);
 
   const [successModal, setSuccessModal] = useState(false);
   const [poolInfo, setPoolInfo] = useState(null);
@@ -121,7 +122,11 @@ const PoolMiner = () => {
 
           let response = null;
           try {
-            response = await axios.post(`/pool/block`, { nonce: data.block.nonce, hash: data.block.hash, miner });
+            response = await axios.post(
+              `/pool/block`,
+              { nonce: data.block.nonce, hash: data.block.hash, miner },
+              { headers: { Authorization: `Bearer ${apiToken}` } }
+            );
           } catch (error) {
             console.error("Block is invalid", error);
             setMiningMode(null);

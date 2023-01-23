@@ -33,6 +33,7 @@ const SoloMiner = () => {
 
   const { headBlock } = useSelector(state => state.blockchain);
   const { params } = useSelector(state => state.consensus);
+  const { apiToken } = useSelector(state => state.network);
 
   const [successModal, setSuccessModal] = useState(false);
   const [counter, setCounter] = useState(0);
@@ -154,7 +155,9 @@ const SoloMiner = () => {
 
           let response = null;
           try {
-            response = await axios.post(`/block`, data.block);
+            response = await axios.post(`/block`, data.block, {
+              headers: { Authorization: `Bearer ${apiToken}` },
+            });
           } catch (error) {
             setMiningMode(null);
 
