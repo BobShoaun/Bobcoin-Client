@@ -6,7 +6,7 @@ import { getNodeIcon } from "../helpers";
 import "./navbar.css";
 
 const Navbar = () => {
-  const nodeName = useSelector(state => state.network.nodeName);
+  const { nodeName } = useSelector(state => state.network);
   const { params } = useSelector(state => state.consensus);
 
   return (
@@ -229,8 +229,10 @@ const Navbar = () => {
             </div>
           </div>
 
-          <div className="buttons navbar-item ml-auto">
-            <Link to={"/wallet"} className="button has-text-weight-bold mr-3">
+          <div className="is-flex navbar-item ml-auto" style={{ gap: ".7em", alignItems: "center" }}>
+            <input type="search" className="searchbar" placeholder="Search address, block hash, tx hash..."></input>
+
+            <Link to={"/wallet"} className="button has-text-weight-bold">
               <span className="material-icons-two-tone mr-2">account_balance_wallet</span>
               <p>My Wallet</p>
             </Link>

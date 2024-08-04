@@ -22,7 +22,7 @@ const MineFailureModal = ({ isOpen, close, error }) => {
 
           <h2 className="title is-6 is-spaced mb-3">Error message:</h2>
           <pre className="subtitle is-6">
-            {Object.keys(VCODE).find(code => VCODE[code] === error.code)}: {error.msg}
+            {Object.keys(VCODE).find(code => VCODE[code] === error?.code)}: {error?.msg}
           </pre>
 
           <p className="help has-text-centered mb-5">*Your invalid block will be rejected by the network.</p>

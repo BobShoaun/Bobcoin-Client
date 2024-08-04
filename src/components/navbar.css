@@ -41,3 +41,12 @@
 .explore-button:focus-within > .explore-dropdown {
 	display: block;
 }
+
+.searchbar {
+	height: 100%;
+	border: none;
+	outline: none;
+	background: black;
+	color: white;
+	padding: .2em 1em;
+}
