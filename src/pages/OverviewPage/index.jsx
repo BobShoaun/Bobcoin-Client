@@ -5,16 +5,19 @@ import { useSelector } from "react-redux";
 import Blockchain from "../../components/Blockchain/";
 import Mempool from "../../components/Mempool";
 import Loading from "../../components/Loading";
+import Error from "../../components/Error";
 import Transaction from "../../components/Transaction";
 import Pagination from "../../components/Pagination";
 import axios from "axios";
 import useDidUpdateEffect from "../../hooks/useUpdateEffect";
+import useErrorTimeout from "../../hooks/useErrorTimeout";
 
 import "./index.css";
 
 const OverviewPage = () => {
   const { params } = useSelector(state => state.consensus);
   const { mempool } = useSelector(state => state.blockchain);
+  const isError = useErrorTimeout(5000);
 
   const [transactions, setTransactions] = useState([]);
   const [numTxPages, setNumTxPages] = useState(0);
@@ -67,7 +70,8 @@ const OverviewPage = () => {
     [txPage]
   );
 
-  if (!params || !mempool) return <Loading />;
+  if (!params || !mempool) 
+    return isError ? <Error /> : <Loading />;
 
   return (
     <section className="section">

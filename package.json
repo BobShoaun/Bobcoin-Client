@@ -75,9 +75,8 @@
     ]
   },
   "devDependencies": {
-    "bulma": "^0.9.3",
+    "bulma": "^1.0.4",
     "concurrently": "^7.0.0",
-    "node-sass": "^7.0.1",
     "react-app-rewired": "^2.2.1",
     "worker-loader": "^3.0.8"
   },

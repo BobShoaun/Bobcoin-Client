@@ -1,7 +1,8 @@
-import React from "react";
 import { useSelector } from "react-redux";
 
+import useErrorTimeout from "../../hooks/useErrorTimeout";
 import Loading from "../../components/Loading";
+import Error from "../../components/Error";
 
 import "./index.css";
 
@@ -24,8 +25,10 @@ const Parameter = ({ _key, value, info }) => (
 const ParametersPage = () => {
   const { nodeName, nodeUrl } = useSelector(state => state.network);
   const { params } = useSelector(state => state.consensus);
+  const isError = useErrorTimeout(5000);
 
-  if (!params) return <Loading />;
+  if (!params)
+    return isError ? <Error /> : <Loading />;
 
   return (
     <main className="section">

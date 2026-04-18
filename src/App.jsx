@@ -41,6 +41,7 @@ const WalletOnboardingPage = lazy(() => import("./pages/WalletOnboardingPage"));
 const App = () => {
   const dispatch = useDispatch();
   const nodeUrl = useSelector(state => state.network.nodeUrl);
+  const { params } = useSelector(state => state.consensus);
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
@@ -54,6 +55,13 @@ const App = () => {
     // set axios apiUrl
     axios.defaults.baseURL = nodeUrl;
   }, [nodeUrl]);
+
+  useEffect(() => {
+    const interval = setTimeout(() => {
+      if (!params)
+        toast.error("Error fetching blockchain parameters. Please try again later.");
+    }, 5000);
+  }, [params]);
 
   return (
     <SocketContext.Provider value={{ socket, setSocket }}>

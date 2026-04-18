@@ -1,6 +1,7 @@
 import { useState, useEffect, createContext } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
+import useErrorTimeout from "../../hooks/useErrorTimeout";
 import axios from "axios";
 
 import Blockchain from "../../components/Blockchain/";
@@ -9,6 +10,7 @@ import MineFailureModal from "./MineFailureModal";
 import Terminal from "./Terminal";
 import Mempool from "../../components/Mempool";
 import Loading from "../../components/Loading";
+import Error from "../../components/Error";
 import SoloMiner from "./SoloMiner";
 import PoolMiner from "./PoolMiner";
 
@@ -47,6 +49,8 @@ const MinePage = () => {
     JSON.parse(localStorage.getItem("keep-mining-pool")) ?? true
   );
 
+  const isError = useErrorTimeout(5000);
+
   const getMineInfo = async () => {
     const { data } = await axios.get("/mine/info");
     setMineInfo(data);
@@ -72,7 +76,8 @@ const MinePage = () => {
 
   const loading = !params || !headBlock;
 
-  if (loading) return <Loading />;
+  if (loading)
+    return isError ? <Error /> : <Loading />;
 
   return (
     <MinePageContext.Provider

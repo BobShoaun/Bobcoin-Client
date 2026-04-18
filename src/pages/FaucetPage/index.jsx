@@ -1,7 +1,9 @@
 import { useSelector } from "react-redux";
 import { useState, useEffect, useRef } from "react";
+import useErrorTimeout from "../../hooks/useErrorTimeout";
 
 import Loading from "../../components/Loading";
+import Error from "../../components/Error";
 import ReCAPTCHA from "react-google-recaptcha";
 import { recaptchaSiteKey } from "../../config";
 import axios from "axios";
@@ -13,6 +15,7 @@ const FaucetPage = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [faucetInfo, setFaucetInfo] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const isError = useErrorTimeout(5000);
 
   const recaptchaRef = useRef(null);
 
@@ -45,7 +48,8 @@ const FaucetPage = () => {
     recaptchaRef.current.reset();
   };
 
-  if (!params || !faucetInfo) return <Loading />;
+  if (!params || !faucetInfo)
+    return isError ? <Error /> : <Loading />;
 
   return (
     <main className="section">

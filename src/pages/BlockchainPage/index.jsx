@@ -4,11 +4,13 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 import Loading from "../../components/Loading";
+import Error from "../../components/Error";
 import Pagination from "../../components/Pagination";
 
 import { formatDistanceToNow } from "date-fns";
 import { getBlockStatus } from "../../helpers";
 import useDidUpdateEffect from "../../hooks/useUpdateEffect";
+import useErrorTimeout from "../../hooks/useErrorTimeout";
 
 import "./blockchain.css";
 
@@ -17,6 +19,7 @@ import axios from "axios";
 const BlockchainPage = () => {
   const { headBlock } = useSelector(state => state.blockchain);
   const { params } = useSelector(state => state.consensus);
+  const isError = useErrorTimeout(5000);
 
   const [blocks, setBlocks] = useState([]);
   const [page, setPage] = useState(0); // 0 indexed page
@@ -44,7 +47,8 @@ const BlockchainPage = () => {
     [page]
   );
 
-  if (!blocks.length || !headBlock || !params) return <Loading />;
+  if (!blocks.length || !headBlock || !params)
+    return isError ? <Error /> : <Loading />;
 
   const numPages = Math.ceil((headBlock.height + 1) / heightsPerPage);
 

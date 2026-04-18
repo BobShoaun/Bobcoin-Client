@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  params: null,
+  params: null
 };
 
 const consensusSlice = createSlice({
